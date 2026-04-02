@@ -80,6 +80,9 @@ async function processWebhookEvent(body: Record<string, unknown>) {
 async function handleCommentEvent(value: Record<string, unknown>) {
   const commentId = value.comment_id as string
   const commentText = ((value.message as string) ?? '').trim().toUpperCase()
+  const postId = value.post_id as string | undefined
+  const from = value.from as Record<string, unknown> | undefined
+  const commenterId = from?.id as string | undefined
 
   if (!commentText || !commentId) return
 
@@ -93,7 +96,21 @@ async function handleCommentEvent(value: Record<string, unknown>) {
 
   if (!product) return
 
-  await sendPrivateReply(commentId, buildProductReplyMessage(product))
+  const replyPayload = buildProductReplyMessage(product)
+  const sentPrivateReply = await sendPrivateReply(commentId, replyPayload, postId)
+  if (sentPrivateReply) return
+
+  console.error('handleCommentEvent private reply failed:', {
+    commentId,
+    postId,
+    commenterId,
+    keyword: commentText,
+    reason: 'Graph API rejected private reply request',
+  })
+
+  // Fallback to direct message when private replies are unavailable for this comment object.
+  if (!commenterId) return
+  await sendMessage(commenterId, replyPayload)
 }
 
 async function handlePostbackEvent(psid: string, payload: string) {
