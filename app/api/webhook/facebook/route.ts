@@ -4,7 +4,7 @@ import {
   sendPrivateReply,
   sendMessage,
   buildProductReplyMessage,
-  buildCheckoutLinkMessage,
+  buildCartLinkMessage,
 } from '@/src/lib/facebook'
 import { getAdminClient } from '@/src/lib/supabase/admin'
 
@@ -133,17 +133,5 @@ async function handlePostbackEvent(psid: string, payload: string) {
     return
   }
 
-  // Create cart session
-  const { data: session, error } = await db
-    .from('cart_sessions')
-    .insert({ fb_user_id: psid, product_id: productId, quantity: 1 })
-    .select('token')
-    .single()
-
-  if (error || !session) {
-    console.error('Failed to create cart session:', error)
-    return
-  }
-
-  await sendMessage(psid, buildCheckoutLinkMessage(product, session.token, 1))
+  await sendMessage(psid, buildCartLinkMessage(product, psid))
 }

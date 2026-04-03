@@ -4,6 +4,7 @@ import './globals.css'
 import Navbar from '../src/components/Navbar'
 import Footer from '../src/components/Footer'
 import ContactCTA from '../src/components/ContactCTA'
+import { CartProvider } from '../src/contexts/CartContext'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -38,6 +39,10 @@ export const metadata: Metadata = {
     siteName: 'CT Tân Vy Phát',
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
 }
 
 export default function RootLayout({
@@ -48,10 +53,12 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${geistSans.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased bg-[#f8fafc] text-[#1e293b]">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <ContactCTA />
+        <CartProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <ContactCTA />
+        </CartProvider>
       </body>
     </html>
   )

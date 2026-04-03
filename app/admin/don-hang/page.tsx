@@ -85,7 +85,6 @@ export default async function AdminOrdersPage({
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 border-b border-gray-100">
                   <tr>
-                    <th className="text-left px-4 py-3 text-gray-500 font-medium">Sản phẩm</th>
                     <th className="text-left px-4 py-3 text-gray-500 font-medium">Khách hàng</th>
                     <th className="text-left px-4 py-3 text-gray-500 font-medium">SĐT</th>
                     <th className="text-left px-4 py-3 text-gray-500 font-medium">Tổng tiền</th>
@@ -99,13 +98,12 @@ export default async function AdminOrdersPage({
                     const s = STATUS_LABELS[order.status as string] ?? { label: order.status as string, color: 'bg-gray-100 text-gray-600' }
                     return (
                       <tr key={order.id as string} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 font-medium text-gray-900 max-w-[180px] truncate">
-                          {order.product_name as string}
-                        </td>
                         <td className="px-4 py-3 text-gray-700">{order.customer_name as string}</td>
                         <td className="px-4 py-3 text-gray-600">{order.customer_phone as string}</td>
                         <td className="px-4 py-3 text-gray-900 font-medium">
-                          {((order.product_price as number) * (order.quantity as number)).toLocaleString('vi-VN')}đ
+                          {Number(order.total_price ?? 0) > 0
+                            ? Number(order.total_price).toLocaleString('vi-VN') + 'đ'
+                            : 'Liên hệ'}
                         </td>
                         <td className="px-4 py-3">
                           <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${s.color}`}>

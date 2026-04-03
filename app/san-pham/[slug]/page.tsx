@@ -9,6 +9,7 @@ import {
 } from '../../../src/lib/supabase/server'
 import { store } from '../../../src/data/store'
 import ProductCard from '../../../src/components/ProductCard'
+import AddToCartButton from '../../../src/components/AddToCartButton'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tanvyphat.com'
 
@@ -161,7 +162,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
                   <p className="text-amber-700 font-semibold text-sm">Giá bán:</p>
                   <p className="text-amber-600 font-bold text-xl">
-                    Liên hệ để được báo giá sỉ tốt nhất
+                    {product.price != null
+                      ? product.price.toLocaleString('vi-VN') + 'đ'
+                      : 'Liên hệ để được báo giá sỉ tốt nhất'}
                   </p>
                 </div>
 
@@ -170,25 +173,29 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 </p>
 
                 <div className="flex flex-col gap-3">
-                  <a
-                    href={`tel:${store.phone}`}
-                    className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3.5 rounded-xl text-base transition-colors shadow-md"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
+                  {product.price != null ? (
+                    <AddToCartButton product={{ id: product.id, slug: product.slug, name: product.name, images: product.images, price: product.price }} />
+                  ) : (
+                    <a
+                      href={`tel:${store.phone}`}
+                      className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3.5 rounded-xl text-base transition-colors shadow-md"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                    Gọi điện: {store.phoneDisplay}
-                  </a>
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                        />
+                      </svg>
+                      Gọi điện: {store.phoneDisplay}
+                    </a>
+                  )}
                   <div className="grid grid-cols-2 gap-3">
                     <a
                       href={store.zalo}

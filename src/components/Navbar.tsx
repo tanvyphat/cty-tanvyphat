@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { store } from '../data/store'
+import CartBadge from './CartBadge'
 
 const navLinks = [
   { href: '/', label: 'Trang chủ' },
@@ -20,13 +21,10 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo / Brand */}
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-white font-bold text-lg hover:text-amber-300 transition-colors"
-          >
-            <span className="text-amber-400 text-2xl">📋</span>
+          <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+            <img src="/logo.png" alt="Tân Vy Phát" className="h-10 w-10 rounded-full object-cover bg-white p-0.5" />
             <div className="flex flex-col leading-tight">
-              <span className="text-base font-extrabold tracking-wide">{store.name}</span>
+              <span className="text-base font-extrabold tracking-wide text-white">{store.name}</span>
               <span className="text-xs text-blue-200 font-normal hidden sm:block">
                 Giấy In & Văn Phòng Phẩm
               </span>
@@ -48,6 +46,7 @@ export default function Navbar() {
 
           {/* Hotline Button */}
           <div className="hidden md:flex items-center gap-3">
+            <CartBadge />
             <a
               href={`tel:${store.phone}`}
               className="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-semibold px-4 py-2 rounded-full text-sm transition-colors shadow-md"
@@ -72,6 +71,7 @@ export default function Navbar() {
 
           {/* Mobile: Phone + Hamburger */}
           <div className="flex md:hidden items-center gap-2">
+            <CartBadge />
             <a
               href={`tel:${store.phone}`}
               className="text-amber-400 hover:text-amber-300 p-2"

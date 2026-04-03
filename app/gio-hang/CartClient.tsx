@@ -1,0 +1,247 @@
+'use client'
+
+import { useEffect, useRef, useState, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import { useCart, useFbUserId, CartItem } from '../../src/hooks/useCart'
+import FeaturedCarousel from '../../src/components/FeaturedCarousel'
+import type { ProductRow, CategoryRow } from '../../src/lib/supabase/server'
+
+interface Props {
+  categoryMap: Record<string, CategoryRow>
+}
+
+function CartPageContent({ categoryMap }: Props) {
+  const { items, totalItems, totalPrice, addItem, removeItem, updateQuantity } = useCart()
+  const { setFbUserId } = useFbUserId()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const addHandled = useRef(false)
+  const [relatedProducts, setRelatedProducts] = useState<ProductRow[]>([])
+
+  // Fetch related products when cart items change
+  useEffect(() => {
+    if (items.length === 0) {
+      setRelatedProducts([])
+      return
+    }
+    const ids = items.map((i) => i.productId).join(',')
+    fetch(`/api/products/related?ids=${ids}`)
+      .then((r) => (r.ok ? r.json() : { products: [] }))
+      .then((data) => setRelatedProducts(data.products ?? []))
+      .catch(() => {})
+  }, [items.map((i) => i.productId).join(',')])  // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (addHandled.current) return
+    addHandled.current = true
+
+    const addId = searchParams.get('add')
+    const fbid = searchParams.get('fbid')
+
+    if (fbid) setFbUserId(fbid)
+
+    if (addId) {
+      fetch(`/api/products/${addId}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((product) => {
+          if (product) {
+            addItem({
+              productId: product.id,
+              slug: product.slug,
+              name: product.name,
+              image: product.images?.[0] ?? null,
+              price: product.price,
+            })
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          router.replace('/gio-hang', { scroll: false })
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const carousel = relatedProducts.length > 0 && (
+    <section className="mt-16 border-t border-gray-100 pt-10">
+      <h2 className="text-lg font-bold text-gray-900 mb-6">Có thể bạn cũng thích</h2>
+      <FeaturedCarousel products={relatedProducts} categoryMap={categoryMap} />
+    </section>
+  )
+
+  if (totalItems === 0) {
+    return (
+      <main className="min-h-screen bg-white py-10 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-2xl font-bold text-gray-900 mb-8">GIỎ HÀNG CỦA BẠN</h1>
+          <div className="text-center py-20 border border-gray-200 rounded-lg mb-8">
+            <div className="text-6xl mb-4">🛒</div>
+            <p className="text-gray-500 mb-6">Giỏ hàng đang trống</p>
+            <Link
+              href="/san-pham"
+              className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+            >
+              Tiếp Tục Mua Sắm
+            </Link>
+          </div>
+          {carousel}
+        </div>
+      </main>
+    )
+  }
+
+  return (
+    <main className="min-h-screen bg-white py-10 px-4">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-2xl font-bold text-gray-900 mb-8">GIỎ HÀNG CỦA BẠN</h1>
+
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
+          {/* LEFT: Cart table */}
+          <div className="flex-1 min-w-0">
+            <div className="hidden sm:grid grid-cols-[2fr_100px_140px_100px_36px] gap-4 text-xs font-semibold text-gray-500 uppercase tracking-wide border-b border-gray-200 pb-3 mb-2 px-2">
+              <span>Sản phẩm</span>
+              <span className="text-right">Giá</span>
+              <span className="text-center">Số lượng</span>
+              <span className="text-right">Tổng</span>
+              <span />
+            </div>
+
+            <div className="divide-y divide-gray-100">
+              {items.map((item: CartItem) => (
+                <div
+                  key={item.productId}
+                  className="grid grid-cols-[auto_1fr] sm:grid-cols-[2fr_100px_140px_100px_36px] gap-4 items-center py-5 px-2"
+                >
+                  <div className="col-span-2 sm:col-span-1 flex items-center gap-4">
+                    <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-gray-50 border border-gray-100">
+                      {item.image ? (
+                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-2xl">📦</span>
+                        </div>
+                      )}
+                    </div>
+                    <Link
+                      href={`/san-pham/${item.slug}`}
+                      className="text-sm font-medium text-gray-900 hover:text-blue-600 line-clamp-2 transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  </div>
+
+                  <div className="hidden sm:block text-right text-sm text-gray-700">
+                    {item.price ? item.price.toLocaleString('vi-VN') + 'đ' : 'Liên hệ'}
+                  </div>
+
+                  <div className="flex items-center justify-center">
+                    <div className="flex items-center border border-gray-300 rounded-full overflow-hidden">
+                      <button
+                        onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                        className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 disabled:opacity-30 transition-colors text-lg leading-none"
+                      >
+                        −
+                      </button>
+                      <span className="w-10 text-center text-sm font-medium">{item.quantity}</span>
+                      <button
+                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                        className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors text-lg leading-none"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="hidden sm:block text-right text-sm font-semibold text-gray-900">
+                    {item.price
+                      ? (item.price * item.quantity).toLocaleString('vi-VN') + 'đ'
+                      : 'Liên hệ'}
+                  </div>
+
+                  <div className="flex justify-end sm:justify-center">
+                    <button
+                      onClick={() => removeItem(item.productId)}
+                      className="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors"
+                      aria-label="Xoá"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6">
+              <textarea
+                placeholder="Ghi chú giao hàng"
+                rows={3}
+                className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-y"
+              />
+            </div>
+          </div>
+
+          {/* RIGHT: Order summary */}
+          <div className="w-full lg:w-72 flex-shrink-0">
+            <div className="border border-gray-200 rounded-lg p-6">
+              <h2 className="text-base font-bold text-gray-900 uppercase tracking-wide border-b border-gray-200 pb-3 mb-4">
+                Tổng số tiền
+              </h2>
+
+              <div className="flex justify-between text-sm text-gray-700 mb-4">
+                <span>Tổng số tiền:</span>
+                <span className="font-semibold text-gray-900">
+                  {totalPrice > 0 ? totalPrice.toLocaleString('vi-VN') + 'đ' : 'Liên hệ'}
+                </span>
+              </div>
+
+              <div className="mb-4">
+                <input
+                  type="text"
+                  placeholder="Mã khuyến mãi"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex justify-between text-sm font-bold text-gray-900 border-t border-gray-200 pt-4 mb-6">
+                <span>TỔNG</span>
+                <span>{totalPrice > 0 ? totalPrice.toLocaleString('vi-VN') + 'đ' : 'Liên hệ'}</span>
+              </div>
+
+              <Link
+                href="/thanh-toan"
+                className="block w-full text-center border-2 border-gray-900 text-gray-900 font-semibold py-3 rounded-lg hover:bg-gray-900 hover:text-white transition-colors text-sm mb-3"
+              >
+                Đi Đến Trang Thanh Toán
+              </Link>
+
+              <Link
+                href="/san-pham"
+                className="block w-full text-center bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-lg transition-colors text-sm"
+              >
+                Tiếp Tục Mua Sắm
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {carousel}
+      </div>
+    </main>
+  )
+}
+
+export default function CartClient({ categoryMap }: Props) {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-white flex items-center justify-center">
+          <p className="text-gray-400 text-sm">Đang tải giỏ hàng...</p>
+        </main>
+      }
+    >
+      <CartPageContent categoryMap={categoryMap} />
+    </Suspense>
+  )
+}

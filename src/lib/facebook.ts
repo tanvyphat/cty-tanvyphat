@@ -118,13 +118,11 @@ export function buildProductReplyMessage(product: {
   }
 }
 
-export function buildCheckoutLinkMessage(
-  product: { name: string; price: number | null },
-  token: string,
-  quantity: number = 1
+export function buildCartLinkMessage(
+  product: { id: number; name: string; price: number | null },
+  psid: string
 ) {
   const price = product.price ? product.price.toLocaleString('vi-VN') + 'đ' : 'Liên hệ'
-  const total = product.price ? (product.price * quantity).toLocaleString('vi-VN') + 'đ' : 'Liên hệ'
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tanvyphat.com'
   return {
     message: {
@@ -132,12 +130,12 @@ export function buildCheckoutLinkMessage(
         type: 'template',
         payload: {
           template_type: 'button',
-          text: `✅ Đã thêm vào giỏ hàng!\n\n🛍️ ${product.name} x ${quantity}\n💰 Giá: ${price}\n💵 Tổng: ${total}\n\nNhấn để điền thông tin giao hàng:`,
+          text: `✅ Đã thêm vào giỏ hàng!\n\n🛍️ ${product.name}\n💰 Giá: ${price}\n\nNhấn để xem giỏ hàng và đặt hàng:`,
           buttons: [
             {
               type: 'web_url',
-              url: `${siteUrl}/dat-hang/${token}`,
-              title: 'Đặt hàng ngay',
+              url: `${siteUrl}/gio-hang?add=${product.id}&fbid=${psid}`,
+              title: 'Xem giỏ hàng',
               webview_height_ratio: 'full',
             },
           ],

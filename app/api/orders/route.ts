@@ -1,65 +1,77 @@
 import { NextRequest } from 'next/server'
 import { getAdminClient } from '@/src/lib/supabase/admin'
 
+interface OrderItem {
+  product_id: number
+  quantity: number
+}
+
 export async function POST(request: NextRequest) {
-  let body: Record<string, string>
+  let body: Record<string, unknown>
   try {
     body = await request.json()
   } catch {
     return Response.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { token, customer_name, customer_phone, customer_address, note } = body
+  const { customer_name, customer_phone, customer_address, note, fb_user_id, items } = body as {
+    customer_name: string
+    customer_phone: string
+    customer_address: string
+    note?: string
+    fb_user_id?: string
+    items: OrderItem[]
+  }
 
-  if (!token || !customer_name || !customer_phone || !customer_address) {
+  if (!customer_name || !customer_phone || !customer_address) {
     return Response.json({ error: 'Thiếu thông tin bắt buộc' }, { status: 400 })
+  }
+
+  if (!Array.isArray(items) || items.length === 0) {
+    return Response.json({ error: 'Giỏ hàng trống' }, { status: 400 })
   }
 
   const db = getAdminClient()
 
-  // Fetch cart session
-  const { data: session } = await db
-    .from('cart_sessions')
-    .select('id, fb_user_id, product_id, quantity, status, expires_at')
-    .eq('token', token)
-    .single()
-
-  if (!session) {
-    return Response.json({ error: 'Không tìm thấy giỏ hàng' }, { status: 404 })
-  }
-
-  if (session.status !== 'pending') {
-    return Response.json({ error: 'Giỏ hàng đã được xử lý' }, { status: 410 })
-  }
-
-  if (new Date(session.expires_at) < new Date()) {
-    return Response.json({ error: 'Liên kết đặt hàng đã hết hạn' }, { status: 410 })
-  }
-
-  // Fetch product for current price/name
-  const { data: product } = await db
+  // Fetch product info for all items
+  const productIds = items.map((i) => i.product_id)
+  const { data: products } = await db
     .from('products')
-    .select('name, price')
-    .eq('id', session.product_id)
-    .single()
+    .select('id, name, price')
+    .in('id', productIds)
 
-  if (!product) {
+  if (!products || products.length === 0) {
     return Response.json({ error: 'Không tìm thấy sản phẩm' }, { status: 404 })
   }
+
+  const productMap = Object.fromEntries(products.map((p) => [p.id, p]))
+
+  // Build order items with resolved product info
+  const resolvedItems = items.map((item) => {
+    const product = productMap[item.product_id]
+    return {
+      product_id: item.product_id,
+      product_name: product?.name ?? 'Sản phẩm không xác định',
+      product_price: product?.price ?? 0,
+      quantity: item.quantity,
+    }
+  })
+
+  const total_price = resolvedItems.reduce(
+    (sum, i) => sum + Number(i.product_price) * i.quantity,
+    0
+  )
 
   // Create order
   const { data: order, error: orderError } = await db
     .from('orders')
     .insert({
-      cart_session_id: session.id,
-      product_id: session.product_id,
-      product_name: product.name,
-      product_price: product.price ?? 0,
-      quantity: session.quantity,
-      customer_name,
-      customer_phone,
-      customer_address,
-      note: note ?? null,
+      customer_name: customer_name.trim(),
+      customer_phone: customer_phone.trim(),
+      customer_address: customer_address.trim(),
+      note: note?.trim() || null,
+      total_price,
+      status: 'moi',
     })
     .select('id')
     .single()
@@ -69,20 +81,26 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'Không thể tạo đơn hàng' }, { status: 500 })
   }
 
-  // Mark cart session as ordered
-  await db
-    .from('cart_sessions')
-    .update({ status: 'ordered' })
-    .eq('id', session.id)
+  // Insert order items
+  const { error: itemsError } = await db.from('order_items').insert(
+    resolvedItems.map((i) => ({ order_id: order.id, ...i }))
+  )
 
-  // Upsert fb_customers with latest info
-  await db.from('fb_customers').upsert({
-    fb_user_id: session.fb_user_id,
-    customer_name,
-    customer_phone,
-    customer_address,
-    updated_at: new Date().toISOString(),
-  })
+  if (itemsError) {
+    console.error('Create order_items error:', itemsError)
+    return Response.json({ error: 'Không thể lưu sản phẩm đơn hàng' }, { status: 500 })
+  }
+
+  // Save customer info for Facebook users (auto-fill next time)
+  if (fb_user_id) {
+    await db.from('fb_customers').upsert({
+      fb_user_id,
+      customer_name: customer_name.trim(),
+      customer_phone: customer_phone.trim(),
+      customer_address: customer_address.trim(),
+      updated_at: new Date().toISOString(),
+    })
+  }
 
   return Response.json({ success: true, order_id: order.id })
 }

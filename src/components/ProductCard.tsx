@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { ProductRow, CategoryRow } from '../lib/supabase/server'
 import { store } from '../data/store'
+import AddToCartButton from './AddToCartButton'
 
 interface ProductCardProps {
   product: ProductRow
@@ -9,6 +10,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, category }: ProductCardProps) {
   const hasImage = product.images.length > 0
+  const hasPrice = product.price != null
 
   return (
     <div className="group flex flex-col">
@@ -42,7 +44,9 @@ export default function ProductCard({ product, category }: ProductCardProps) {
       <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-2 flex-1">
         {product.description}
       </p>
-      <p className="text-amber-600 font-semibold text-xs mb-3">Liên hệ báo giá</p>
+      <p className="text-amber-600 font-semibold text-xs mb-3">
+        {hasPrice ? product.price!.toLocaleString('vi-VN') + 'đ' : 'Liên hệ báo giá'}
+      </p>
 
       {/* Actions */}
       <div className="flex gap-2">
@@ -52,12 +56,21 @@ export default function ProductCard({ product, category }: ProductCardProps) {
         >
           Xem chi tiết
         </Link>
-        <a
-          href={`tel:${store.phone}`}
-          className="flex-1 text-center text-xs border border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white font-medium py-1.5 px-3 rounded-lg transition-colors"
-        >
-          Đặt hàng
-        </a>
+        {hasPrice ? (
+          <div className="flex-1">
+            <AddToCartButton
+              product={{ id: product.id, slug: product.slug, name: product.name, images: product.images, price: product.price }}
+              fullWidth
+            />
+          </div>
+        ) : (
+          <a
+            href={`tel:${store.phone}`}
+            className="flex-1 text-center text-xs border border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white font-medium py-1.5 px-3 rounded-lg transition-colors"
+          >
+            Đặt hàng
+          </a>
+        )}
       </div>
     </div>
   )

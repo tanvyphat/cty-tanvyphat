@@ -24,9 +24,15 @@ export default async function AdminOrderDetailPage({
 
   const { id } = await params
   const db = getAdminClient()
-  const { data: order } = await db.from('orders').select('*').eq('id', id).single()
+  const { data: order } = await db
+    .from('orders')
+    .select('*, order_items(*)')
+    .eq('id', id)
+    .single()
 
   if (!order) notFound()
+
+  const orderItems = (order.order_items as Array<Record<string, unknown>>) ?? []
 
   const s = STATUS_LABELS[order.status] ?? { label: order.status, color: 'bg-gray-100 text-gray-600' }
 
@@ -55,19 +61,40 @@ export default async function AdminOrderDetailPage({
           <p className="text-xs text-gray-400 font-mono">#{order.id}</p>
         </div>
 
-        {/* Product */}
+        {/* Products */}
         <div className="bg-white rounded-2xl shadow-sm p-4">
           <h2 className="font-semibold text-gray-700 text-sm mb-3">Sản phẩm</h2>
-          <div className="space-y-1 text-sm">
-            <p className="font-medium text-gray-900">{order.product_name}</p>
-            <p className="text-gray-500">Số lượng: {order.quantity}</p>
-            <p className="text-gray-500">
-              Đơn giá: {Number(order.product_price).toLocaleString('vi-VN')}đ
-            </p>
-            <p className="font-semibold text-blue-600">
-              Tổng: {(Number(order.product_price) * order.quantity).toLocaleString('vi-VN')}đ
-            </p>
-          </div>
+          {orderItems.length === 0 ? (
+            <p className="text-gray-400 text-sm">Không có sản phẩm</p>
+          ) : (
+            <div className="space-y-3">
+              {orderItems.map((item) => (
+                <div key={item.id as number} className="flex justify-between items-start text-sm border-b border-gray-50 pb-2 last:border-0 last:pb-0">
+                  <div>
+                    <p className="font-medium text-gray-900">{item.product_name as string}</p>
+                    <p className="text-gray-500 text-xs">
+                      {Number(item.product_price) > 0
+                        ? Number(item.product_price).toLocaleString('vi-VN') + 'đ'
+                        : 'Liên hệ'} × {item.quantity as number}
+                    </p>
+                  </div>
+                  <p className="font-semibold text-gray-800 text-xs">
+                    {Number(item.product_price) > 0
+                      ? (Number(item.product_price) * (item.quantity as number)).toLocaleString('vi-VN') + 'đ'
+                      : '—'}
+                  </p>
+                </div>
+              ))}
+              <div className="flex justify-between items-center pt-2">
+                <span className="text-sm font-semibold text-gray-700">Tổng cộng</span>
+                <span className="font-bold text-blue-600">
+                  {Number(order.total_price) > 0
+                    ? Number(order.total_price).toLocaleString('vi-VN') + 'đ'
+                    : 'Liên hệ'}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Customer */}
