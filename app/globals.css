@@ -40,6 +40,30 @@ html {
   transform: translateY(0);
 }
 
+/* Category strip scrollbar — hidden by default, fades in when scrolling */
+.cat-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s;
+}
+.cat-scroll::-webkit-scrollbar {
+  height: 3px;
+}
+.cat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.cat-scroll::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 2px;
+  transition: background-color 0.3s;
+}
+.cat-scroll.is-scrolling {
+  scrollbar-color: rgba(107, 114, 128, 0.45) transparent;
+}
+.cat-scroll.is-scrolling::-webkit-scrollbar-thumb {
+  background-color: rgba(107, 114, 128, 0.45);
+}
+
 /* Line clamp utility */
 .line-clamp-2 {
   display: -webkit-box;

@@ -1,6 +1,7 @@
 'use client'
 
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
+import { usePathname } from 'next/navigation'
 import { useCallback, useState, useTransition } from 'react'
 import type { CategoryRow } from '../lib/supabase/server'
 
@@ -34,7 +35,7 @@ export default function ProductFilter({
 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
-  const [, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [expanded, setExpanded] = useState<Set<string>>(
     () => new Set(['size', 'weight', 'brand', 'type'])
@@ -101,7 +102,7 @@ export default function ProductFilter({
   if (selectedBranch === 'all') return null
 
   const filterContent = (
-    <div>
+    <div className={isPending ? 'pointer-events-none' : ''}>
       <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Bộ lọc</p>
 
       {selectedBranch === 'giay-in' && (

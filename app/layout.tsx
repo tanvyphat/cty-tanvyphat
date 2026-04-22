@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
+import NextTopLoader from 'nextjs-toploader'
 import Navbar from '../src/components/Navbar'
 import Footer from '../src/components/Footer'
 import ContactCTA from '../src/components/ContactCTA'
@@ -53,6 +54,7 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${geistSans.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased bg-[#f8fafc] text-[#1e293b]">
+        <NextTopLoader color="#1a56db" showSpinner={false} />
         <CartProvider>
           <Navbar />
           <main className="flex-1">{children}</main>

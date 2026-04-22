@@ -34,7 +34,7 @@ export default function ProductCard({ product, category }: ProductCardProps) {
           </div>
         )}
         {category && (
-          <span className="absolute top-2 left-2 bg-black/40 backdrop-blur-sm text-white text-xs font-medium px-2 py-0.5 rounded-full">
+          <span className="absolute top-2 right-2 bg-black/40 backdrop-blur-sm text-white text-xs font-medium px-2 py-0.5 rounded-full">
             {category.name}
           </span>
         )}

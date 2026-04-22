@@ -1,7 +1,8 @@
 'use client'
 
-import { useRouter, usePathname } from 'next/navigation'
-import { useCallback, useTransition } from 'react'
+import { useRouter } from 'nextjs-toploader/app'
+import { usePathname } from 'next/navigation'
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
 import type { CategoryRow } from '../lib/supabase/server'
 
 type Props = {
@@ -25,7 +26,25 @@ export default function CategoryStrip({
 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
-  const [, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [scrolling, setScrolling] = useState(false)
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(null)
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+    const onScroll = () => {
+      setScrolling(true)
+      if (timerRef.current) clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(() => setScrolling(false), 1000)
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      el.removeEventListener('scroll', onScroll)
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [])
 
   const go = useCallback(
     (categorySlug: string) => {
@@ -48,22 +67,25 @@ export default function CategoryStrip({
     : categories.filter((cat) => cat.branch_slug === selectedBranch)
 
   return (
-    <div className="bg-white rounded-2xl shadow-md -mt-8 relative z-10 w-fit mx-auto">
-      <div className="flex items-center gap-1 px-4 py-4">
+    <div className="bg-white rounded-2xl shadow-md -mt-8 relative z-10 mx-4 sm:mx-6 lg:w-fit lg:mx-auto">
+      <div
+        ref={scrollRef}
+        className={`flex items-center gap-1 px-4 py-4 overflow-x-auto cat-scroll${scrolling ? ' is-scrolling' : ''}${isPending ? ' pointer-events-none' : ''}`}
+      >
         {visibleCategories.map((cat) => {
           const isSelected = selectedCategory === cat.slug
           return (
             <button
               key={cat.slug}
               onClick={() => go(cat.slug)}
-              className={`flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl min-w-[72px] transition-colors ${
+              className={`flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl w-[72px] shrink-0 transition-colors ${
                 isSelected
                   ? 'bg-[#dce8ff] text-[#1a56db]'
                   : 'bg-[#f0f4ff] text-gray-700 hover:bg-[#dce8ff] hover:text-[#1a56db]'
               }`}
             >
               <span className="text-2xl leading-none">{cat.icon}</span>
-              <span className="text-xs font-medium text-center leading-tight whitespace-nowrap">
+              <span className="text-xs font-medium text-center leading-tight w-full truncate">
                 {cat.name}
               </span>
             </button>

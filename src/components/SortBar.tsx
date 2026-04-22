@@ -1,6 +1,7 @@
 'use client'
 
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
+import { usePathname } from 'next/navigation'
 import { useCallback, useTransition } from 'react'
 
 type Props = {
@@ -35,7 +36,7 @@ export default function SortBar({
 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
-  const [, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
 
   const navigate = useCallback(
     (sort: string, dir: string) => {
@@ -56,7 +57,7 @@ export default function SortBar({
 
   return (
     <div className="flex items-center justify-between gap-3 flex-wrap">
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className={`flex items-center gap-2 flex-wrap${isPending ? ' pointer-events-none' : ''}`}>
         <span className="text-sm text-gray-500 font-medium">Sắp xếp:</span>
         {SORT_OPTIONS.map((opt) => {
           const isActive = sortBy === opt.sort && sortDir === opt.dir

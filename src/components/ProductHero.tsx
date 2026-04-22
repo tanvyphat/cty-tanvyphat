@@ -1,6 +1,7 @@
 'use client'
 
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
+import { usePathname } from 'next/navigation'
 import { useCallback, useRef, useTransition } from 'react'
 import type { BranchRow } from '../lib/supabase/server'
 
@@ -16,11 +17,13 @@ type Props = {
   selectedWeights: string[]
 }
 
-const BRANCH_ICONS: Record<string, React.ReactNode> = {
-  'giay-in': <span>📄</span>,
-  'van-phong-pham': <span>📋</span>,
-  'hang-thai-lan': (
-    <span className="inline-flex items-center justify-center bg-white/20 text-white text-[10px] font-bold w-5 h-5 rounded">
+const BRANCH_ICONS: Record<string, (selected: boolean) => React.ReactNode> = {
+  'giay-in': () => <span>📄</span>,
+  'van-phong-pham': () => <span>📋</span>,
+  'hang-thai-lan': (selected) => (
+    <span className={`inline-flex items-center justify-center text-[10px] font-bold w-5 h-5 rounded ${
+      selected ? 'bg-[#1a56db]/15 text-[#1a56db]' : 'bg-white/20 text-white'
+    }`}>
       TH
     </span>
   ),
@@ -39,7 +42,7 @@ export default function ProductHero({
 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
-  const [, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
   const inputRef = useRef<HTMLInputElement>(null)
 
   const buildUrl = useCallback(
@@ -99,7 +102,7 @@ export default function ProductHero({
         </h1>
 
         {/* Branch tabs */}
-        <div className="flex justify-center gap-2 mb-7 flex-wrap">
+        <div className={`flex justify-center gap-2 mb-7 flex-wrap${isPending ? ' pointer-events-none' : ''}`}>
           <button
             onClick={() => handleBranchClick('all')}
             className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
@@ -123,7 +126,7 @@ export default function ProductHero({
                     : 'border-white/40 text-white hover:border-white/70'
                 }`}
               >
-                {BRANCH_ICONS[b.slug] ?? <span>{b.icon}</span>}
+                {BRANCH_ICONS[b.slug]?.(isSelected) ?? <span>{b.icon}</span>}
                 {b.name}
               </button>
             )
