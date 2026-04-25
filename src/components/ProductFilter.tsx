@@ -6,7 +6,7 @@ import { useCallback, useState, useTransition } from 'react'
 import type { CategoryRow } from '../lib/supabase/server'
 
 const SIZES = ['A4', 'A3', 'A5', 'A3L']
-const WEIGHTS = ['70gsm', '75gsm', '80gsm', '100gsm']
+const WEIGHTS = ['70gsm', '75gsm', '80gsm', '100+ gsm']
 
 type Props = {
   categories: CategoryRow[]

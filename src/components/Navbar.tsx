@@ -25,8 +25,8 @@ export default function Navbar() {
             <img src="/logo.png" alt="Tân Vy Phát" className="h-10 w-10 rounded-full object-cover bg-white p-0.5" />
             <div className="flex flex-col leading-tight">
               <span className="text-base font-extrabold tracking-wide text-white">{store.name}</span>
-              <span className="text-xs text-blue-200 font-normal hidden sm:block">
-                Giấy In & Văn Phòng Phẩm
+              <span className="text-xs text-blue-200 font-normal hidden sm:block leading-tight">
+                Giấy In, Văn Phòng Phẩm Và<br />Hàng Tiêu Dùng Thái Lan
               </span>
             </div>
           </Link>

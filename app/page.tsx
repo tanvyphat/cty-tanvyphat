@@ -40,6 +40,8 @@ export default async function Home() {
   const [allProducts, categories] = await Promise.all([getProducts(), getCategories()])
   const featuredProducts = allProducts.filter((p) => p.featured)
   const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c]))
+  const vppSlugs = new Set(categories.filter((c) => c.branch_slug === 'van-phong-pham').map((c) => c.slug))
+  const vppProductImage = allProducts.find((p) => vppSlugs.has(p.category) && p.images?.length > 0)?.images[0]
 
   return (
     <>
@@ -57,7 +59,7 @@ export default async function Home() {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-amber-500 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-6 shadow-md">
+            <div className="inline-flex items-center gap-2 bg-red-600 text-gray-100 text-sm font-semibold px-4 py-1.5 rounded-full mb-6 shadow-md">
               <span>🏪</span>
               <span>Q.12, TPHCM · Ship toàn quốc</span>
             </div>
@@ -133,7 +135,7 @@ export default async function Home() {
               <strong className="text-[#1a3a6b] font-semibold">Tân Vy Phát</strong> là đơn vị chuyên phân phối{' '}
               <strong className="text-[#1a3a6b] font-semibold">giấy in, văn phòng phẩm</strong> và{' '}
               <strong className="text-[#1a3a6b] font-semibold">hàng tiêu dùng Thái Lan</strong> giá sỉ tại Q.12, TPHCM.
-              Với hơn 5 năm kinh nghiệm, chúng tôi nhập hàng trực tiếp từ nhà máy sản xuất trong nước
+              Với hơn 17 năm kinh nghiệm, chúng tôi nhập hàng trực tiếp từ nhà máy sản xuất trong nước
               và nhập khẩu chính ngạch, đảm bảo hàng <strong className="text-[#1a3a6b] font-semibold">chính hãng – đầy đủ chứng từ VAT</strong>.
             </p>
             <p className="text-gray-500 text-sm leading-relaxed">
@@ -142,9 +144,9 @@ export default async function Home() {
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-8">
               {[
-                { value: '718+', label: 'Khách hàng' },
+                { value: '5868+', label: 'Khách hàng' },
                 { value: 'Toàn quốc', label: 'Giao hàng' },
-                { value: '5+', label: 'Năm kinh nghiệm' },
+                { value: '17+', label: 'Năm kinh nghiệm' },
                 { value: 'Q.12 HCM', label: 'Địa chỉ kho' },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
@@ -192,7 +194,7 @@ export default async function Home() {
                 <ScrollReveal className="w-full lg:w-[45%] shrink-0">
                   <div className="overflow-hidden rounded-2xl">
                     <img
-                      src="/branch-van-phong-pham.jpg"
+                      src={vppProductImage ?? '/branch-van-phong-pham.jpg'}
                       alt="Văn Phòng Phẩm"
                       className="w-full h-72 md:h-96 object-cover hover:scale-105 transition-transform duration-700"
                     />
@@ -204,7 +206,7 @@ export default async function Home() {
                     [ Dòng sản phẩm 01 ]
                   </p>
                   <h2 className="text-3xl md:text-4xl font-extrabold text-[#1a3a6b] leading-tight mb-4">
-                    Giấy In, Văn Phòng Phẩm<br />
+                    Văn Phòng Phẩm<br />
                     <span className="text-[#1a56db]">Giá Sỉ Tận Gốc</span>
                   </h2>
                   <p className="text-gray-500 text-base leading-relaxed mb-6">
@@ -286,6 +288,65 @@ export default async function Home() {
                   <Link
                     href="/san-pham?branch=hang-thai-lan"
                     className="inline-flex items-center gap-2 border-2 border-[#991b1b] text-[#991b1b] hover:bg-[#991b1b] hover:text-white font-semibold px-7 py-3 rounded-full transition-all duration-200 text-sm tracking-wide"
+                  >
+                    XEM SẢN PHẨM
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </ScrollReveal>
+              </div>
+            </div>
+          </section>
+        )
+      })()}
+
+      {/* Nhánh 3: Giấy In — ảnh trái, text phải */}
+      {(() => {
+        const giayIn = categories.filter((c) => c.branch_slug === 'giay-in')
+        return (
+          <section className="py-16 bg-white overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+                {/* Ảnh */}
+                <ScrollReveal className="w-full lg:w-[45%] shrink-0">
+                  <div className="overflow-hidden rounded-2xl">
+                    <img
+                      src="/branch-van-phong-pham.jpg"
+                      alt="Giấy In"
+                      className="w-full h-72 md:h-96 object-cover hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
+                </ScrollReveal>
+                {/* Nội dung */}
+                <ScrollReveal className="w-full lg:w-[55%]" delay={150}>
+                  <p className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase mb-4">
+                    [ Dòng sản phẩm 03 ]
+                  </p>
+                  <h2 className="text-3xl md:text-4xl font-extrabold text-[#14532d] leading-tight mb-4">
+                    Giấy In<br />
+                    <span className="text-[#16a34a]">Nhập Thẳng Từ Nhà Máy</span>
+                  </h2>
+                  <p className="text-gray-500 text-base leading-relaxed mb-6">
+                    Giấy in A4 các hãng Supreme, Double A, Paper One, bìa Thái Gold 160gsm,
+                    decal và nhựa ép dẻo. Hàng sẵn kho số lượng lớn, xuất hoá đơn VAT đầy đủ.
+                  </p>
+                  {/* Danh mục */}
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {giayIn.map((cat) => (
+                      <Link
+                        key={cat.slug}
+                        href={`/san-pham?category=${cat.slug}`}
+                        className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-[#16a34a] border border-gray-200 hover:border-[#16a34a] px-3 py-1.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
+                      >
+                        <span>{cat.icon}</span>
+                        <span>{cat.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                  <Link
+                    href="/san-pham?branch=giay-in"
+                    className="inline-flex items-center gap-2 border-2 border-[#14532d] text-[#14532d] hover:bg-[#14532d] hover:text-white font-semibold px-7 py-3 rounded-full transition-all duration-200 text-sm tracking-wide"
                   >
                     XEM SẢN PHẨM
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

@@ -55,6 +55,16 @@ export default function SortBar({
     [router, pathname, selectedBranch, selectedCategory, searchText, perPage, selectedSizes, selectedWeights]
   )
 
+  if (selectedBranch === 'giay-in' || selectedBranch === 'van-phong-pham' || selectedBranch === 'hang-thai-lan') {
+    return (
+      <div className="flex items-center justify-end">
+        <div className="text-sm text-gray-500">
+          <span className="font-semibold text-gray-900">{count}</span> sản phẩm
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex items-center justify-between gap-3 flex-wrap">
       <div className={`flex items-center gap-2 flex-wrap${isPending ? ' pointer-events-none' : ''}`}>

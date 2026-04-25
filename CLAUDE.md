@@ -116,7 +116,7 @@ import { getAdminClient } from '@/lib/supabase/admin'
 ### Sort mặc định cho Giấy In
 
 Khi `branch=giay-in` và không chọn sort khác, sắp xếp theo **brand priority** (categories.sort_order):
-Supreme (10) → Idea (20) → Delight (30) → Projecta Optima (40) → Double A (50) → Paper One (60) → Quality (70) → Tổng Hợp (999)
+Supreme (10) → Idea (20) → Delight (30) → Projecta Optima (40) → Double A (50) → Paper One (60) → Quality (70) → Bìa Thái Gold (80) → Tổng Hợp (999)
 
 Thứ tự trong mỗi hãng: sort theo tên (A3 → A4 → A5).
 
@@ -137,14 +137,16 @@ Thứ tự trong mỗi hãng: sort theo tên (A3 → A4 → A5).
 
 ### Categories hiện tại
 
-**Giấy In** (branch_id=3):
-`supreme`, `idea`, `delight`, `projecta-optima`, `double-a`, `paper-one`, `quality`, `giay-in-khac`
+**Giấy In** (branch giay-in, theo hãng + sort_order):
+`supreme`(10), `idea`(20), `delight`(30), `projecta-optima`(40), `double-a`(50), `paper-one`(60), `quality`(70), `bia-thai`(80 — Bìa Thái Gold 160gsm từ giay-in/Gold), `giay-in-khac`(999)
 
-**Văn Phòng Phẩm** (branch_id=1, theo hãng):
+**Văn Phòng Phẩm** (branch van-phong-pham, theo hãng):
 `thien-long`, `gold`, `plus`, `double-a-vpp`, `vpp-khac`
 
-**Hàng Thái Lan** (branch_id=2, theo loại SP):
-`bot-giat`, `nuoc-giat`, `nuoc-xa-vai`, `nuoc-rua-chen`, `ve-sinh-nha-cua`, `cham-soc-ca-nhan`, `san-pham-cho-be`, `sap-thom`, `huong-thom`, `thuc-uong`, `thuc-pham-do-uong`
+**Hàng Thái Lan** (branch hang-thai-lan, theo loại SP):
+`nuoc-giat`, `bot-giat`, `nuoc-xa-vai`, `nuoc-rua-chen`, `nuoc-lau-san`, `tay-rua`, `sua-tam`, `kem-danh-rang`, `huong-thom`, `hang-thai-khac`
+
+> **Lưu ý folder mapping:** Thêm sản phẩm mới bằng cách đặt ảnh vào đúng folder trong `../san-pham/[branch]/[subfolder]/` rồi chạy lại `node scripts/upload-and-seed.mjs`. Folder names phân biệt hoa/thường — hang-thai-lan dùng ALL CAPS (BỘT GIẶT, NƯỚC GIẶT…).
 
 ### Order flow
 

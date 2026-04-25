@@ -94,11 +94,11 @@ export default function ProductHero({
   return (
     <div className="bg-gradient-to-br from-[#0d2456] via-[#1440a0] to-[#1a56db] text-white pt-10 pb-16">
       <div className="max-w-3xl mx-auto px-4 text-center">
-        <p className="text-blue-200 text-xs font-semibold tracking-[0.2em] uppercase mb-2">
+        <p className="text-blue-200 text-lg font-semibold tracking-[0.2em] uppercase mb-2">
           TÂN VY PHÁT
         </p>
         <h1 className="text-3xl md:text-4xl font-bold mb-8">
-          Giấy In &amp; Văn Phòng Phẩm Giá Sỉ
+          Giấy In &amp; Văn Phòng Phẩm Giá Sỉ Và Lẻ
         </h1>
 
         {/* Branch tabs */}

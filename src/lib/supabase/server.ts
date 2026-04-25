@@ -144,18 +144,22 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
     query = query.or(sizes.map((s) => `name.ilike.%${s}%`).join(','))
   }
   if (weights && weights.length > 0) {
-    query = query.or(weights.map((w) => `name.ilike.%${w}%`).join(','))
+    // "100+" → match tất cả định lượng >= 100gsm (100, 110, 120, ... 300)
+    const weightPatterns = weights.flatMap((w) =>
+      w === '100+'
+        ? Array.from({ length: 21 }, (_, i) => `name.ilike.%${100 + i * 10}gsm%`)
+        : [`name.ilike.%${w}%`]
+    )
+    query = query.or(weightPatterns.join(','))
   }
 
-  if (sortBy === 'price') {
+  if (branchSlug === 'giay-in' || branchSlug === 'van-phong-pham' || branchSlug === 'hang-thai-lan') {
+    // Fetch theo name trước; sort theo brand priority sẽ xử lý trong JS bên dưới
+    query = query.order('name', { ascending: true })
+  } else if (sortBy === 'price') {
     query = query
       .order('price', { ascending: sortDir === 'asc', nullsFirst: false })
       .order('name', { ascending: true })
-  } else if (branchSlug === 'giay-in') {
-    // Sort by brand priority (categories.sort_order), then by name (size/weight order)
-    query = (query as any)
-      .order('sort_order', { referencedTable: 'categories', ascending: true })
-      .order('name', { ascending: sortDir === 'asc' })
   } else {
     query = query
       .order('featured', { ascending: false })
@@ -167,7 +171,20 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
 
   const { data, error, count } = await query
   if (error) throw new Error(`getProductsFiltered: ${error.message}`)
-  return { data: data ?? [], count: count ?? 0 }
+
+  // Giấy in: sort theo categories.sort_order (brand priority) → name
+  // referencedTable order của Supabase không hoạt động với FK text→slug
+  let result = data ?? []
+  if (branchSlug === 'giay-in' || branchSlug === 'van-phong-pham' || branchSlug === 'hang-thai-lan') {
+    result = [...result].sort((a, b) => {
+      const aOrder = (a as any).categories?.sort_order ?? 9999
+      const bOrder = (b as any).categories?.sort_order ?? 9999
+      if (aOrder !== bOrder) return aOrder - bOrder
+      return a.name.localeCompare(b.name, 'vi')
+    })
+  }
+
+  return { data: result, count: count ?? 0 }
 }
 
 export async function getProductCounts(): Promise<Record<string, number>> {
