@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { store } from '../src/data/store'
 import { getProducts, getCategories } from '../src/lib/supabase/server'
 import FeaturedCarousel from '../src/components/FeaturedCarousel'
+import BannerCarousel from '../src/components/BannerCarousel'
 import ScrollReveal from '../src/components/ScrollReveal'
 
 const uspItems = [
@@ -45,80 +46,11 @@ export default async function Home() {
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#1a3a6b] via-[#1a56db] to-[#1e40af] text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                'radial-gradient(circle at 2px 2px, #ffffff 1px, transparent 0)',
-              backgroundSize: '40px 40px',
-            }}
-          />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-red-600 text-gray-100 text-sm font-semibold px-4 py-1.5 rounded-full mb-6 shadow-md">
-              <span>🏪</span>
-              <span>Q.12, TPHCM · Ship toàn quốc</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight mb-4 drop-shadow-sm">
-              {store.name}
-            </h1>
-            <p className="text-xl sm:text-2xl text-blue-100 font-medium mb-3">{store.tagline}</p>
-            <p className="text-blue-200 text-base mb-8 leading-relaxed">
-              Cung cấp giấy in A4, văn phòng phẩm, bìa Thái, nhựa ép dẻo và hàng tiêu dùng
-              nhập khẩu Thái Lan chính hãng — giá sỉ tốt nhất, hàng sẵn kho, giao nhanh toàn quốc.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/san-pham"
-                className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-bold px-8 py-3.5 rounded-xl text-base transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-              >
-                <span>Xem sản phẩm</span>
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-              <a
-                href={`tel:${store.phone}`}
-                className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold px-8 py-3.5 rounded-xl text-base transition-all duration-200 hover:-translate-y-0.5"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-                Liên hệ ngay
-              </a>
-            </div>
-          </div>
-        </div>
-        {/* Wave divider */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path
-              d="M0 48H1440V20C1200 48 960 4 720 4C480 4 240 48 0 20V48Z"
-              fill="#f8fafc"
-            />
-          </svg>
-        </div>
-      </section>
+      {/* Banner Carousel */}
+      <div className="relative h-[420px] sm:h-[520px] md:h-[600px] overflow-hidden">
+        <BannerCarousel />
+        <Link href="/san-pham" className="absolute inset-0 z-30 cursor-pointer" aria-label="Xem sản phẩm" />
+      </div>
 
       {/* About Mini */}
       <section className="py-12 bg-[#f8fafc]">
@@ -255,7 +187,7 @@ export default async function Home() {
                     <img
                       src="/branch-hang-thai-lan.jpg"
                       alt="Hàng Tiêu Dùng Thái Lan"
-                      className="w-full h-72 md:h-96 object-cover hover:scale-105 transition-transform duration-700"
+                      className="w-full h-auto block hover:scale-105 transition-transform duration-700"
                     />
                   </div>
                 </ScrollReveal>
@@ -403,7 +335,7 @@ export default async function Home() {
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <a
               href={`tel:${store.phone}`}
-              className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-bold px-8 py-3.5 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 bg-red-500 hover:bg-red-400 text-white font-bold px-8 py-3.5 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
             >
               <svg
                 className="w-5 h-5"

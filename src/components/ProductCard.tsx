@@ -69,7 +69,7 @@ export default function ProductCard({ product, category }: ProductCardProps) {
         ) : (
           <a
             href={`tel:${store.phone}`}
-            className="flex-1 text-center text-xs border border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white font-medium py-1.5 px-3 rounded-lg transition-colors"
+            className="flex-1 text-center text-xs border border-red-500 text-red-600 hover:bg-red-500 hover:text-white font-medium py-1.5 px-3 rounded-lg transition-colors"
           >
             Đặt hàng
           </a>

@@ -49,7 +49,7 @@ export default function Navbar() {
             <CartBadge />
             <a
               href={`tel:${store.phone}`}
-              className="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-semibold px-4 py-2 rounded-full text-sm transition-colors shadow-md"
+              className="flex items-center gap-2 bg-red-500 hover:bg-red-400 text-white font-semibold px-4 py-2 rounded-full text-sm transition-colors shadow-md"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -145,7 +145,7 @@ export default function Navbar() {
             ))}
             <a
               href={`tel:${store.phone}`}
-              className="mt-2 flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-semibold px-4 py-2 rounded-full text-sm transition-colors"
+              className="mt-2 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-400 text-white font-semibold px-4 py-2 rounded-full text-sm transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

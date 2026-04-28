@@ -84,7 +84,7 @@ export default function TuyenDungPage() {
                   </div>
                   <a
                     href={`tel:${store.phone}`}
-                    className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-colors whitespace-nowrap"
+                    className="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-colors whitespace-nowrap"
                   >
                     Ứng tuyển ngay
                   </a>
@@ -154,7 +154,7 @@ export default function TuyenDungPage() {
               <p className="text-white font-semibold text-lg mb-2">Liên hệ ngay để hợp tác</p>
               <a
                 href={`tel:${store.phone}`}
-                className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-bold px-8 py-3.5 rounded-xl text-base transition-colors shadow-lg"
+                className="inline-flex items-center gap-2 bg-red-500 hover:bg-red-400 text-white font-bold px-8 py-3.5 rounded-xl text-base transition-colors shadow-lg"
               >
                 📞 {store.phoneDisplay}
               </a>

@@ -130,7 +130,7 @@ export default function TinTucPage() {
                 <div className="flex gap-2 mt-auto">
                   <a
                     href={`tel:${store.phone}`}
-                    className="flex-1 text-center text-xs bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-3 rounded-lg transition-colors"
+                    className="flex-1 text-center text-xs bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-3 rounded-lg transition-colors"
                   >
                     Liên hệ ngay
                   </a>
@@ -170,7 +170,7 @@ export default function TinTucPage() {
             </a>
             <a
               href={`tel:${store.phone}`}
-              className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-red-500 hover:bg-red-400 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
             >
               📞 {store.phoneDisplay}
             </a>

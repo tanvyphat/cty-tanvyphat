@@ -128,7 +128,7 @@ function CartPageContent({ categoryMap }: Props) {
             <p className="text-gray-500 mb-6">Giỏ hàng đang trống</p>
             <Link
               href="/san-pham"
-              className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+              className="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
             >
               Tiếp Tục Mua Sắm
             </Link>
@@ -266,7 +266,7 @@ function CartPageContent({ categoryMap }: Props) {
 
               <Link
                 href="/san-pham"
-                className="block w-full text-center bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-lg transition-colors text-sm"
+                className="block w-full text-center bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition-colors text-sm"
               >
                 Tiếp Tục Mua Sắm
               </Link>

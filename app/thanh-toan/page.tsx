@@ -64,7 +64,7 @@ function CheckoutContent() {
           <p className="text-gray-400 text-xs mb-6">📞 Hotline: 0903 608 768</p>
           <Link
             href="/san-pham"
-            className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors text-sm"
+            className="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors text-sm"
           >
             Tiếp Tục Mua Sắm
           </Link>
@@ -170,7 +170,7 @@ function CheckoutContent() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-amber-300 text-white font-bold py-3.5 rounded-xl text-sm transition-colors shadow-sm"
+              className="w-full bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-bold py-3.5 rounded-xl text-sm transition-colors shadow-sm"
             >
               {loading ? 'Đang xử lý...' : '✅ Xác nhận đặt hàng'}
             </button>

@@ -178,7 +178,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   ) : (
                     <a
                       href={`tel:${store.phone}`}
-                      className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3.5 rounded-xl text-base transition-colors shadow-md"
+                      className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-3.5 rounded-xl text-base transition-colors shadow-md"
                     >
                       <svg
                         className="w-5 h-5"

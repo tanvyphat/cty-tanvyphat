@@ -153,7 +153,7 @@ export default function ProductHero({
           </div>
           <button
             onClick={handleSearch}
-            className="m-1.5 px-6 py-2.5 bg-amber-400 hover:bg-amber-500 text-gray-900 font-semibold text-sm rounded-xl transition-colors whitespace-nowrap"
+            className="m-1.5 px-6 py-2.5 bg-red-400 hover:bg-red-500 text-gray-900 font-semibold text-sm rounded-xl transition-colors whitespace-nowrap"
           >
             Tìm kiếm
           </button>

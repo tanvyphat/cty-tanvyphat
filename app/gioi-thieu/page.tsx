@@ -120,7 +120,7 @@ export default function GioiThieuPage() {
           </p>
           <a
             href={`tel:${store.phone}`}
-            className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-bold px-8 py-3.5 rounded-xl text-base transition-colors shadow-md"
+            className="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold px-8 py-3.5 rounded-xl text-base transition-colors shadow-md"
           >
             <svg
               className="w-5 h-5"
