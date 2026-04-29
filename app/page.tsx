@@ -123,9 +123,9 @@ export default async function Home() {
                 <ScrollReveal className="w-full lg:w-[45%] shrink-0">
                   <div className="overflow-hidden rounded-2xl">
                     <img
-                      src={vppProductImage ?? '/branch-van-phong-pham.jpg'}
+                      src="/branch-van-phong-pham.jpg"
                       alt="Văn Phòng Phẩm"
-                      className="w-full h-72 md:h-96 object-cover hover:scale-105 transition-transform duration-700"
+                      className="w-full h-auto hover:scale-105 transition-transform duration-700"
                     />
                   </div>
                 </ScrollReveal>
@@ -241,9 +241,9 @@ export default async function Home() {
                 <ScrollReveal className="w-full lg:w-[45%] shrink-0">
                   <div className="overflow-hidden rounded-2xl">
                     <img
-                      src="/branch-van-phong-pham.jpg"
+                      src="/branch-giay-in.jpg"
                       alt="Giấy In"
-                      className="w-full h-72 md:h-96 object-cover hover:scale-105 transition-transform duration-700"
+                      className="w-full h-auto hover:scale-105 transition-transform duration-700"
                     />
                   </div>
                 </ScrollReveal>
