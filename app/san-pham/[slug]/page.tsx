@@ -10,6 +10,7 @@ import {
 import { store } from '../../../src/data/store'
 import ProductCard from '../../../src/components/ProductCard'
 import AddToCartButton from '../../../src/components/AddToCartButton'
+import ProductDescription from '../../../src/components/ProductDescription'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tanvyphat.com'
 
@@ -133,20 +134,20 @@ export default async function ProductDetailPage({ params }: PageProps) {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
               {/* Image */}
-              <div className="relative bg-gradient-to-br from-blue-50 to-indigo-100 min-h-72 md:min-h-96 flex items-center justify-center">
+              <div className="relative aspect-square bg-gradient-to-br from-blue-50 to-indigo-100">
                 {hasImage ? (
                   <img
                     src={product.images[0]}
                     alt={product.name}
-                    className="w-full h-full object-cover max-h-96"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="text-center py-12 px-8">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
                     <div className="text-8xl mb-4">{category?.icon ?? '📦'}</div>
                     <p className="text-blue-500 font-medium text-lg">{product.name}</p>
                   </div>
                 )}
-                <div className="absolute top-4 left-4">
+                <div className="absolute top-4 right-4">
                   <span className="bg-[#1a56db] text-white text-sm font-semibold px-3 py-1.5 rounded-full shadow-md">
                     {category?.icon} {category?.name ?? product.category}
                   </span>
@@ -168,9 +169,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   </p>
                 </div>
 
-                <p className="text-gray-600 leading-relaxed text-sm mb-6 flex-1">
-                  {product.description}
-                </p>
+                <div className="flex-1" />
 
                 <div className="flex flex-col gap-3">
                   {product.price != null ? (
@@ -220,6 +219,17 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 </div>
 
                 <p className="text-xs text-gray-400 mt-4 text-center">Địa chỉ: {store.address}</p>
+              </div>
+            </div>
+
+            {/* Description — below the image+info grid */}
+            <div className="border-t border-gray-100 px-6 md:px-8 py-6">
+              <h2 className="font-semibold text-[#1a3a6b] mb-3 text-base">Mô tả sản phẩm</h2>
+              <ProductDescription description={product.description} />
+              <div className="mt-4 pt-4 border-t border-gray-100 text-xs text-gray-500 space-y-1">
+                <p>* Lưu ý: Quý khách mua hàng vui lòng lấy Hóa đơn VAT (giá được tính thêm thuế VAT 10%, trường hợp quý khách không lấy HĐ VAT hoặc lấy HĐ trực tiếp, giá vẫn được tính thêm 10%)</p>
+                <p>❤️ Quý khách liên hệ mua sỉ Giấy In &amp; Văn Phòng Phẩm: 0903608768</p>
+                <p>❤️ Quý khách liên hệ mua sỉ Hàng Tiêu Dùng Thái Lan: 0926616674</p>
               </div>
             </div>
           </div>

@@ -242,3 +242,48 @@ export async function getProductsByCategory(categorySlug: string): Promise<Produ
   if (error) throw new Error(`getProductsByCategory: ${error.message}`)
   return data ?? []
 }
+
+export type NewsRow = {
+  id: number
+  slug: string
+  title: string
+  excerpt: string
+  content: string
+  image_url: string | null
+  video_url: string | null
+  tag: string
+  tag_color: string
+  published_at: string
+  fb_url: string | null
+}
+
+export async function getNewsList(): Promise<NewsRow[]> {
+  const { data, error } = await getClient()
+    .from('news')
+    .select('*')
+    .order('published_at', { ascending: false })
+  if (error) throw new Error(`getNewsList: ${error.message}`)
+  return data ?? []
+}
+
+export async function getNewsBySlug(slug: string): Promise<NewsRow | null> {
+  const { data, error } = await getClient()
+    .from('news')
+    .select('*')
+    .eq('slug', slug)
+    .single()
+  if (error) {
+    if (error.code === 'PGRST116') return null
+    throw new Error(`getNewsBySlug: ${error.message}`)
+  }
+  return data
+}
+
+export async function getAllNewsSlugs(): Promise<{ slug: string }[]> {
+  const { data, error } = await getClient()
+    .from('news')
+    .select('slug')
+    .order('published_at', { ascending: false })
+  if (error) throw new Error(`getAllNewsSlugs: ${error.message}`)
+  return data ?? []
+}

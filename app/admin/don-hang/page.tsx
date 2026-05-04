@@ -53,7 +53,12 @@ export default async function AdminOrdersPage({
       {/* Navbar */}
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <h1 className="font-bold text-gray-900">📦 Quản lý đơn hàng</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="font-bold text-gray-900">📦 Quản lý đơn hàng</h1>
+            <Link href="/admin/tin-tuc" className="text-sm text-gray-500 hover:text-gray-700">
+              Tin tức
+            </Link>
+          </div>
           <LogoutButton />
         </div>
       </header>
