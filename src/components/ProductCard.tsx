@@ -4,6 +4,16 @@ import type { ProductRow, CategoryRow } from '../lib/supabase/server'
 import { store } from '../data/store'
 import AddToCartButton from './AddToCartButton'
 
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/#{1,6}\s+/g, '')
+    .replace(/^\s*[-*]\s+/gm, '')
+    .replace(/\n+/g, ' ')
+    .trim()
+}
+
 interface ProductCardProps {
   product: ProductRow
   category?: CategoryRow
@@ -45,7 +55,7 @@ export default function ProductCard({ product, category }: ProductCardProps) {
         {product.name}
       </h3>
       <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-2 flex-1">
-        {product.description}
+        {stripMarkdown(product.description)}
       </p>
       <p className="text-amber-600 font-semibold text-xs mb-3">
         {hasPrice ? product.price!.toLocaleString('vi-VN') + 'đ' : 'Liên hệ báo giá'}
