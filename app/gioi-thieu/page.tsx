@@ -40,37 +40,80 @@ export default function GioiThieuPage() {
 
       {/* Story / Mission */}
       <section className="py-14 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            <div>
-              <h2 className="text-2xl font-bold text-[#1a3a6b] mb-4">Câu chuyện của chúng tôi</h2>
-              <div className="flex flex-col gap-4 text-gray-600 leading-relaxed text-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+
+            {/* Article content — takes 2/3 */}
+            <div className="lg:col-span-2">
+              <h2 className="text-xl md:text-2xl font-bold text-[#1a3a6b] mb-5 leading-snug">
+                GIẤY IN VĂN PHÒNG – LỰA CHỌN TÂN VY PHÁT ĐỂ TỐI ƯU HIỆU QUẢ LÀM VIỆC
+              </h2>
+              <div className="flex flex-col gap-3 text-gray-600 leading-relaxed text-sm">
                 <p>
-                  CT Tân Vy Phát được thành lập với sứ mệnh cung cấp giấy in và văn phòng phẩm
-                  chất lượng cao với giá sỉ tốt nhất cho các doanh nghiệp, trường học và tiệm văn
-                  phòng phẩm trên cả nước.
+                  <em>Trong môi trường doanh nghiệp hiện đại, giấy in không chỉ là vật tư tiêu hao mà còn ảnh hưởng trực tiếp đến hiệu suất vận hành, hình ảnh chuyên nghiệp và chi phí dài hạn.</em>
                 </p>
                 <p>
-                  Với hơn 5 năm kinh nghiệm trong ngành, chúng tôi đã xây dựng được mạng lưới
-                  hơn 700 khách hàng thân thiết khắp các tỉnh thành. Kho hàng rộng rãi tại{' '}
-                  <strong>{store.address}</strong> luôn sẵn hàng để phục vụ quý khách.
+                  <em>Với hơn 17 năm kinh nghiệm trong ngành, chúng tôi nhận thấy một thực tế: nhiều doanh nghiệp vẫn lựa chọn giấy dựa trên giá, thay vì dựa trên hiệu quả sử dụng tổng thể.</em>
+                </p>
+
+                <p className="mt-1">
+                  <strong>Chất lượng giấy – yếu tố cốt lõi nhưng thường bị xem nhẹ.</strong>
                 </p>
                 <p>
-                  Chúng tôi không ngừng mở rộng danh mục sản phẩm từ giấy in A4 các nhãn hiệu
-                  Double A, Projecta, Supreme đến bìa Thái, giấy decal, nhựa ép laminating và
-                  đầy đủ văn phòng phẩm Thiên Long.
+                  Các thương hiệu giấy in trên thị trường hiện nay đều có những tiêu chuẩn sản xuất riêng. Tuy nhiên, sự khác biệt nằm ở độ ổn định chất lượng: từ độ trắng, độ mịn bề mặt đến khả năng tương thích với thiết bị in. Giấy đạt chuẩn giúp bản in sắc nét, hạn chế bụi giấy và giảm thiểu tình trạng kẹt giấy.
+                </p>
+
+                <p className="mt-1">
+                  <strong>Tối ưu chi phí không đồng nghĩa với chọn giá thấp nhất.</strong>
+                </p>
+                <p>Một loại giấy phù hợp sẽ giúp:</p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Giảm hao mực in</li>
+                  <li>Hạn chế hư hao máy móc</li>
+                  <li>Tăng tuổi thọ thiết bị</li>
+                  <li>Đảm bảo tiến độ công việc</li>
+                </ul>
+                <p>
+                  <em>Chi phí thực tế cần được nhìn trên tổng thể vận hành, không chỉ là giá mua ban đầu.</em>
+                </p>
+
+                <p className="mt-1">
+                  <strong>Tính ổn định – tiêu chí quan trọng khi lựa chọn.</strong>
+                </p>
+                <p>
+                  <em>Đối với doanh nghiệp, việc sử dụng giấy có chất lượng đồng đều giữa các lô hàng là yếu tố then chốt để đảm bảo công việc không bị gián đoạn. Đây cũng là lý do nên ưu tiên các dòng giấy có nguồn gốc rõ ràng và được phân phối bởi đơn vị uy tín.</em>
+                </p>
+
+                <p className="mt-1">
+                  <strong>Giải pháp phù hợp cho từng nhu cầu.</strong>
+                </p>
+                <p>
+                  Không có một loại giấy nào "tốt nhất cho tất cả", chỉ có loại phù hợp nhất cho từng mục đích: in nội bộ, in hợp đồng, in báo cáo hay tài liệu trình ký.
+                </p>
+                <p>
+                  <em>Với nền tảng kinh nghiệm hơn 17 năm, chúng tôi tập trung vào việc tư vấn đúng nhu cầu, giúp doanh nghiệp tối ưu chi phí và nâng cao hiệu quả sử dụng.</em>
                 </p>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 text-center border border-blue-100">
-              <div className="text-7xl mb-4">📋</div>
-              <h3 className="text-xl font-bold text-[#1a3a6b] mb-2">{store.name}</h3>
-              <p className="text-gray-600 text-sm mb-4">{store.tagline}</p>
-              <div className="border-t border-blue-200 pt-4 text-xs text-gray-500 space-y-1">
-                <p>📍 {store.address}</p>
-                <p>📞 {store.phoneDisplay}</p>
+
+            {/* Info card — takes 1/3 */}
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-7 text-center border border-blue-100 lg:sticky lg:top-24">
+              <div className="flex justify-center mb-4">
+                <img
+                  src="/logo.png"
+                  alt="Logo Tân Vy Phát"
+                  className="w-20 h-20 rounded-full object-cover bg-white shadow-sm border-2 border-blue-100"
+                />
+              </div>
+              <h3 className="text-base font-bold text-[#1a3a6b] mb-1">CÔNG TY TÂN VY PHÁT</h3>
+              <p className="text-gray-500 text-xs mb-4">{store.tagline}</p>
+              <div className="border-t border-blue-200 pt-4 text-xs text-gray-500 space-y-2 text-left">
+                <p><span className="font-semibold text-gray-600">Giờ làm việc:</span> 7:30 – 17:30 (T2 – T7) · CN nghỉ</p>
+                <p><span className="font-semibold text-gray-600">Địa chỉ:</span> 1/6 Đường Tân Thới Nhất 22, Khu phố 8, P. Đông Hưng Thuận, TP.HCM</p>
+                <p><span className="font-semibold text-gray-600">Hotline/Zalo:</span> 0906&nbsp;892&nbsp;828 – 090&nbsp;360&nbsp;87&nbsp;68</p>
               </div>
             </div>
+
           </div>
         </div>
       </section>

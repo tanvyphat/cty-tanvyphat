@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { store } from '../data/store'
 import CartBadge from './CartBadge'
 
@@ -15,6 +16,10 @@ const navLinks = [
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const pathname = usePathname()
+
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname.startsWith(href)
 
   return (
     <nav className="sticky top-0 z-50 bg-[#1a3a6b] shadow-lg">
@@ -37,7 +42,11 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-blue-100 hover:text-white hover:bg-[#1e4db7] px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive(link.href)
+                    ? 'bg-[#1e4db7] text-white font-medium'
+                    : 'text-blue-100 hover:text-white hover:bg-[#1e4db7]'
+                }`}
               >
                 {link.label}
               </Link>
@@ -138,7 +147,11 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="text-blue-100 hover:text-white hover:bg-[#1a56db] px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive(link.href)
+                    ? 'bg-[#1e4db7] text-white font-medium'
+                    : 'text-blue-100 hover:text-white hover:bg-[#1a56db]'
+                }`}
               >
                 {link.label}
               </Link>
