@@ -14,7 +14,7 @@ import UnitSelector from './UnitSelector'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tanvyphat.com'
 
-export const revalidate = 60 // ISR: tự cập nhật mỗi 60 giây
+export const revalidate = 3600 // fallback ISR mỗi 1 tiếng; on-demand revalidation xử lý tức thì khi admin save
 
 type PageProps = {
   params: Promise<{ slug: string }>

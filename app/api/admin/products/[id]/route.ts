@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createSSRClient } from '@/src/lib/supabase/server'
 import { getAdminClient } from '@/src/lib/supabase/admin'
 
@@ -18,12 +19,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   const db = getAdminClient()
 
-  const { data: existing } = await db
-    .from('products')
-    .select('id')
-    .eq('slug', slug)
-    .neq('id', productId)
-    .maybeSingle()
+  const [{ data: currentProduct }, { data: existing }] = await Promise.all([
+    db.from('products').select('slug').eq('id', productId).single(),
+    db.from('products').select('id').eq('slug', slug).neq('id', productId).maybeSingle(),
+  ])
 
   if (existing) {
     return NextResponse.json({ error: 'Slug đã tồn tại, hãy chỉnh sửa tên hoặc slug' }, { status: 409 })
@@ -61,6 +60,13 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     }
   }
 
+  // Revalidate slug cũ (nếu slug đổi) và slug mới
+  if (currentProduct && currentProduct.slug !== slug) {
+    revalidatePath(`/san-pham/${currentProduct.slug}`)
+  }
+  revalidatePath(`/san-pham/${slug}`)
+  revalidatePath('/san-pham')
+
   return NextResponse.json({ success: true })
 }
 
@@ -70,11 +76,16 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { id } = await params
-  const { error } = await getAdminClient()
-    .from('products')
-    .delete()
-    .eq('id', Number(id))
+  const db = getAdminClient()
+
+  const { data: product } = await db.from('products').select('slug').eq('id', Number(id)).single()
+
+  const { error } = await db.from('products').delete().eq('id', Number(id))
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+  if (product) revalidatePath(`/san-pham/${product.slug}`)
+  revalidatePath('/san-pham')
+
   return NextResponse.json({ success: true })
 }

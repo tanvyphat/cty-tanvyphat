@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createSSRClient } from '@/src/lib/supabase/server'
 import { getAdminClient } from '@/src/lib/supabase/admin'
 
@@ -54,6 +55,9 @@ export async function POST(req: NextRequest) {
     }))
     await db.from('product_units').insert(unitRows)
   }
+
+  revalidatePath(`/san-pham/${slug}`)
+  revalidatePath('/san-pham')
 
   return NextResponse.json({ id: product.id }, { status: 201 })
 }
