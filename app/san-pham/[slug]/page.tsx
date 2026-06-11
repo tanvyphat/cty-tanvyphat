@@ -14,6 +14,8 @@ import UnitSelector from './UnitSelector'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tanvyphat.com'
 
+export const revalidate = 60 // ISR: tự cập nhật mỗi 60 giây
+
 type PageProps = {
   params: Promise<{ slug: string }>
 }
