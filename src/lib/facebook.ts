@@ -2,9 +2,9 @@ import { createHmac } from 'crypto'
 
 const GRAPH_URL = 'https://graph.facebook.com/v21.0'
 
-function getToken() {
-  const token = process.env.FB_PAGE_ACCESS_TOKEN
-  if (!token) throw new Error('Missing FB_PAGE_ACCESS_TOKEN')
+function getToken(pageId: string) {
+  const token = process.env[`FB_PAGE_ACCESS_TOKEN_${pageId}`]
+  if (!token) throw new Error(`Missing FB_PAGE_ACCESS_TOKEN_${pageId}`)
   return token
 }
 
@@ -16,6 +16,7 @@ export function verifySignature(rawBody: string, signatureHeader: string): boole
 }
 
 export async function sendPrivateReply(
+  pageId: string,
   commentId: string,
   message: object,
   postId?: string
@@ -24,7 +25,7 @@ export async function sendPrivateReply(
   let lastError: string | null = null
 
   for (const candidateId of candidateIds) {
-    const params = new URLSearchParams({ access_token: getToken() })
+    const params = new URLSearchParams({ access_token: getToken(pageId) })
     const res = await fetch(`${GRAPH_URL}/${candidateId}/private_replies?${params.toString()}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -47,13 +48,13 @@ export async function sendPrivateReply(
     postId,
     response: lastError,
     hint:
-      'Check FB_PAGE_ACCESS_TOKEN for the target page and required permissions/pages subscription (pages_manage_metadata, pages_read_engagement, pages_messaging).',
+      'Check FB_PAGE_ACCESS_TOKEN_<pageId> for the target page and required permissions/pages subscription (pages_manage_metadata, pages_read_engagement, pages_messaging).',
   })
   return false
 }
 
-export async function sendMessage(psid: string, message: object): Promise<void> {
-  const res = await fetch(`${GRAPH_URL}/me/messages?access_token=${getToken()}`, {
+export async function sendMessage(pageId: string, psid: string, message: object): Promise<void> {
+  const res = await fetch(`${GRAPH_URL}/me/messages?access_token=${getToken(pageId)}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ recipient: { id: psid }, ...message }),

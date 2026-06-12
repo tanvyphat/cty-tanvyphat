@@ -48,6 +48,8 @@ async function processWebhookEvent(body: Record<string, unknown>) {
     const entries = (body.entry as Array<Record<string, unknown>>) ?? []
 
     for (const entry of entries) {
+      const pageId = entry.id as string
+
       // Handle feed changes (comments on posts)
       const changes = (entry.changes as Array<Record<string, unknown>>) ?? []
       for (const change of changes) {
@@ -55,7 +57,7 @@ async function processWebhookEvent(body: Record<string, unknown>) {
           const value = change.value as Record<string, unknown>
           console.log('[webhook] feed value:', JSON.stringify(value))
           if (value.item === 'comment' && value.verb === 'add') {
-            await handleCommentEvent(value)
+            await handleCommentEvent(pageId, value)
           }
         }
       }
@@ -67,7 +69,7 @@ async function processWebhookEvent(body: Record<string, unknown>) {
         if (postback?.payload && typeof postback.payload === 'string') {
           if (postback.payload.startsWith('ADD_TO_CART:')) {
             const sender = event.sender as Record<string, unknown>
-            await handlePostbackEvent(sender.id as string, postback.payload)
+            await handlePostbackEvent(pageId, sender.id as string, postback.payload)
           }
         }
       }
@@ -77,7 +79,7 @@ async function processWebhookEvent(body: Record<string, unknown>) {
   }
 }
 
-async function handleCommentEvent(value: Record<string, unknown>) {
+async function handleCommentEvent(pageId: string, value: Record<string, unknown>) {
   const commentId = value.comment_id as string
   const commentText = ((value.message as string) ?? '').trim().toUpperCase()
   const postId = value.post_id as string | undefined
@@ -97,7 +99,7 @@ async function handleCommentEvent(value: Record<string, unknown>) {
   if (!product) return
 
   const replyPayload = buildProductReplyMessage(product)
-  const sentPrivateReply = await sendPrivateReply(commentId, replyPayload, postId)
+  const sentPrivateReply = await sendPrivateReply(pageId, commentId, replyPayload, postId)
   if (sentPrivateReply) return
 
   console.error('handleCommentEvent private reply failed:', {
@@ -110,10 +112,10 @@ async function handleCommentEvent(value: Record<string, unknown>) {
 
   // Fallback to direct message when private replies are unavailable for this comment object.
   if (!commenterId) return
-  await sendMessage(commenterId, replyPayload)
+  await sendMessage(pageId, commenterId, replyPayload)
 }
 
-async function handlePostbackEvent(psid: string, payload: string) {
+async function handlePostbackEvent(pageId: string, psid: string, payload: string) {
   const productId = parseInt(payload.replace('ADD_TO_CART:', ''), 10)
   if (isNaN(productId)) return
 
@@ -127,11 +129,11 @@ async function handlePostbackEvent(psid: string, payload: string) {
   if (!product) return
 
   if (product.stock <= 0) {
-    await sendMessage(psid, {
+    await sendMessage(pageId, psid, {
       message: { text: 'Rất tiếc, sản phẩm này đã hết hàng. Vui lòng liên hệ shop để được hỗ trợ.' },
     })
     return
   }
 
-  await sendMessage(psid, buildCartLinkMessage(product, psid))
+  await sendMessage(pageId, psid, buildCartLinkMessage(product, psid))
 }
