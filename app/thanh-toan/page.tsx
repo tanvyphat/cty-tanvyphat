@@ -59,7 +59,8 @@ function CheckoutContent() {
     fetch(`/api/shipping/fee?${params}`, { signal: controller.signal })
       .then(r => r.json())
       .then(data => {
-        setShippingFee(data.fee ?? 0)
+        const rawFee = data.fee ?? 0
+        setShippingFee(rawFee > 0 ? Math.ceil(rawFee / 1000) * 1000 : 0)
         setShippingUnavailable(data.unavailable ?? false)
       })
       .catch(() => {})

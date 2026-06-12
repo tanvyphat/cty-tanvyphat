@@ -75,7 +75,7 @@ export default async function AdminOrderDetailPage({
                     <p className="text-gray-500 text-xs">
                       {Number(item.product_price) > 0
                         ? Number(item.product_price).toLocaleString('vi-VN') + 'đ'
-                        : 'Liên hệ'} × {item.quantity as number}
+                        : 'Liên hệ'}{item.unit_name ? ` / ${item.unit_name as string}` : ''} × {item.quantity as number}
                     </p>
                   </div>
                   <p className="font-semibold text-gray-800 text-xs">
