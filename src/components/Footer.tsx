@@ -156,7 +156,7 @@ export default function Footer() {
                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <div className="text-gray-400">
+                <div className="text-amber-400 font-semibold">
                   <p>Thứ 2 – Thứ 7: 7:30 – 17:30</p>
                   <p>Chủ nhật: Nghỉ</p>
                 </div>
