@@ -7,9 +7,9 @@ import { ChevronLeft, ChevronRight, ArrowRight, Phone, Sparkles, Pencil, Papercl
 import { store } from '@/src/data/store'
 
 const slides = [
-  { src: '/carousel/slide-1.jpg', alt: 'Giấy in chính hãng' },
-  { src: '/carousel/slide-2.jpg', alt: 'Văn phòng phẩm giá sỉ' },
-  { src: null, alt: 'Sắp ra mắt' },
+  { src: '/carousel/banner-1.jpg', alt: 'Banner 1' },
+  { src: '/carousel/banner-2.jpg', alt: 'Banner 2' },
+  { src: '/carousel/banner-3.jpg', alt: 'Banner 3' },
 ]
 
 const N = slides.length
