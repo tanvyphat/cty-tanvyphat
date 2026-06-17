@@ -102,7 +102,7 @@ export default function Footer() {
             <div className="flex flex-col gap-3 text-sm">
               <div className="flex items-start gap-2">
                 <svg
-                  className="w-4 h-4 text-amber-400 mt-0.5 shrink-0"
+                  className="w-4 h-4 text-rose-400 mt-0.5 shrink-0"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -123,7 +123,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <svg
-                  className="w-4 h-4 text-amber-400 shrink-0"
+                  className="w-4 h-4 text-rose-400 shrink-0"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -137,14 +137,14 @@ export default function Footer() {
                 </svg>
                 <a
                   href={`tel:${store.phone}`}
-                  className="text-amber-400 hover:text-amber-300 font-semibold transition-colors"
+                  className="text-rose-400 hover:text-rose-300 font-semibold transition-colors"
                 >
                   {store.phoneDisplay}
                 </a>
               </div>
               <div className="flex items-start gap-2">
                 <svg
-                  className="w-4 h-4 text-amber-400 mt-0.5 shrink-0"
+                  className="w-4 h-4 text-rose-400 mt-0.5 shrink-0"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -156,7 +156,7 @@ export default function Footer() {
                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <div className="text-amber-400 font-semibold">
+                <div className="text-rose-400 font-semibold">
                   <p>Thứ 2 – Thứ 7: 7:30 – 17:30</p>
                   <p>Chủ nhật: Nghỉ</p>
                 </div>
