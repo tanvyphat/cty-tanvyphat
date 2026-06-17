@@ -70,27 +70,31 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const firstUnit = product.product_units[0] ?? null
   const minPrice = product.min_price
 
+  const productUrl = `${SITE_URL}/san-pham/${product.slug}`
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
     description: product.description,
-    url: `${SITE_URL}/san-pham/${product.slug}`,
+    sku: product.slug,
+    url: productUrl,
     ...(product.images.length > 0 && { image: product.images }),
     brand: { '@type': 'Organization', name: 'CT Tân Vy Phát' },
     offers: {
       '@type': 'Offer',
-      availability: 'https://schema.org/InStoreOnly',
+      availability: 'https://schema.org/OnlineOrInStoreOnly',
       priceCurrency: 'VND',
       ...(minPrice != null && { price: minPrice }),
+      url: productUrl,
       seller: {
         '@type': 'Organization',
         name: 'CT Tân Vy Phát',
         telephone: store.phone,
         address: {
           '@type': 'PostalAddress',
-          streetAddress: '1/6 Đường Tân Thới Nhất 22',
-          addressLocality: 'Quận 12',
+          streetAddress: '1/6 Đường Tân Thới Nhất 22, Khu phố 8, Phường Đông Hưng Thuận',
+          addressLocality: 'TP. Hồ Chí Minh',
           addressRegion: 'TP. Hồ Chí Minh',
           addressCountry: 'VN',
         },
@@ -98,12 +102,23 @@ export default async function ProductDetailPage({ params }: PageProps) {
     },
   }
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Sản phẩm', item: `${SITE_URL}/san-pham` },
+      ...(category
+        ? [{ '@type': 'ListItem', position: 3, name: category.name, item: `${SITE_URL}/san-pham?category=${category.slug}` },
+           { '@type': 'ListItem', position: 4, name: product.name, item: productUrl }]
+        : [{ '@type': 'ListItem', position: 3, name: product.name, item: productUrl }]),
+    ],
+  }
+
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
       <div className="min-h-screen bg-[#f8fafc]">
         {/* Breadcrumb */}

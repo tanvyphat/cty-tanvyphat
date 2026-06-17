@@ -50,6 +50,56 @@ export const metadata: Metadata = {
   },
 }
 
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'CT Tân Vy Phát',
+  alternateName: 'Công ty TNHH MTV SX TM Tân Vy Phát',
+  url: 'https://tanvyphat.com',
+  logo: 'https://tanvyphat.com/logo.png',
+  image: 'https://tanvyphat.com/logo.png',
+  description:
+    'Chuyên phân phối giấy in A4, văn phòng phẩm, bìa Thái, nhựa ép giá sỉ tại Q.12 TPHCM. Hàng chính hãng, ship toàn quốc.',
+  telephone: '+84903608768',
+  email: 'tanvyphatpaper@gmail.com',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '1/6 Đường Tân Thới Nhất 22, Khu phố 8, Phường Đông Hưng Thuận',
+    addressLocality: 'TP. Hồ Chí Minh',
+    addressRegion: 'TP. Hồ Chí Minh',
+    addressCountry: 'VN',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 10.823378689328257,
+    longitude: 106.61907487497048,
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      opens: '07:30',
+      closes: '17:30',
+    },
+  ],
+  sameAs: ['https://www.facebook.com/100023082080173'],
+}
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'CT Tân Vy Phát',
+  url: 'https://tanvyphat.com',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://tanvyphat.com/san-pham?search={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -58,6 +108,8 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${geistSans.variable} h-full`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col antialiased bg-[#f8fafc] text-[#1e293b]" suppressHydrationWarning>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
         <NextTopLoader color="#1a56db" showSpinner={false} />
         <AuthProvider>
           <CartProvider>

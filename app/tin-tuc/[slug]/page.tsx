@@ -86,12 +86,37 @@ export default async function TinTucDetailPage({
 
   const { headings, processedHtml, images } = processContent(item.content)
 
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tanvyphat.com'
+  const articleLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: item.title,
+    description: item.excerpt,
+    datePublished: item.published_at,
+    dateModified: item.published_at,
+    url: `${SITE_URL}/tin-tuc/${item.slug}`,
+    ...(item.image_url && { image: [item.image_url] }),
+    author: {
+      '@type': 'Organization',
+      name: 'CT Tân Vy Phát',
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'CT Tân Vy Phát',
+      url: SITE_URL,
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
+    },
+  }
+
   const media: MediaItem[] = []
   if (item.image_url) media.push({ type: 'image', src: item.image_url, alt: item.title })
   images.forEach((src) => media.push({ type: 'image', src }))
   if (item.video_url) media.push({ type: 'video', src: item.video_url })
 
   return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
     <div className="min-h-screen bg-[#f8fafc]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
@@ -177,5 +202,6 @@ export default async function TinTucDetailPage({
 
       </div>
     </div>
+    </>
   )
 }
