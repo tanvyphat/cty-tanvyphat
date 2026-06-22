@@ -39,7 +39,8 @@ const uspItems = [
 
 export default async function Home() {
   const [allProducts, categories] = await Promise.all([getProducts(), getCategories()])
-  const featuredProducts = allProducts.filter((p) => p.featured)
+  const withImages = allProducts.filter((p) => p.images?.length > 0)
+  const featuredProducts = [...withImages].sort(() => Math.random() - 0.5).slice(0, 15)
   const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c]))
   const vppSlugs = new Set(categories.filter((c) => c.branch_slug === 'van-phong-pham').map((c) => c.slug))
   const vppProductImage = allProducts.find((p) => vppSlugs.has(p.category) && p.images?.length > 0)?.images[0]
