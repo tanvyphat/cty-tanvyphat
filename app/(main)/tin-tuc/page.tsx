@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { getNewsList } from '../../src/lib/supabase/server'
-import { store } from '../../src/data/store'
+import { getNewsList } from '../../../src/lib/supabase/server'
+import { store } from '../../../src/data/store'
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -30,7 +30,7 @@ export default async function TinTucPage() {
             {newsItems.map((item) => (
               <Link
                 key={item.id}
-                href={`/tin-tuc/${item.slug}`}
+                href={`/app/(main)/tin-tuc/${item.slug}`}
                 className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col group"
               >
                 {/* Ảnh bìa */}

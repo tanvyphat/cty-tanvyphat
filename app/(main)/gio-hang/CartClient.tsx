@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { useCart, useFbUserId, CartItem } from '../../src/hooks/useCart'
-import FeaturedCarousel from '../../src/components/FeaturedCarousel'
-import type { ProductRow, CategoryRow } from '../../src/lib/supabase/server'
+import { useCart, useFbUserId, CartItem } from '../../../src/hooks/useCart'
+import FeaturedCarousel from '../../../src/components/FeaturedCarousel'
+import type { ProductRow, CategoryRow } from '../../../src/lib/supabase/server'
 
 interface Props {
   categoryMap: Record<string, CategoryRow>
@@ -175,7 +175,7 @@ function CartPageContent({ categoryMap }: Props) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <Link
-                          href={`/san-pham/${item.slug}`}
+                          href={`/app/(main)/san-pham/${item.slug}`}
                           className="text-sm font-medium text-gray-900 hover:text-blue-600 line-clamp-2 transition-colors"
                         >
                           {item.name}
@@ -231,7 +231,7 @@ function CartPageContent({ categoryMap }: Props) {
                         )}
                       </div>
                       <Link
-                        href={`/san-pham/${item.slug}`}
+                        href={`/app/(main)/san-pham/${item.slug}`}
                         className="text-sm font-medium text-gray-900 hover:text-blue-600 line-clamp-2 transition-colors"
                       >
                         {item.name}

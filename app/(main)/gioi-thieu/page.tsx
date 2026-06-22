@@ -1,4 +1,4 @@
-import { store } from '../../src/data/store'
+import { store } from '../../../src/data/store'
 
 const strengths = [
   {

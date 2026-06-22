@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { store } from '../src/data/store'
-import { getProducts, getCategories } from '../src/lib/supabase/server'
-import FeaturedCarousel from '../src/components/FeaturedCarousel'
-import BannerCarousel from '../src/components/BannerCarousel'
-import ScrollReveal from '../src/components/ScrollReveal'
+import { store } from '../../src/data/store'
+import { getProducts, getCategories } from '../../src/lib/supabase/server'
+import FeaturedCarousel from '../../src/components/FeaturedCarousel'
+import BannerCarousel from '../../src/components/BannerCarousel'
+import ScrollReveal from '../../src/components/ScrollReveal'
 
 const uspItems = [
   {

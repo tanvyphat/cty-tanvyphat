@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { useCart } from '../../../src/hooks/useCart'
-import { store } from '../../../src/data/store'
-import type { ProductUnitRow } from '../../../src/lib/supabase/server'
+import { useCart } from '../../../../src/hooks/useCart'
+import { store } from '../../../../src/data/store'
+import type { ProductUnitRow } from '../../../../src/lib/supabase/server'
 
 interface Product {
   id: number

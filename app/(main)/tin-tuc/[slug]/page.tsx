@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getAllNewsSlugs, getNewsBySlug } from '../../../src/lib/supabase/server'
-import { store } from '../../../src/data/store'
+import { getAllNewsSlugs, getNewsBySlug } from '../../../../src/lib/supabase/server'
+import { store } from '../../../../src/data/store'
 import { TocSidebar, MediaCarousel } from './TinTucDetailClient'
 
 export async function generateStaticParams() {

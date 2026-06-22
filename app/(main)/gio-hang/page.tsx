@@ -1,4 +1,4 @@
-import { getCategories } from '../../src/lib/supabase/server'
+import { getCategories } from '../../../src/lib/supabase/server'
 import CartClient from './CartClient'
 
 export default async function CartPage() {

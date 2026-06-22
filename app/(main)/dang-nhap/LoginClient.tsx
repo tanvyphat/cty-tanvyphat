@@ -71,7 +71,7 @@ export default function LoginClient() {
       <div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-6">
-          <a href="/" className="inline-block mb-4">
+          <a href="/public" className="inline-block mb-4">
             <img src="/logo.png" alt="Tân Vy Phát" className="h-14 w-14 rounded-full mx-auto object-cover" />
           </a>
           <h1 className="text-2xl font-bold text-gray-900">
@@ -178,7 +178,7 @@ export default function LoginClient() {
         </p>
 
         <p className="text-center mt-4">
-          <a href="/" className="text-xs text-gray-400 hover:text-gray-600">← Quay lại trang chủ</a>
+          <a href="/public" className="text-xs text-gray-400 hover:text-gray-600">← Quay lại trang chủ</a>
         </p>
       </div>
     </div>

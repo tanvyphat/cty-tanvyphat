@@ -7,13 +7,13 @@ import {
   type SortBy,
   type SortDir,
   type PerPage,
-} from '../../src/lib/supabase/server'
-import ProductCard from '../../src/components/ProductCard'
-import ProductFilter from '../../src/components/ProductFilter'
-import ProductHero from '../../src/components/ProductHero'
-import CategoryStrip from '../../src/components/CategoryStrip'
-import SortBar from '../../src/components/SortBar'
-import ProductPagination from '../../src/components/ProductPagination'
+} from '../../../src/lib/supabase/server'
+import ProductCard from '../../../src/components/ProductCard'
+import ProductFilter from '../../../src/components/ProductFilter'
+import ProductHero from '../../../src/components/ProductHero'
+import CategoryStrip from '../../../src/components/CategoryStrip'
+import SortBar from '../../../src/components/SortBar'
+import ProductPagination from '../../../src/components/ProductPagination'
 
 export const metadata: Metadata = {
   title: 'Sản Phẩm – Văn Phòng Phẩm & Hàng Tiêu Dùng Thái Lan',

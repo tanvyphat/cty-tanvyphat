@@ -206,7 +206,7 @@ export default async function AdminSanPhamPage({
                         <td className="px-4 py-3">
                           <div className="flex items-center justify-end gap-3">
                             <Link
-                              href={`/san-pham/${product.slug}`}
+                              href={`/app/(main)/san-pham/${product.slug}`}
                               target="_blank"
                               className="text-gray-400 hover:text-gray-600 text-xs"
                             >

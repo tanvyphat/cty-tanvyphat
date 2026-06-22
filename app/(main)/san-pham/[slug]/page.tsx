@@ -6,10 +6,10 @@ import {
   getProductBySlug,
   getCategories,
   getProductsByCategory,
-} from '../../../src/lib/supabase/server'
-import { store } from '../../../src/data/store'
-import ProductCard from '../../../src/components/ProductCard'
-import ProductDescription from '../../../src/components/ProductDescription'
+} from '../../../../src/lib/supabase/server'
+import { store } from '../../../../src/data/store'
+import ProductCard from '../../../../src/components/ProductCard'
+import ProductDescription from '../../../../src/components/ProductDescription'
 import UnitSelector from './UnitSelector'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tanvyphat.com'
@@ -125,7 +125,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <div className="bg-white border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <nav className="flex items-center gap-2 text-sm text-gray-500">
-              <Link href="/" className="hover:text-[#1a56db] transition-colors">
+              <Link href="/public" className="hover:text-[#1a56db] transition-colors">
                 Trang chủ
               </Link>
               <span>›</span>
