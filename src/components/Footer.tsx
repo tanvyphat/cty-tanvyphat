@@ -7,7 +7,6 @@ const quickLinks = [
   { href: '/gioi-thieu', label: 'Giới thiệu' },
   { href: '/tin-tuc', label: 'Tin tức' },
   { href: '/lien-he', label: 'Liên hệ' },
-  { href: '/tuyen-dung', label: 'Tuyển dụng' },
 ]
 
 export default function Footer() {
