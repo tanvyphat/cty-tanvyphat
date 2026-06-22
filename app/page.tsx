@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { store } from '../src/data/store'
-import { getProducts, getCategories } from '../src/lib/supabase/server'
+import { getRandomProducts, getCategories } from '../src/lib/supabase/server'
 import FeaturedCarousel from '../src/components/FeaturedCarousel'
 import BannerCarousel from '../src/components/BannerCarousel'
 import ScrollReveal from '../src/components/ScrollReveal'
@@ -38,12 +38,8 @@ const uspItems = [
 
 
 export default async function Home() {
-  const [allProducts, categories] = await Promise.all([getProducts(), getCategories()])
-  const withImages = allProducts.filter((p) => p.images?.length > 0)
-  const featuredProducts = [...withImages].sort(() => Math.random() - 0.5).slice(0, 15)
+  const [featuredProducts, categories] = await Promise.all([getRandomProducts(15), getCategories()])
   const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c]))
-  const vppSlugs = new Set(categories.filter((c) => c.branch_slug === 'van-phong-pham').map((c) => c.slug))
-  const vppProductImage = allProducts.find((p) => vppSlugs.has(p.category) && p.images?.length > 0)?.images[0]
 
   return (
     <>

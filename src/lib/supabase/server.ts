@@ -102,6 +102,14 @@ export async function getProducts(): Promise<ProductRow[]> {
   return (data ?? []).map(normalizeProduct)
 }
 
+export async function getRandomProducts(limit: number): Promise<ProductRow[]> {
+  const { data, error } = await getClient()
+    .rpc('get_random_products', { limit_count: limit })
+    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at)')
+  if (error) throw new Error(`getRandomProducts: ${error.message}`)
+  return (data ?? []).map(normalizeProduct)
+}
+
 export async function getBranches(): Promise<BranchRow[]> {
   const { data, error } = await getClient()
     .from('branches')
