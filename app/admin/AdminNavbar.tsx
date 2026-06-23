@@ -38,7 +38,13 @@ export default function AdminNavbar() {
                     })}
                 </div>
 
-                <div className="flex items-center gap-4 pl-4 border-l border-gray-200 cursor-pointer">
+                <div className="flex items-center gap-4 pl-4 border-l border-gray-200">
+                    <Link
+                        href="/"
+                        className="text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1.5"
+                    >
+                        🏠 Trang chủ
+                    </Link>
                     <LogoutButton />
                 </div>
             </div>
