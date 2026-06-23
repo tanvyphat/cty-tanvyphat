@@ -27,7 +27,7 @@ export default function ProductCard({ product, category }: ProductCardProps) {
 
   return (
     <div className="group flex flex-col bg-white rounded-lg sm:rounded-xl overflow-hidden shadow-sm border border-gray-100">
-      <Link href={`/app/(main)/san-pham/${product.slug}`} className="block relative aspect-square overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100">
+      <Link href={`/san-pham/${product.slug}`} className="block relative aspect-square overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100">
         {hasImage ? (
           <Image
             src={product.images[0]}
