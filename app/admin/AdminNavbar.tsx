@@ -38,7 +38,7 @@ export default function AdminNavbar() {
                     })}
                 </div>
 
-                <div className="flex items-center gap-4 pl-4 border-l border-gray-200">
+                <div className="flex items-center gap-4 pl-4 border-l border-gray-200 cursor-pointer">
                     <LogoutButton />
                 </div>
             </div>
