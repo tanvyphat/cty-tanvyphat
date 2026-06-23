@@ -9,7 +9,7 @@ export default function LogoutButton() {
   async function handleLogout() {
     const supabase = createSupabaseBrowserClient()
     await supabase.auth.signOut()
-    router.push('/admin/dang-nhap')
+    router.push('/')
     router.refresh()
   }
 

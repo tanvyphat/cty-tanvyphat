@@ -20,7 +20,8 @@ export default function LoginClient() {
   const [message, setMessage] = useState('')
 
   useEffect(() => {
-    if (user) router.replace('/tai-khoan')
+    // Chuyển hướng sang trang chủ "/" nếu người dùng đã đăng nhập
+    if (user) router.replace('/')
   }, [user, router])
 
   async function handleEmail(e: React.FormEvent) {
@@ -34,7 +35,8 @@ export default function LoginClient() {
         if (error) {
           setError(error.message === 'Invalid login credentials' ? 'Email hoặc mật khẩu không đúng.' : error.message)
         } else {
-          router.push('/tai-khoan')
+          // Chuyển hướng sang trang chủ "/" sau khi đăng nhập thành công
+          router.push('/')
         }
       } else {
         const { error } = await supabase.auth.signUp({
@@ -56,7 +58,7 @@ export default function LoginClient() {
   async function handleOAuth(provider: 'google' | 'facebook') {
     await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: `${typeof window !== 'undefined' ? window.location.origin : ''}/auth/callback` },
     })
   }
 
@@ -67,120 +69,119 @@ export default function LoginClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <a href="/public" className="inline-block mb-4">
-            <img src="/logo.png" alt="Tân Vy Phát" className="h-14 w-14 rounded-full mx-auto object-cover" />
-          </a>
-          <h1 className="text-2xl font-bold text-gray-900">
-            {mode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản'}
-          </h1>
-          <p className="text-gray-500 text-sm mt-1">CT Tân Vy Phát</p>
-        </div>
-
-        {/* Social buttons */}
-        <div className="space-y-3 mb-5">
-          <button
-            type="button"
-            onClick={() => handleOAuth('google')}
-            className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-xl py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            {/* Google icon */}
-            <svg className="h-5 w-5" viewBox="0 0 24 24">
-              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-            </svg>
-            Đăng nhập với Google
-          </button>
-
-        </div>
-
-        {/* Divider */}
-        <div className="relative mb-5">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-md">
+          {/* Header */}
+          <div className="text-center mb-6">
+            <a href="/" className="inline-block mb-4">
+              <img src="/logo.png" alt="Tân Vy Phát" className="h-14 w-14 rounded-full mx-auto object-cover" />
+            </a>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {mode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản'}
+            </h1>
+            <p className="text-gray-500 text-sm mt-1">CT Tân Vy Phát</p>
           </div>
-          <div className="relative flex justify-center">
-            <span className="bg-white px-3 text-xs text-gray-400">hoặc dùng email</span>
-          </div>
-        </div>
 
-        {/* Email form */}
-        <form onSubmit={handleEmail} className="space-y-4">
-          {mode === 'register' && (
+          {/* Social buttons */}
+          <div className="space-y-3 mb-5">
+            <button
+                type="button"
+                onClick={() => handleOAuth('google')}
+                className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-xl py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              {/* Google icon */}
+              <svg className="h-5 w-5" viewBox="0 0 24 24">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Đăng nhập với Google
+            </button>
+          </div>
+
+          {/* Divider */}
+          <div className="relative mb-5">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-white px-3 text-xs text-gray-400">hoặc dùng email</span>
+            </div>
+          </div>
+
+          {/* Email form */}
+          <form onSubmit={handleEmail} className="space-y-4">
+            {mode === 'register' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Họ và tên</label>
+                  <input
+                      type="text"
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      placeholder="Nguyễn Văn A"
+                      className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+            )}
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Họ và tên</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
               <input
-                type="text"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                placeholder="Nguyễn Văn A"
-                className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="email@example.com"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-          )}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="email@example.com"
-              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Mật khẩu</label>
+              <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  minLength={6}
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Mật khẩu</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="••••••••"
-              minLength={6}
-              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+            {error && (
+                <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">{error}</p>
+            )}
+            {message && (
+                <p className="text-green-600 text-sm bg-green-50 border border-green-200 rounded-xl px-4 py-2.5">{message}</p>
+            )}
 
-          {error && (
-            <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">{error}</p>
-          )}
-          {message && (
-            <p className="text-green-600 text-sm bg-green-50 border border-green-200 rounded-xl px-4 py-2.5">{message}</p>
-          )}
+            <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#1a3a6b] hover:bg-[#1e4db7] disabled:opacity-60 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
+            >
+              {loading ? 'Đang xử lý...' : mode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản'}
+            </button>
+          </form>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#1a3a6b] hover:bg-[#1e4db7] disabled:opacity-60 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
-          >
-            {loading ? 'Đang xử lý...' : mode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản'}
-          </button>
-        </form>
+          {/* Switch mode */}
+          <p className="text-center text-sm text-gray-500 mt-5">
+            {mode === 'login' ? 'Chưa có tài khoản? ' : 'Đã có tài khoản? '}
+            <button
+                type="button"
+                onClick={() => switchMode(mode === 'login' ? 'register' : 'login')}
+                className="text-blue-600 hover:underline font-medium"
+            >
+              {mode === 'login' ? 'Tạo tài khoản' : 'Đăng nhập'}
+            </button>
+          </p>
 
-        {/* Switch mode */}
-        <p className="text-center text-sm text-gray-500 mt-5">
-          {mode === 'login' ? 'Chưa có tài khoản? ' : 'Đã có tài khoản? '}
-          <button
-            type="button"
-            onClick={() => switchMode(mode === 'login' ? 'register' : 'login')}
-            className="text-blue-600 hover:underline font-medium"
-          >
-            {mode === 'login' ? 'Tạo tài khoản' : 'Đăng nhập'}
-          </button>
-        </p>
-
-        <p className="text-center mt-4">
-          <a href="/public" className="text-xs text-gray-400 hover:text-gray-600">← Quay lại trang chủ</a>
-        </p>
+          <p className="text-center mt-4">
+            <a href="/" className="text-xs text-gray-400 hover:text-gray-600">← Quay lại trang chủ</a>
+          </p>
+        </div>
       </div>
-    </div>
   )
 }
