@@ -30,7 +30,7 @@ export default async function TinTucPage() {
             {newsItems.map((item) => (
               <Link
                 key={item.id}
-                href={`/app/(main)/tin-tuc/${item.slug}`}
+                href={`/tin-tuc/${item.slug}`}
                 className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col group"
               >
                 {/* Ảnh bìa */}
