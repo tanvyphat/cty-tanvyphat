@@ -76,7 +76,7 @@ export default async function AdminTinTucPage() {
                           <td className="px-4 py-3 text-right">
                             <div className="flex items-center justify-end gap-2">
                               <Link
-                                  href={`/app/(main)/tin-tuc/${item.slug}`}
+                                  href={`/tin-tuc/${item.slug}`}
                                   target="_blank"
                                   className="text-gray-400 hover:text-gray-600 text-xs"
                               >
