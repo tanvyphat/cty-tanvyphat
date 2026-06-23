@@ -172,14 +172,14 @@ export default function QuanTriVienPage() {
                   {!modal.isAlert && (
                       <button
                           onClick={closeModal}
-                          className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200 bg-gray-100 rounded-xl transition-colors"
+                          className="cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200 bg-gray-100 rounded-xl transition-colors"
                       >
                         Huỷ
                       </button>
                   )}
                   <button
                       onClick={modal.isAlert ? closeModal : modal.onConfirm}
-                      className={`px-5 py-2 text-sm font-semibold text-white rounded-xl transition-all shadow-sm ${
+                      className={`cursor-pointer px-5 py-2 text-sm font-semibold text-white rounded-xl transition-all shadow-sm ${
                           modal.type === 'danger' ? 'bg-red-600 hover:bg-red-700 hover:shadow-red-200' :
                               modal.type === 'warning' ? 'bg-orange-600 hover:bg-orange-700 hover:shadow-orange-200' :
                                   'bg-blue-600 hover:bg-blue-700 hover:shadow-blue-200'

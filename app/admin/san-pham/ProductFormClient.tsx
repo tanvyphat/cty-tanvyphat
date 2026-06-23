@@ -185,7 +185,7 @@ export default function ProductFormClient({ categories, product }: Props) {
             form="product-form"
             type="submit"
             disabled={submitting || uploading}
-            className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+            className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-1.5 rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
           >
             {submitting ? 'Đang lưu...' : isEdit ? 'Lưu thay đổi' : 'Thêm sản phẩm'}
           </button>

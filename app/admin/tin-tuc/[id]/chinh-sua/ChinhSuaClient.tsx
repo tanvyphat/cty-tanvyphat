@@ -80,7 +80,7 @@ export default function ChinhSuaClient({ item }: { item: NewsRow }) {
             form="edit-form"
             type="submit"
             disabled={submitting}
-            className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+            className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-1.5 rounded-lg transition-colors disabled:opacity-50"
           >
             {submitting ? 'Đang lưu...' : 'Lưu thay đổi'}
           </button>

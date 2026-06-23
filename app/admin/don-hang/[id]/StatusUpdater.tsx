@@ -63,7 +63,7 @@ export default function StatusUpdater({
         <button
           onClick={handleUpdate}
           disabled={loading || status === currentStatus}
-          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer"
         >
           {loading ? '...' : 'Lưu'}
         </button>
