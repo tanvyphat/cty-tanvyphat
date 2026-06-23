@@ -175,7 +175,7 @@ function CartPageContent({ categoryMap }: Props) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <Link
-                          href={`/app/(main)/san-pham/${item.slug}`}
+                          href={`/san-pham/${item.slug}`}
                           className="text-sm font-medium text-gray-900 hover:text-blue-600 line-clamp-2 transition-colors"
                         >
                           {item.name}
@@ -231,7 +231,7 @@ function CartPageContent({ categoryMap }: Props) {
                         )}
                       </div>
                       <Link
-                        href={`/app/(main)/san-pham/${item.slug}`}
+                        href={`/san-pham/${item.slug}`}
                         className="text-sm font-medium text-gray-900 hover:text-blue-600 line-clamp-2 transition-colors"
                       >
                         {item.name}
