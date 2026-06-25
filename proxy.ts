@@ -24,11 +24,12 @@ export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const isAdminPath = pathname.startsWith('/admin')
   const isLoginPath = pathname === '/admin/dang-nhap'
+  const isForgotPasswordPath = pathname === '/admin/quen-mat-khau'
 
   const isAdmin = user?.app_metadata?.role === 'admin'
 
   // Chưa đăng nhập hoặc không phải admin → vào trang admin (không phải login) → redirect về login
-  if (isAdminPath && !isLoginPath && !isAdmin) {
+  if (isAdminPath && !isLoginPath && !isForgotPasswordPath && !isAdmin) {
     return NextResponse.redirect(new URL('/admin/dang-nhap', request.url))
   }
 

@@ -1,34 +1,35 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { createSupabaseBrowserClient } from '@/src/lib/supabase/browser'
 
-export default function AdminLoginPage() {
-  const [email, setEmail] = useState('')
+export default function ResetPasswordPage() {
   const [password, setPassword] = useState('')
+  const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setError('')
+    if (password !== confirm) {
+      setError('Mật khẩu xác nhận không khớp')
+      return
+    }
+    if (password.length < 6) {
+      setError('Mật khẩu phải ít nhất 6 ký tự')
+      return
+    }
     setLoading(true)
-
-    try {
-      const supabase = createSupabaseBrowserClient()
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-      if (error) {
-        setError('Email hoặc mật khẩu không đúng')
-      } else if (data.user?.app_metadata?.role !== 'admin') {
-        window.location.href = '/san-pham'
-      } else {
-        window.location.href = '/admin/don-hang'
-      }
-    } catch {
+    setError('')
+    const supabase = createSupabaseBrowserClient()
+    const { error } = await supabase.auth.updateUser({ password })
+    if (error) {
       setError('Có lỗi xảy ra. Vui lòng thử lại.')
-    } finally {
       setLoading(false)
+    } else {
+      router.push('/admin/don-hang')
     }
   }
 
@@ -36,29 +37,29 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-sm">
         <div className="text-center mb-6">
-          <h1 className="text-xl font-bold text-gray-900">CT Tân Vy Phát</h1>
-          <p className="text-gray-500 text-sm mt-1">Quản lý đơn hàng</p>
+          <h1 className="text-xl font-bold text-gray-900">Đặt lại mật khẩu</h1>
+          <p className="text-gray-500 text-sm mt-1">Nhập mật khẩu mới cho tài khoản</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="admin@example.com"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu mới</label>
             <input
               type="password"
               required
               value={password}
               onChange={e => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Xác nhận mật khẩu</label>
+            <input
+              type="password"
+              required
+              value={confirm}
+              onChange={e => setConfirm(e.target.value)}
               placeholder="••••••••"
               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -73,13 +74,8 @@ export default function AdminLoginPage() {
             disabled={loading}
             className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
           >
-            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            {loading ? 'Đang cập nhật...' : 'Cập nhật mật khẩu'}
           </button>
-          <div className="text-center">
-            <Link href="/admin/quen-mat-khau" className="text-gray-400 text-xs hover:underline">
-              Quên mật khẩu?
-            </Link>
-          </div>
         </form>
       </div>
     </div>
