@@ -22,7 +22,6 @@ export async function PATCH(
 
   const db = getAdminClient()
   const updatePayload: Record<string, unknown> = { status, updated_at: new Date().toISOString() }
-  if (status === 'da_giao') updatePayload.payment_status = 'paid'
 
   const { data, error } = await db
     .from('orders')

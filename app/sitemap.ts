@@ -16,7 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/tin-tuc`,           lastModified: new Date() },
     { url: `${SITE_URL}/gioi-thieu`,        lastModified: new Date() },
     { url: `${SITE_URL}/lien-he`,           lastModified: new Date() },
-{ url: `${SITE_URL}/tra-cuu-don-hang`,  lastModified: new Date() },
+    { url: `${SITE_URL}/tra-cuu-don-hang`,  lastModified: new Date() },
   ]
 
   const categoryPages: MetadataRoute.Sitemap = categories.map((cat) => ({

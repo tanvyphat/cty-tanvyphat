@@ -141,6 +141,7 @@ export default async function AdminOrderDetailPage({
 
         {/* Status updater */}
         <StatusUpdater orderId={id} currentStatus={order.status} />
+
       </div>
     </div>
   )
