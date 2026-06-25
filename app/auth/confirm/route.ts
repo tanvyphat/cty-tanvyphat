@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
   const next = type === 'recovery'
-    ? '/admin/doi-mat-khau'
+    ? '/doi-mat-khau'
     : (searchParams.get('next') ?? '/admin/don-hang')
 
   if (token_hash && type) {

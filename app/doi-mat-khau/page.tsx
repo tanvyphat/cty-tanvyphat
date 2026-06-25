@@ -29,7 +29,7 @@ export default function ResetPasswordPage() {
       setError('Có lỗi xảy ra. Vui lòng thử lại.')
       setLoading(false)
     } else {
-      router.push('/admin/don-hang')
+      router.push('/')
     }
   }
 

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { createSupabaseBrowserClient } from '@/src/lib/supabase/browser'
 
 export default function AdminLoginPage() {
@@ -75,11 +74,6 @@ export default function AdminLoginPage() {
           >
             {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
-          <div className="text-center">
-            <Link href="/admin/quen-mat-khau" className="text-gray-400 text-xs hover:underline">
-              Quên mật khẩu?
-            </Link>
-          </div>
         </form>
       </div>
     </div>

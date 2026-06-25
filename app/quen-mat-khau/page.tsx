@@ -33,8 +33,8 @@ export default function ForgotPasswordPage() {
             <p className="text-sm text-gray-600">
               Nếu email tồn tại, bạn sẽ nhận được link đặt lại mật khẩu trong vài phút.
             </p>
-            <Link href="/admin/dang-nhap" className="text-blue-600 text-sm hover:underline">
-              Quay lại đăng nhập
+            <Link href="/" className="text-blue-600 text-sm hover:underline">
+              Về trang chủ
             </Link>
           </div>
         ) : (
@@ -46,7 +46,7 @@ export default function ForgotPasswordPage() {
                 required
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="admin@example.com"
+                placeholder="email@example.com"
                 className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -58,8 +58,8 @@ export default function ForgotPasswordPage() {
               {loading ? 'Đang gửi...' : 'Gửi link đặt lại mật khẩu'}
             </button>
             <div className="text-center">
-              <Link href="/admin/dang-nhap" className="text-gray-500 text-sm hover:underline">
-                Quay lại đăng nhập
+              <Link href="/" className="text-gray-500 text-sm hover:underline">
+                Về trang chủ
               </Link>
             </div>
           </form>

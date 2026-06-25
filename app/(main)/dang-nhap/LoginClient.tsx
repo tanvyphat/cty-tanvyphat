@@ -178,9 +178,11 @@ export default function LoginClient() {
             </button>
           </p>
 
-          <p className="text-center mt-4">
-            <a href="/" className="text-xs text-gray-400 hover:text-gray-600">← Quay lại trang chủ</a>
-          </p>
+          {mode === 'login' && (
+            <p className="text-center mt-4">
+              <a href="/quen-mat-khau" className="text-xs text-gray-400 hover:underline">Quên mật khẩu?</a>
+            </p>
+          )}
         </div>
       </div>
   )
