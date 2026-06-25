@@ -2,11 +2,12 @@ import Link from 'next/link'
 import { store } from '../data/store'
 
 const quickLinks = [
-  { href: '/', label: 'Trang chủ' },
+  { href: '/chinh-sach/chinh-sach-bao-mat', label: 'Chính sách bảo mật' },
   { href: '/san-pham', label: 'Sản phẩm' },
   { href: '/gioi-thieu', label: 'Giới thiệu' },
   { href: '/tin-tuc', label: 'Tin tức' },
   { href: '/lien-he', label: 'Liên hệ' },
+  { href: '/chinh-sach/chinh-sach-xoa-du-lieu', label: 'Chính sách xoá dữ liệu người dùng' }
 ]
 
 export default function Footer() {
