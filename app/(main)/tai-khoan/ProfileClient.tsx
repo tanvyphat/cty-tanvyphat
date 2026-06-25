@@ -232,6 +232,18 @@ export default function ProfileClient() {
                 </Link>
             )}
 
+            {(!provider || provider === 'email') && (
+              <Link href="/tai-khoan/doi-mat-khau" className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors">
+                <div className="flex items-center gap-3 text-sm font-medium text-gray-700">
+                  <span className="text-xl">🔑</span>
+                  Đổi mật khẩu
+                </div>
+                <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            )}
+
             <Link href="/tra-cuu-don-hang" className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors">
               <div className="flex items-center gap-3 text-sm font-medium text-gray-700">
                 <span className="text-xl">📦</span>
