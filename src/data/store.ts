@@ -6,7 +6,7 @@ export const store = {
   address: '1/6 Đường Tân Thới Nhất 22, Khu phố 8, Phường Đông Hưng Thuận, Thành phố Hồ Chí Minh, Việt Nam',
   email: 'tanvyphatpaper@gmail.com',
   facebook: 'https://www.facebook.com/100023082080173',
-  zalo: 'https://zalo.me/0903608768',
+  zalo: 'https://zalo.me/1377439457201992738',
   whatsapp: 'https://wa.me/84903608768',
   mapsUrl: 'https://maps.app.goo.gl/T2VrFLpVWFwF6fDS9',
   directionsUrl: 'https://maps.app.goo.gl/T2VrFLpVWFwF6fDS9',

@@ -9,6 +9,7 @@ const BRANCH_NAMES: Record<string, string> = {
   'giay-in': 'Giấy In',
   'van-phong-pham': 'Văn Phòng Phẩm',
   'hang-thai-lan': 'Hàng Tiêu Dùng Thái Lan',
+  'becker-chemie': 'Becker Chemie'
 }
 
 function toSlug(text: string): string {

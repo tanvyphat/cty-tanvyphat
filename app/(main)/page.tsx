@@ -289,6 +289,66 @@ export default async function Home() {
         )
       })()}
 
+      {/* Nhánh 4: Hàng Becker Chemie — text trái, ảnh phải */}
+      {(() => {
+        const becker = categories.filter((c) => c.branch_slug === 'becker-chemie')
+        return (
+            <section className="py-16 bg-[#f8fafc] overflow-hidden">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col lg:flex-row-reverse items-center gap-10 lg:gap-16">
+                  {/* Ảnh */}
+                  <ScrollReveal className="w-full lg:w-[45%] shrink-0">
+                    <div className="overflow-hidden rounded-2xl">
+                      <img
+                          src="/branch-becker-chemie.jpg"
+                          alt="Becker Chemie"
+                          className="w-full h-auto block hover:scale-105 transition-transform duration-700"
+                      />
+                    </div>
+                  </ScrollReveal>
+                  {/* Nội dung */}
+                  <ScrollReveal className="w-full lg:w-[55%]" delay={150}>
+                    <p className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase mb-4">
+                      [ Dòng sản phẩm 04 ]
+                    </p>
+                    <h2 className="text-3xl md:text-4xl font-extrabold text-[#0000AA] leading-tight mb-4">
+                      Dòng sản phẩm Becker Chemie<br />
+                      <span className="text-[#0099FF]">Nhập Khẩu Chính Ngạch</span>
+                    </h2>
+                    <p className="text-gray-500 text-base leading-relaxed mb-6">
+                      Giải pháp làm sạch toàn diện, nâng tầm không gian sống. Được nghiên cứu và phát triển dựa trên các tiêu chuẩn
+                      chất lượng khắt khe, Becker Chemie không chỉ đơn thuần là dung dịch tẩy rửa, mà là "chuyên gia" đồng hành bảo vệ
+                      tổ ấm và không gian làm việc của bạn.
+                    </p>
+                    {/* Danh mục */}
+                    <div className="flex flex-wrap gap-2 mb-8">
+                      {becker.map((cat) => (
+                          <Link
+                              key={cat.slug}
+                              href={`/san-pham?category=${cat.slug}`}
+                              className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-[#dc2626] border border-gray-200 hover:border-[#dc2626] px-3 py-1.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
+                          >
+                            <span>{cat.icon}</span>
+                            <span>{cat.name}</span>
+                          </Link>
+                      ))}
+                    </div>
+                    <Link
+                        href="/san-pham?branch=becker-chemie"
+                        className="inline-flex items-center gap-2 border-2 border-[#991b1b] text-[#991b1b] hover:bg-[#991b1b] hover:text-white font-semibold px-7 py-3 rounded-full transition-all duration-200 text-sm tracking-wide"
+                    >
+                      XEM SẢN PHẨM
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </ScrollReveal>
+                </div>
+              </div>
+            </section>
+        )
+      })()}
+
       {/* Featured Products – Carousel */}
       <section className="py-12 bg-[#f8fafc]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

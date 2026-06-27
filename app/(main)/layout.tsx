@@ -1,6 +1,6 @@
 import Navbar from '../../src/components/Navbar'
 import Footer from '../../src/components/Footer'
-import ContactCTA from '../../src/components/ContactCTA'
+import ZaloChatWidget from "@/src/components/ZaloChatWidget";
 
 export default function MainLayout({
                                        children,
@@ -11,8 +11,8 @@ export default function MainLayout({
         <>
             <Navbar/>
             <main className="flex-1">{children}</main>
+            <ZaloChatWidget/>
             <Footer/>
-            <ContactCTA/>
         </>
     )
 }
