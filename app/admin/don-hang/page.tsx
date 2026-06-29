@@ -154,7 +154,7 @@ export default async function AdminOrdersPage({
                           </span>
                         </td>
                         <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">
-                          {new Date(order.created_at as string).toLocaleDateString('vi-VN')}
+                          {new Date(order.created_at as string).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', dateStyle: 'short', timeStyle: 'short' })}
                         </td>
                         <td className="px-4 py-3">
                           <Link
