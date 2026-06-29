@@ -151,11 +151,7 @@ export const DISTRICTS_BY_PROVINCE: Record<string, District[]> = {
     { code: '774', name: 'Quận Tân Phú', provinceCode: '79' },
     { code: '775', name: 'Quận Bình Tân', provinceCode: '79' },
     { code: '776', name: 'Thành phố Thủ Đức', provinceCode: '79' },
-    { code: '777', name: 'Huyện Bình Chánh', provinceCode: '79' },
     { code: '778', name: 'Huyện Hóc Môn', provinceCode: '79' },
-    { code: '779', name: 'Huyện Củ Chi', provinceCode: '79' },
-    { code: '780', name: 'Huyện Nhà Bè', provinceCode: '79' },
-    { code: '781', name: 'Huyện Cần Giờ', provinceCode: '79' },
   ],
   '92': [
     { code: '920', name: 'Quận Ninh Kiều', provinceCode: '92' },

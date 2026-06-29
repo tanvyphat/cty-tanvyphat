@@ -61,7 +61,7 @@ export default function PaymentPolicyPage() {
 
                         <div className="bg-gray-50 p-5 rounded-xl border border-gray-200 mt-4 text-gray-800 text-sm sm:text-base">
                             <p className="mb-2"><strong>Website:</strong> <Link href="/" className="text-blue-600 hover:underline">tanvyphat.com</Link></p>
-                            <p className="mb-2"><strong>Email:</strong> <a href="mailto:Tanvyphatpaper@gmail.com?subject=Thắc Mắc Về Bảo Mật Website">Tanvyphatpaper@gmail.com</a> </p>
+                            <p className="mb-2"><strong>Email:</strong> <a href="mailto:Tanvyphatpaper@gmail.com?subject=Thắc Mắc Về Chính Sách Thanh Toán">Tanvyphatpaper@gmail.com</a> </p>
                             <p className="mb-2"><strong>Hotline:</strong> <a href="tel:0931868158">0931868158</a> </p>
                             <p><strong>Địa chỉ:</strong> Thành phố Hồ Chí Minh, Việt Nam</p>
                         </div>

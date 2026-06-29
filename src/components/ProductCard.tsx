@@ -73,7 +73,7 @@ export default function ProductCard({ product, category }: ProductCardProps) {
 
         <div className="flex gap-1 sm:gap-2 mt-auto">
           <Link
-            href={`/app/(main)/san-pham/${product.slug}`}
+            href={`/san-pham/${product.slug}`}
             className="flex-1 text-center text-[10px] sm:text-xs border border-[#1a56db] text-[#1a56db] hover:bg-[#1a56db] hover:text-white font-medium py-0.5 sm:py-1.5 px-1 sm:px-3 rounded-md sm:rounded-lg transition-colors"
           >
             Chi tiết

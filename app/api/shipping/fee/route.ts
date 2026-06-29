@@ -41,11 +41,11 @@ export async function GET(request: NextRequest) {
       deliver_option: 'none',
     })
     const res = await fetch(
-      `https://services.giaohangtietkiem.vn/services/shipment/fee?${params}`,
-      {
-        headers: { Token: token },
-        next: { revalidate: 300 },
-      }
+        `https://services.giaohangtietkiem.vn/services/shipment/fee?${params}`,
+        {
+          headers: { Token: token },
+          next: { revalidate: 300 },
+        }
     )
     if (!res.ok) throw new Error(`GHTK ${res.status}`)
     const data = await res.json()
