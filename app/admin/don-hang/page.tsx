@@ -112,6 +112,7 @@ export default async function AdminOrdersPage({
                     <th className="text-left px-4 py-3 text-gray-500 font-medium">SĐT</th>
                     <th className="text-left px-4 py-3 text-gray-500 font-medium">Tổng tiền</th>
                     <th className="text-left px-4 py-3 text-gray-500 font-medium">Thanh toán</th>
+                    <th className="text-left px-4 py-3 text-gray-500 font-medium">Giao hàng</th>
                     <th className="text-left px-4 py-3 text-gray-500 font-medium">Trạng thái</th>
                     <th className="text-left px-4 py-3 text-gray-500 font-medium">Ngày tạo</th>
                     <th className="px-4 py-3"></th>
@@ -138,6 +139,13 @@ export default async function AdminOrdersPage({
                             </span>
                           ) : (
                             <span className="text-xs text-gray-500">COD</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          {order.delivery_type === 'express' ? (
+                            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-700">⚡ Hỏa tốc</span>
+                          ) : (
+                            <span className="text-xs text-gray-500">Thường</span>
                           )}
                         </td>
                         <td className="px-4 py-3">
