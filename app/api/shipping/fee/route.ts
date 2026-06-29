@@ -43,6 +43,7 @@ export async function GET(request: NextRequest) {
       address,
       weight,
       deliver_option: deliverOption,
+      transport: 'road',
     })
     const res = await fetch(
         `https://services.giaohangtietkiem.vn/services/shipment/fee?${params}`,
