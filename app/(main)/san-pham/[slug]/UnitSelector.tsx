@@ -34,6 +34,7 @@ export default function UnitSelector({ product, units }: Props) {
       image: product.images?.[0] ?? null,
       price: selectedUnit.price,
       unit: selectedUnit.unit_name,
+      weight_grams: selectedUnit.weight_grams ?? null,
     })
     setAdded(true)
     setTimeout(() => setAdded(false), 1500)

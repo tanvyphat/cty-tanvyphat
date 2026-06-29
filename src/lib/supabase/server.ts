@@ -10,6 +10,7 @@ export type ProductUnitRow = {
   stock: number
   sort_order: number
   created_at: string
+  weight_grams: number | null
 }
 
 export type ProductRow = {
@@ -109,7 +110,7 @@ export async function createSSRClient() {
 export async function getProducts(): Promise<ProductRow[]> {
   const { data, error } = await getClient()
     .from('products')
-    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at)')
+    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
     .order('featured', { ascending: false })
     .order('name')
   if (error) throw new Error(`getProducts: ${error.message}`)
@@ -119,7 +120,7 @@ export async function getProducts(): Promise<ProductRow[]> {
 export async function getRandomProducts(limit: number): Promise<ProductRow[]> {
   const { data, error } = await getClient()
     .rpc('get_random_products', { limit_count: limit })
-    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at)')
+    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
   if (error) throw new Error(`getRandomProducts: ${error.message}`)
   return (data ?? []).map(normalizeProduct)
 }
@@ -164,7 +165,7 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
   // Include categories to allow ordering by sort_order for giay-in branch
   let query = client
     .from('products')
-    .select('*, categories!products_category_fkey(sort_order), product_units(id, product_id, unit_name, price, stock, sort_order, created_at)', { count: 'exact' })
+    .select('*, categories!products_category_fkey(sort_order), product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)', { count: 'exact' })
 
   if (search && search.trim()) {
     const term = search.trim()
@@ -238,7 +239,7 @@ export async function getProductCounts(): Promise<Record<string, number>> {
 export async function getProductBySlug(slug: string): Promise<ProductRow | null> {
   const { data, error } = await getClient()
     .from('products')
-    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at)')
+    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
     .eq('slug', slug)
     .single()
   if (error) {
@@ -272,7 +273,7 @@ export async function getCategories(): Promise<CategoryRow[]> {
 export async function getProductsByCategory(categorySlug: string): Promise<ProductRow[]> {
   const { data, error } = await getClient()
     .from('products')
-    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at)')
+    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
     .eq('category', categorySlug)
     .order('name')
   if (error) throw new Error(`getProductsByCategory: ${error.message}`)

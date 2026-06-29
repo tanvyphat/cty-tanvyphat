@@ -59,6 +59,7 @@ function CartPageContent({ categoryMap }: Props) {
               image: product.images?.[0] ?? null,
               price: product.firstUnit.price,
               unit: product.firstUnit.unit_name,
+              weight_grams: product.firstUnit.weight_grams ?? null,
             })
           }
         })

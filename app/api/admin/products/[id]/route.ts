@@ -49,12 +49,13 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (Array.isArray(units)) {
     await db.from('product_units').delete().eq('product_id', productId)
     if (units.length > 0) {
-      const unitRows = units.map((u: { unit_name: string; price?: string; stock?: string }, i: number) => ({
+      const unitRows = units.map((u: { unit_name: string; price?: string; stock?: string; weight_grams?: number | null }, i: number) => ({
         product_id: productId,
         unit_name: u.unit_name.trim(),
         price: u.price !== '' && u.price != null ? Number(u.price) : null,
         stock: Number(u.stock ?? 0) || 0,
         sort_order: i,
+        weight_grams: u.weight_grams ?? null,
       }))
       await db.from('product_units').insert(unitRows)
     }

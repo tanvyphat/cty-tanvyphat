@@ -10,6 +10,7 @@ interface PendingPaymentBody {
   province?: string
   district?: string
   shipping_fee: number
+  delivery_type?: string
   items: { product_id: number; unit_id: number; quantity: number }[]
 }
 
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
 
   const {
     customer_name, customer_phone, customer_address,
-    note, fb_user_id, province, district, shipping_fee, items,
+    note, fb_user_id, province, district, shipping_fee, delivery_type, items,
   } = body
 
   if (!customer_name || !customer_phone || !customer_address) {
@@ -65,6 +66,7 @@ export async function POST(request: NextRequest) {
       fb_user_id: fb_user_id || null,
       province: province || null,
       district: district || null,
+      delivery_type: delivery_type ?? 'standard',
       items: JSON.stringify(items),
     })
     .select('token')

@@ -28,6 +28,7 @@ interface UnitField {
   unit_name: string
   price: string
   stock: string
+  weight_grams: string
 }
 
 type Props = {
@@ -37,12 +38,13 @@ type Props = {
 
 function defaultUnits(product?: ProductRow): UnitField[] {
   if (!product || product.product_units.length === 0) {
-    return [{ unit_name: 'Hộp', price: '', stock: '0' }]
+    return [{ unit_name: 'Hộp', price: '', stock: '0', weight_grams: '' }]
   }
   return product.product_units.map((u: ProductUnitRow) => ({
     unit_name: u.unit_name,
     price: u.price != null ? String(u.price) : '',
     stock: String(u.stock),
+    weight_grams: u.weight_grams != null ? String(u.weight_grams) : '',
   }))
 }
 
@@ -104,7 +106,7 @@ export default function ProductFormClient({ categories, product }: Props) {
   }
 
   function addUnit() {
-    setUnits(prev => [...prev, { unit_name: '', price: '', stock: '0' }])
+    setUnits(prev => [...prev, { unit_name: '', price: '', stock: '0', weight_grams: '' }])
   }
 
   function removeUnit(index: number) {
@@ -145,6 +147,7 @@ export default function ProductFormClient({ categories, product }: Props) {
         unit_name: u.unit_name.trim(),
         price: u.price.trim() || null,
         stock: u.stock || '0',
+        weight_grams: u.weight_grams.trim() ? Number(u.weight_grams) : null,
       })),
     }
 
@@ -355,7 +358,7 @@ export default function ProductFormClient({ categories, product }: Props) {
           <div className="space-y-3">
             {units.map((unit, i) => (
               <div key={i} className="flex items-start gap-2 p-3 bg-gray-50 rounded-xl">
-                <div className="flex-1 grid grid-cols-3 gap-2">
+                <div className="flex-1 grid grid-cols-4 gap-2">
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">Tên đơn vị *</label>
                     <input
@@ -383,6 +386,17 @@ export default function ProductFormClient({ categories, product }: Props) {
                       type="number"
                       value={unit.stock}
                       onChange={e => updateUnit(i, 'stock', e.target.value)}
+                      min="0"
+                      className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Cân nặng (g)</label>
+                    <input
+                      type="number"
+                      value={unit.weight_grams}
+                      onChange={e => updateUnit(i, 'weight_grams', e.target.value)}
+                      placeholder="1000"
                       min="0"
                       className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                     />

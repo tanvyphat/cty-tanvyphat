@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, Suspense } from 'react'
 import Link from 'next/link'
 import { useCart, useFbUserId, CartItem } from '../../../src/hooks/useCart'
 import { useAuth } from '../../../src/contexts/AuthContext'
-import { PROVINCES, DISTRICTS_BY_PROVINCE, type Province, type District } from '../../../src/data/provinces'
+import { PROVINCES, DISTRICTS_BY_PROVINCE, HCMC_CODE, type Province, type District } from '../../../src/data/provinces'
 
 const SEPAY_BANK = process.env.NEXT_PUBLIC_SEPAY_BANK_CODE ?? ''
 const SEPAY_ACCOUNT = process.env.NEXT_PUBLIC_SEPAY_ACCOUNT ?? ''
@@ -27,6 +27,7 @@ function CheckoutContent() {
   const [shippingFee, setShippingFee] = useState<number | null>(null)
   const [shippingLoading, setShippingLoading] = useState(false)
   const [shippingUnavailable, setShippingUnavailable] = useState(false)
+  const [deliveryType, setDeliveryType] = useState<'standard' | 'express'>('standard')
 
   // Submission state
   const [loading, setLoading] = useState(false)
@@ -45,6 +46,19 @@ function CheckoutContent() {
 
   const districts = province ? (DISTRICTS_BY_PROVINCE[province.code] ?? []) : []
   const totalWithShipping = totalPrice + (shippingFee ?? 0)
+  const totalWeight = items.reduce((sum, i) => sum + (i.weight_grams ?? 1000) * i.quantity, 0)
+
+  // Khi chọn hỏa tốc: tự động set tỉnh = TP.HCM và khóa lại
+  useEffect(() => {
+    if (deliveryType === 'express') {
+      const hcmc = PROVINCES.find(p => p.code === HCMC_CODE) ?? null
+      if (province?.code !== HCMC_CODE) {
+        setProvince(hcmc)
+        setDistrict(null)
+        setShippingFee(null)
+      }
+    }
+  }, [deliveryType])
 
   function fillFromProfile() {
     if (!profile) return
@@ -62,9 +76,14 @@ function CheckoutContent() {
     setProfileFilled(true)
   }
 
-  // Tính phí vận chuyển khi chọn tỉnh + quận
+  // Tính phí vận chuyển khi chọn tỉnh + quận hoặc đổi loại giao
   useEffect(() => {
     if (!province || !district) {
+      setShippingFee(null)
+      setShippingUnavailable(false)
+      return
+    }
+    if (deliveryType === 'express' && !address.trim()) {
       setShippingFee(null)
       setShippingUnavailable(false)
       return
@@ -76,6 +95,9 @@ function CheckoutContent() {
       district: district.name,
       province_code: province.code,
       total: String(totalPrice),
+      type: deliveryType,
+      address: address.trim() || '1',
+      weight: String(totalWeight),
     })
     fetch(`/api/shipping/fee?${params}`, { signal: controller.signal })
         .then(r => r.json())
@@ -87,7 +109,7 @@ function CheckoutContent() {
         .catch(() => {})
         .finally(() => setShippingLoading(false))
     return () => controller.abort()
-  }, [province, district, totalPrice])
+  }, [province, district, totalPrice, deliveryType, address, totalWeight])
 
   // Poll trạng thái thanh toán chuyển khoản
   useEffect(() => {
@@ -139,6 +161,7 @@ function CheckoutContent() {
             province: province?.name,
             district: district?.name,
             shipping_fee: shippingFee ?? 0,
+            delivery_type: deliveryType,
             items: items.map((i: CartItem) => ({ product_id: i.productId, unit_id: i.unitId, quantity: i.quantity })),
           }),
         })
@@ -165,6 +188,7 @@ function CheckoutContent() {
             province: province?.name,
             district: district?.name,
             shipping_fee: shippingFee ?? 0,
+            delivery_type: deliveryType,
             items: items.map((i: CartItem) => ({ product_id: i.productId, unit_id: i.unitId, quantity: i.quantity })),
           }),
         })
@@ -377,13 +401,17 @@ function CheckoutContent() {
                           suppressHydrationWarning
                           value={province?.code ?? ''}
                           onChange={e => handleProvinceChange(e.target.value)}
-                          className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                          disabled={deliveryType === 'express'}
+                          className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white disabled:bg-orange-50 disabled:text-gray-700 disabled:border-orange-200"
                       >
                         <option value="">Chọn tỉnh/TP</option>
                         {PROVINCES.map(p => (
                             <option key={p.code} value={p.code}>{p.name}</option>
                         ))}
                       </select>
+                      {deliveryType === 'express' && (
+                        <p className="text-xs text-orange-600 mt-1">⚡ Hỏa tốc chỉ giao trong TP.HCM</p>
+                      )}
                     </div>
 
                     <div>
@@ -440,6 +468,41 @@ function CheckoutContent() {
                 </div>
               </div>
 
+              {/* Hình thức giao hàng */}
+              <div className="bg-white border border-gray-200 rounded-xl p-6">
+                <h2 className="font-semibold text-gray-900 text-base mb-4">Hình thức giao hàng</h2>
+                <div className="space-y-3">
+                  <label className={`flex items-center gap-3 p-3 border rounded-xl cursor-pointer transition-colors ${deliveryType === 'standard' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:bg-gray-50'}`}>
+                    <input
+                        type="radio"
+                        name="delivery"
+                        value="standard"
+                        checked={deliveryType === 'standard'}
+                        onChange={() => setDeliveryType('standard')}
+                        className="accent-blue-600"
+                    />
+                    <div>
+                      <p className="font-medium text-sm text-gray-900">Giao hàng thường</p>
+                      <p className="text-xs text-gray-500">2-3 ngày</p>
+                    </div>
+                  </label>
+                  <label className={`flex items-center gap-3 p-3 border rounded-xl cursor-pointer transition-colors ${deliveryType === 'express' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:bg-gray-50'}`}>
+                    <input
+                        type="radio"
+                        name="delivery"
+                        value="express"
+                        checked={deliveryType === 'express'}
+                        onChange={() => setDeliveryType('express')}
+                        className="accent-orange-500"
+                    />
+                    <div>
+                      <p className="font-medium text-sm text-gray-900">⚡ Giao hỏa tốc</p>
+                      <p className="text-xs text-gray-500">Trong ngày · Chỉ giao trong TP.HCM</p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
               {/* Phương thức thanh toán */}
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h2 className="font-semibold text-gray-900 text-base mb-4">Phương thức thanh toán</h2>
@@ -470,7 +533,7 @@ function CheckoutContent() {
                     />
                     <div>
                       <p className="font-medium text-sm text-gray-900">Chuyển khoản ngân hàng</p>
-                      <p className="text-xs text-gray-500">Quét QR — xác nhận tự động qua SePay</p>
+                      <p className="text-xs text-gray-500">Quét QR</p>
                     </div>
                   </label>
                 </div>
@@ -485,13 +548,28 @@ function CheckoutContent() {
               <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-bold py-3.5 rounded-xl text-sm transition-colors shadow-sm"
+                  style={loading
+                    ? { background: '#dbeafe', color: '#1e40af', boxShadow: 'none' }
+                    : { background: '#2563eb', color: '#fff', boxShadow: '0 4px 14px rgba(37,99,235,0.33)' }
+                  }
+                  className="w-full h-[54px] flex items-center justify-center gap-2.5 rounded-[14px] font-semibold text-base border-none transition-all duration-200 disabled:cursor-wait hover:-translate-y-px hover:brightness-95"
               >
-                {loading
-                    ? 'Đang xử lý...'
-                    : paymentMethod === 'bank_transfer'
-                        ? '📲 Tiếp tục & Quét QR'
-                        : '✅ Xác nhận đặt hàng'}
+                {loading ? (
+                  <>
+                    <span className="inline-block w-5 h-5 rounded-full border-[2.5px] border-[#1e40af] border-t-transparent animate-spin flex-shrink-0" />
+                    Đang xử lý…
+                  </>
+                ) : paymentMethod === 'bank_transfer' ? (
+                  <>
+                    <span className="inline-flex items-center justify-center w-[22px] h-[22px] rounded-full text-[13px] font-bold flex-shrink-0" style={{ background: 'rgba(255,255,255,.22)' }}>📲</span>
+                    Tiếp tục & Quét QR
+                  </>
+                ) : (
+                  <>
+                    <span className="inline-flex items-center justify-center w-[22px] h-[22px] rounded-full text-[13px] font-bold flex-shrink-0" style={{ background: 'rgba(255,255,255,.22)' }}>✓</span>
+                    Xác nhận đặt hàng
+                  </>
+                )}
               </button>
             </form>
 
@@ -550,7 +628,7 @@ function CheckoutContent() {
                     ) : shippingLoading ? (
                         <span className="text-gray-400 text-xs">Đang tính...</span>
                     ) : shippingUnavailable || shippingFee === null ? (
-                        <span className="text-orange-500 text-xs">Liên hệ shop</span>
+                        <span className="text-orange-500 text-xs">Vui lòng nhập đầy đủ thông tin</span>
                     ) : shippingFee === 0 ? (
                         <span className="text-green-600 font-semibold text-xs">MIỄN PHÍ</span>
                     ) : (

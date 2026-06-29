@@ -138,6 +138,12 @@ export default async function AdminOrderDetailPage({
                                 ? Number(order.shipping_fee).toLocaleString('vi-VN') + 'đ'
                                 : 'Miễn phí'}
                         </p>
+                        <p>
+                            <span className="text-gray-500">Giao hàng:</span>{' '}
+                            {(order as { delivery_type?: string }).delivery_type === 'express'
+                                ? '⚡ Hỏa tốc (trong ngày)'
+                                : 'Thường (2-3 ngày)'}
+                        </p>
                     </div>
                 </div>
 

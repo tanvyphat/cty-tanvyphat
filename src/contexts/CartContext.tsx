@@ -11,6 +11,7 @@ export interface CartItem {
   image: string | null
   price: number | null
   unit: string | null
+  weight_grams: number | null
   quantity: number
 }
 

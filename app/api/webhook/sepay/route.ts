@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
   const { data: pendings } = await db
     .from('pending_payments')
-    .select('token, amount, customer_name, customer_phone, customer_address, province, district, note, fb_user_id, items, shipping_fee')
+    .select('token, amount, customer_name, customer_phone, customer_address, province, district, note, fb_user_id, items, shipping_fee, delivery_type')
     .eq('status', 'waiting')
 
   const pending = pendings?.find(p => {
@@ -109,6 +109,7 @@ export async function POST(request: NextRequest) {
       shipping_fee: pending.shipping_fee ?? 0,
       province: pending.province ?? null,
       district: pending.district ?? null,
+      delivery_type: (pending as { delivery_type?: string }).delivery_type ?? 'standard',
       status: 'moi',
       payment_method: 'bank_transfer',
       payment_status: 'paid',

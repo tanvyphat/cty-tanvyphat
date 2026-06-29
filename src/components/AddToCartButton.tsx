@@ -30,6 +30,7 @@ export default function AddToCartButton({ product, unit, fullWidth }: Props) {
       image: product.images?.[0] ?? null,
       price: unit.price,
       unit: unit.unit_name,
+      weight_grams: unit.weight_grams ?? null,
     })
     setAdded(true)
     setTimeout(() => setAdded(false), 1500)

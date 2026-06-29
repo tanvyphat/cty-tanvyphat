@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
         shipping_fee = 0,
         province,
         district,
+        delivery_type,
     } = body as {
         customer_name: string
         customer_phone: string
@@ -35,6 +36,7 @@ export async function POST(request: NextRequest) {
         shipping_fee?: number
         province?: string
         district?: string
+        delivery_type?: string
     }
 
     // Kiểm tra dữ liệu đầu vào
@@ -52,7 +54,7 @@ export async function POST(request: NextRequest) {
     let finalUserId: string | null = null
 
     try {
-        const supabase = await createSSRClient()   // ← Dùng SSR client
+        const supabase = await createSSRClient()
         const {data: {user}, error} = await supabase.auth.getUser()
 
         if (!error && user?.id) {
@@ -62,7 +64,6 @@ export async function POST(request: NextRequest) {
         console.warn('Guest order (không đăng nhập):', error)
     }
 
-// Debug (nên giữ tạm để kiểm tra)
     console.log('Final User ID:', finalUserId)
 
     // Lấy thông tin sản phẩm & đơn vị
@@ -113,6 +114,7 @@ export async function POST(request: NextRequest) {
             shipping_fee: shippingFeeNum,
             province: province?.trim() || null,
             district: district?.trim() || null,
+            delivery_type: delivery_type ?? 'standard',
             status: 'moi',
             payment_method: 'cod',
             payment_status: 'pending',
