@@ -83,7 +83,7 @@ function CheckoutContent() {
       setShippingUnavailable(false)
       return
     }
-    if (deliveryType === 'express' && !address.trim()) {
+    if (!address.trim()) {
       setShippingFee(null)
       setShippingUnavailable(false)
       return
