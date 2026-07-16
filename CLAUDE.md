@@ -104,11 +104,13 @@ import { getAdminClient } from '@/lib/supabase/admin'
 
 ### 3 dòng sản phẩm (branches)
 
-| Branch | Slug | Filter sidebar | Thứ tự tab |
+| Branch | Slug | Filter sidebar (`ProductFilter`) | Thứ tự tab |
 |--------|------|---------------|------------|
 | Giấy In | `giay-in` | KÍCH THƯỚC (A4/A3/A5/A3L) + TRỌNG LƯỢNG (70/75/80/100gsm) | 1 |
-| Văn Phòng Phẩm | `van-phong-pham` | THƯƠNG HIỆU (hãng) | 2 |
-| Hàng Tiêu Dùng Thái Lan | `hang-thai-lan` | LOẠI SẢN PHẨM | 3 |
+| Văn Phòng Phẩm | `van-phong-pham` | Không có — chọn category qua `CategoryStrip` (chip icon) | 2 |
+| Hàng Tiêu Dùng Thái Lan | `hang-thai-lan` | Không có — chọn category qua `CategoryStrip` (chip icon) | 3 |
+
+> `ProductFilter` (sidebar "Bộ lọc") chỉ hiện khi `branch=giay-in` — các branch khác chọn category qua `CategoryStrip` để tránh trùng UI.
 
 ### URL params trang sản phẩm
 
@@ -224,7 +226,6 @@ Thứ tự trong mỗi hãng: sort theo tên (A3 → A4 → A5).
 | `getBranches()` | Trả về branches sắp xếp theo sort_order |
 | `getCategories()` | Trả về categories với branch_slug, sắp xếp theo branch_id → sort_order |
 | `getProductsFiltered(filter)` | Filter + paginate sản phẩm. Giấy In sort theo categories.sort_order |
-| `getProductCounts()` | Đếm sản phẩm theo category slug |
 | `getProductBySlug(slug)` | Lấy một sản phẩm |
 
 ### Auth (admin panel)

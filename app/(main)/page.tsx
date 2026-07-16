@@ -2,37 +2,59 @@ import Link from 'next/link'
 import { store } from '../../src/data/store'
 import { getProducts, getCategories } from '../../src/lib/supabase/server'
 import FeaturedCarousel from '../../src/components/FeaturedCarousel'
-import BannerCarousel from '../../src/components/BannerCarousel'
+import HomeHero from '../../src/components/HomeHero'
 import ScrollReveal from '../../src/components/ScrollReveal'
 
 const uspItems = [
   {
-    icon: '💰',
+    icon: (
+      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+        <circle cx="7" cy="7" r="1.2" fill="currentColor" stroke="none" />
+      </svg>
+    ),
     title: 'Giá sỉ tận gốc',
-    desc: 'Nhập trực tiếp từ nhà sản xuất, không qua trung gian. Giá cạnh tranh nhất thị trường.',
-    cardHover: 'hover:bg-gradient-to-br hover:from-amber-50 hover:to-yellow-50 hover:border-amber-300',
-    iconHover: 'group-hover:bg-amber-100',
+    desc: 'Nhập thẳng từ nhà máy',
+    iconColor: 'text-amber-600',
+    ring: 'border-amber-300',
   },
   {
-    icon: '🚚',
-    title: 'Giao hàng toàn quốc',
-    desc: 'Ship toàn quốc nhanh chóng, đóng gói cẩn thận. Giao hàng nội thành TPHCM trong ngày.',
-    cardHover: 'hover:bg-gradient-to-br hover:from-blue-50 hover:to-sky-50 hover:border-blue-300',
-    iconHover: 'group-hover:bg-blue-100',
+    icon: (
+      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+        <rect x="1" y="5" width="14" height="12" rx="1.5" />
+        <path d="M15 8h4l3 4v5h-7" />
+        <circle cx="6" cy="19" r="1.8" />
+        <circle cx="18" cy="19" r="1.8" />
+      </svg>
+    ),
+    title: 'Giao toàn quốc',
+    desc: 'Nội thành HCM trong ngày',
+    iconColor: 'text-blue-600',
+    ring: 'border-blue-300',
   },
   {
-    icon: '✅',
-    title: 'Hàng chính hãng',
-    desc: 'Cam kết 100% hàng chính hãng, đầy đủ chứng từ nhập khẩu. Đổi trả nếu không đúng.',
-    cardHover: 'hover:bg-gradient-to-br hover:from-green-50 hover:to-emerald-50 hover:border-green-300',
-    iconHover: 'group-hover:bg-green-100',
+    icon: (
+      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z" />
+        <path d="M9 11.5l2 2 4-4" />
+      </svg>
+    ),
+    title: '100% chính hãng',
+    desc: 'Đổi trả nếu không đúng',
+    iconColor: 'text-green-600',
+    ring: 'border-green-300',
   },
   {
-    icon: '📞',
+    icon: (
+      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 6v6l4 2" />
+      </svg>
+    ),
     title: 'Hỗ trợ 24/7',
-    desc: 'Đội ngũ tư vấn nhiệt tình, hỗ trợ báo giá nhanh. Gọi ngay để được tư vấn miễn phí.',
-    cardHover: 'hover:bg-gradient-to-br hover:from-purple-50 hover:to-violet-50 hover:border-purple-300',
-    iconHover: 'group-hover:bg-purple-100',
+    desc: 'Tư vấn báo giá miễn phí',
+    iconColor: 'text-purple-600',
+    ring: 'border-purple-300',
   },
 ]
 
@@ -46,8 +68,29 @@ export default async function Home() {
 
   return (
     <>
-      {/* Banner Carousel */}
-      <BannerCarousel />
+      {/* Hero: category sidebar + carousel + promo cards */}
+      <HomeHero categories={categories} />
+
+      {/* USP Section */}
+      <section className="py-10 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-4 divide-y divide-gray-100 md:divide-y-0 md:divide-x">
+              {uspItems.map((item) => (
+                <div key={item.title} className="flex items-center gap-3.5 px-6 py-5">
+                  <div className={`w-11 h-11 rounded-full border-2 ${item.ring} ${item.iconColor} flex items-center justify-center shrink-0`}>
+                    {item.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[#1a3a6b] text-sm mb-0.5">{item.title}</h3>
+                    <p className="text-gray-500 text-xs leading-snug">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
 
       {/* About Mini */}
       <section className="py-12 bg-[#f8fafc]">
@@ -86,27 +129,6 @@ export default async function Home() {
             </div>
           </div>
           </ScrollReveal>
-        </div>
-      </section>
-
-      {/* USP Section */}
-      <section className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {uspItems.map((item, i) => (
-              <ScrollReveal key={item.title} delay={i * 100}>
-              <div
-                className={`group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 ${item.cardHover} hover:shadow-lg hover:-translate-y-1 transition-all duration-300 text-center cursor-default`}
-              >
-                <div className={`bg-gray-100 ${item.iconHover} w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm transition-colors duration-300`}>
-                  <span className="text-3xl">{item.icon}</span>
-                </div>
-                <h3 className="font-bold text-[#1a3a6b] text-base mb-2">{item.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
-              </div>
-              </ScrollReveal>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -380,55 +402,42 @@ export default async function Home() {
       </section>
 
       {/* CTA Banner */}
-      <section className="py-12 bg-gradient-to-r from-[#1a3a6b] to-[#1a56db] text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-12 bg-[#f8fafc]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
-          <h2 className="text-2xl md:text-3xl font-bold mb-2">
-            Liên hệ ngay để được báo giá tốt nhất!
-          </h2>
-          <p className="text-blue-200 mb-6 text-base">
-            Gọi hotline hoặc nhắn tin qua Facebook / Zalo – phản hồi trong vài phút
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <a
-              href={`tel:${store.phone}`}
-              className="inline-flex items-center gap-2 bg-red-500 hover:bg-red-400 text-white font-bold px-8 py-3.5 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                />
-              </svg>
-              {store.phoneDisplay}
-            </a>
-            <a
-              href={store.facebook}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#1877F2] hover:bg-[#0c63d4] text-white font-semibold px-6 py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-0.5"
-            >
-              <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-              </svg>
-              Facebook
-            </a>
-            <a
-              href={store.zalo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#0068FF] hover:bg-[#0054cc] text-white font-semibold px-6 py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-0.5"
-            >
-              Zalo
-            </a>
-          </div>
+            <div className="bg-[#1a56db] rounded-2xl px-6 sm:px-10 py-6 sm:py-7 flex flex-col lg:flex-row items-center justify-between gap-5">
+              <div className="text-center lg:text-left">
+                <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-1.5">
+                  Liên hệ ngay để được báo giá sỉ tốt nhất
+                </h2>
+                <p className="text-blue-100 text-sm">
+                  Gọi hotline hoặc nhắn tin qua Facebook / Zalo – phản hồi trong vài phút
+                </p>
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <a
+                  href={`tel:${store.phone}`}
+                  className="inline-flex items-center gap-2 bg-white hover:bg-blue-50 text-[#1a56db] font-bold px-5 py-3 rounded-xl text-sm sm:text-base transition-colors whitespace-nowrap"
+                >
+                  <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                    />
+                  </svg>
+                  Gọi {store.phoneDisplay}
+                </a>
+                <a
+                  href={store.zalo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 border-2 border-white/70 hover:bg-white/10 text-white font-bold px-5 py-3 rounded-xl text-sm sm:text-base transition-colors whitespace-nowrap"
+                >
+                  Nhắn Zalo
+                </a>
+              </div>
+            </div>
           </ScrollReveal>
         </div>
       </section>

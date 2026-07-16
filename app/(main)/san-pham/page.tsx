@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import {
   getProductsFiltered,
-  getProductCounts,
   getCategories,
   getBranches,
   type SortBy,
@@ -62,7 +61,7 @@ export default async function SanPhamPage({ searchParams }: PageProps) {
   const selectedSizes = sizeParam ? sizeParam.split(',').filter(Boolean) : []
   const selectedWeights = weightParam ? weightParam.split(',').filter(Boolean) : []
 
-  const [{ data: products, count }, categories, branches, productCounts] = await Promise.all([
+  const [{ data: products, count }, categories, branches] = await Promise.all([
     getProductsFiltered({
       category: selectedCategory,
       branchSlug: selectedBranch,
@@ -76,7 +75,6 @@ export default async function SanPhamPage({ searchParams }: PageProps) {
     }),
     getCategories(),
     getBranches(),
-    getProductCounts(),
   ])
 
   const totalPages = Math.ceil(count / perPage)
@@ -102,12 +100,10 @@ export default async function SanPhamPage({ searchParams }: PageProps) {
         branches={branches}
         selectedBranch={selectedBranch}
         searchText={searchText}
-        selectedCategory={selectedCategory}
         sortBy={sortBy}
         sortDir={sortDir}
         perPage={perPage}
-        selectedSizes={selectedSizes}
-        selectedWeights={selectedWeights}
+        count={count}
       />
 
       <div className="max-w-7xl mx-auto px-1 sm:px-6 lg:px-8">
@@ -139,8 +135,6 @@ export default async function SanPhamPage({ searchParams }: PageProps) {
 
         <div className="flex gap-6 pb-12">
           <ProductFilter
-            categories={categories}
-            productCounts={productCounts}
             selectedBranch={selectedBranch}
             selectedCategory={selectedCategory}
             searchText={searchText}

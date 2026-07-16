@@ -9,7 +9,7 @@ export default function CartBadge() {
   return (
     <Link
       href="/gio-hang"
-      className="relative flex items-center justify-center text-white hover:text-amber-300 transition-colors p-1"
+      className="relative flex items-center justify-center text-gray-700 hover:text-[#1a56db] transition-colors p-1"
       aria-label="Giỏ hàng"
     >
       <svg

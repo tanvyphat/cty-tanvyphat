@@ -3,14 +3,11 @@
 import { useRouter } from 'nextjs-toploader/app'
 import { usePathname } from 'next/navigation'
 import { useCallback, useState, useTransition } from 'react'
-import type { CategoryRow } from '../lib/supabase/server'
 
 const SIZES = ['A4', 'A3', 'A5', 'A3L']
 const WEIGHTS = ['70gsm', '75gsm', '80gsm', '100+ gsm']
 
 type Props = {
-  categories: CategoryRow[]
-  productCounts: Record<string, number>
   selectedBranch: string
   selectedCategory: string
   searchText: string
@@ -22,8 +19,6 @@ type Props = {
 }
 
 export default function ProductFilter({
-  categories,
-  productCounts,
   selectedBranch,
   selectedCategory,
   searchText,
@@ -38,7 +33,7 @@ export default function ProductFilter({
   const [isPending, startTransition] = useTransition()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [expanded, setExpanded] = useState<Set<string>>(
-    () => new Set(['size', 'weight', 'brand', 'type'])
+    () => new Set(['size', 'weight'])
   )
 
   const buildUrl = useCallback(
@@ -83,11 +78,6 @@ export default function ProductFilter({
     go(buildUrl({ weights: next }))
   }
 
-  const toggleCategory = (slug: string) => {
-    const next = selectedCategory === slug ? 'all' : slug
-    go(buildUrl({ category: next }))
-  }
-
   const toggleExpand = (key: string) => {
     setExpanded((prev) => {
       const next = new Set(prev)
@@ -97,86 +87,42 @@ export default function ProductFilter({
     })
   }
 
-  const branchCats = categories.filter((c) => c.branch_slug === selectedBranch)
-
-  if (selectedBranch === 'all') return null
+  if (selectedBranch !== 'giay-in') return null
 
   const filterContent = (
     <div className={isPending ? 'pointer-events-none' : ''}>
       <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Bộ lọc</p>
 
-      {selectedBranch === 'giay-in' && (
-        <>
-          <FilterSection
-            title="Kích thước"
-            sectionKey="size"
-            expanded={expanded.has('size')}
-            onToggle={() => toggleExpand('size')}
-          >
-            {SIZES.map((size) => (
-              <CheckItem
-                key={size}
-                label={size}
-                checked={selectedSizes.includes(size)}
-                onChange={() => toggleSize(size)}
-              />
-            ))}
-          </FilterSection>
-          <FilterSection
-            title="Định lượng"
-            sectionKey="weight"
-            expanded={expanded.has('weight')}
-            onToggle={() => toggleExpand('weight')}
-          >
-            {WEIGHTS.map((w) => (
-              <CheckItem
-                key={w}
-                label={w}
-                checked={selectedWeights.includes(w)}
-                onChange={() => toggleWeight(w)}
-              />
-            ))}
-          </FilterSection>
-        </>
-      )}
-
-      {selectedBranch === 'van-phong-pham' && (
-        <FilterSection
-          title="Thương hiệu"
-          sectionKey="brand"
-          expanded={expanded.has('brand')}
-          onToggle={() => toggleExpand('brand')}
-        >
-          {branchCats.map((cat) => (
-            <CheckItem
-              key={cat.slug}
-              label={cat.name}
-              count={productCounts[cat.slug] ?? 0}
-              checked={selectedCategory === cat.slug}
-              onChange={() => toggleCategory(cat.slug)}
-            />
-          ))}
-        </FilterSection>
-      )}
-
-      {selectedBranch === 'hang-thai-lan' && (
-        <FilterSection
-          title="Loại sản phẩm"
-          sectionKey="type"
-          expanded={expanded.has('type')}
-          onToggle={() => toggleExpand('type')}
-        >
-          {branchCats.map((cat) => (
-            <CheckItem
-              key={cat.slug}
-              label={cat.name}
-              count={productCounts[cat.slug] ?? 0}
-              checked={selectedCategory === cat.slug}
-              onChange={() => toggleCategory(cat.slug)}
-            />
-          ))}
-        </FilterSection>
-      )}
+      <FilterSection
+        title="Kích thước"
+        sectionKey="size"
+        expanded={expanded.has('size')}
+        onToggle={() => toggleExpand('size')}
+      >
+        {SIZES.map((size) => (
+          <CheckItem
+            key={size}
+            label={size}
+            checked={selectedSizes.includes(size)}
+            onChange={() => toggleSize(size)}
+          />
+        ))}
+      </FilterSection>
+      <FilterSection
+        title="Định lượng"
+        sectionKey="weight"
+        expanded={expanded.has('weight')}
+        onToggle={() => toggleExpand('weight')}
+      >
+        {WEIGHTS.map((w) => (
+          <CheckItem
+            key={w}
+            label={w}
+            checked={selectedWeights.includes(w)}
+            onChange={() => toggleWeight(w)}
+          />
+        ))}
+      </FilterSection>
     </div>
   )
 

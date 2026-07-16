@@ -224,18 +224,6 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
   return { data: result.map(normalizeProduct), count: count ?? 0 }
 }
 
-export async function getProductCounts(): Promise<Record<string, number>> {
-  const { data, error } = await getClient()
-    .from('products')
-    .select('category')
-  if (error) throw new Error(`getProductCounts: ${error.message}`)
-  const counts: Record<string, number> = {}
-  for (const row of data ?? []) {
-    counts[row.category] = (counts[row.category] ?? 0) + 1
-  }
-  return counts
-}
-
 export async function getProductBySlug(slug: string): Promise<ProductRow | null> {
   const { data, error } = await getClient()
     .from('products')
