@@ -66,9 +66,8 @@ src/
     CartBadge.tsx                  # Icon giỏ hàng + badge số lượng ở Navbar
     ProductCard.tsx                # Card sản phẩm — dùng next/image, hiện AddToCartButton nếu có giá
     ProductHero.tsx                # Hero trang sản phẩm: branch tabs + search bar (client)
-    CategoryStrip.tsx              # Thanh icon danh mục ngang, highlight theo branch (client)
     SortBar.tsx                    # Pill buttons sắp xếp + đếm sản phẩm (client)
-    ProductFilter.tsx              # Sidebar bộ lọc: size/weight / hãng / loại SP (client)
+    ProductFilter.tsx              # Sidebar bộ lọc: danh mục (hãng/loại) + size/weight cho giay-in (client)
     ProductPagination.tsx          # Phân trang
     FeaturedCarousel.tsx           # Carousel sản phẩm (trang chủ + giỏ hàng)
     Navbar.tsx                     # Navbar — chứa CartBadge
@@ -106,11 +105,11 @@ import { getAdminClient } from '@/lib/supabase/admin'
 
 | Branch | Slug | Filter sidebar (`ProductFilter`) | Thứ tự tab |
 |--------|------|---------------|------------|
-| Giấy In | `giay-in` | KÍCH THƯỚC (A4/A3/A5/A3L) + TRỌNG LƯỢNG (70/75/80/100gsm) | 1 |
-| Văn Phòng Phẩm | `van-phong-pham` | Không có — chọn category qua `CategoryStrip` (chip icon) | 2 |
-| Hàng Tiêu Dùng Thái Lan | `hang-thai-lan` | Không có — chọn category qua `CategoryStrip` (chip icon) | 3 |
+| Giấy In | `giay-in` | DANH MỤC (hãng) + KÍCH THƯỚC (A4/A3/A5/A3L) + TRỌNG LƯỢNG (70/75/80/100gsm) | 1 |
+| Văn Phòng Phẩm | `van-phong-pham` | DANH MỤC (hãng) | 2 |
+| Hàng Tiêu Dùng Thái Lan | `hang-thai-lan` | DANH MỤC (loại sản phẩm) | 3 |
 
-> `ProductFilter` (sidebar "Bộ lọc") chỉ hiện khi `branch=giay-in` — các branch khác chọn category qua `CategoryStrip` để tránh trùng UI.
+> `ProductFilter` (sidebar "Bộ lọc") hiện danh mục (category) của branch đang chọn cho mọi branch; mục KÍCH THƯỚC/TRỌNG LƯỢNG chỉ hiện khi `branch=giay-in`. Ẩn hoàn toàn khi `branch=all`.
 
 ### URL params trang sản phẩm
 

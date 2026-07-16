@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import { store } from '../../src/data/store'
 import { getProducts, getCategories } from '../../src/lib/supabase/server'
-import FeaturedCarousel from '../../src/components/FeaturedCarousel'
 import HomeHero from '../../src/components/HomeHero'
 import ScrollReveal from '../../src/components/ScrollReveal'
+import ProductCard from '../../src/components/ProductCard'
 
 const uspItems = [
   {
@@ -61,15 +61,14 @@ const uspItems = [
 
 export default async function Home() {
   const [allProducts, categories] = await Promise.all([getProducts(), getCategories()])
-  const featuredProducts = allProducts.filter((p) => p.featured)
   const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c]))
-  const vppSlugs = new Set(categories.filter((c) => c.branch_slug === 'van-phong-pham').map((c) => c.slug))
-  const vppProductImage = allProducts.find((p) => vppSlugs.has(p.category) && p.images?.length > 0)?.images[0]
+  const productsByBranch = (branchSlug: string) =>
+    allProducts.filter((p) => categoryMap[p.category]?.branch_slug === branchSlug).slice(0, 4)
 
   return (
     <>
-      {/* Hero: category sidebar + carousel + promo cards */}
-      <HomeHero categories={categories} />
+      {/* Hero: carousel tràn viền */}
+      <HomeHero />
 
       {/* USP Section */}
       <section className="py-10 bg-white">
@@ -132,272 +131,103 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Categories Section – Editorial layout */}
-
-      {/* Nhánh 1: Văn Phòng Phẩm — ảnh trái, text phải */}
-      {(() => {
-        const vpp = categories.filter((c) => c.branch_slug === 'van-phong-pham')
-        return (
-          <section className="py-16 bg-white overflow-hidden">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-                {/* Ảnh */}
-                <ScrollReveal className="w-full lg:w-[45%] shrink-0">
-                  <div className="overflow-hidden rounded-2xl">
-                    <img
-                      src="/branch-van-phong-pham.jpg"
-                      alt="Văn Phòng Phẩm"
-                      className="w-full h-auto hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                </ScrollReveal>
-                {/* Nội dung */}
-                <ScrollReveal className="w-full lg:w-[55%]" delay={150}>
-                  <p className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase mb-4">
-                    [ Dòng sản phẩm 01 ]
+      {/* Dòng sản phẩm — 4 thẻ danh mục */}
+      <section className="py-12 sm:py-16 bg-[#f8fafc]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-8 sm:gap-10">
+          {[
+            {
+              index: 1,
+              branchSlug: 'van-phong-pham',
+              title: 'Văn Phòng Phẩm — Giá Sỉ Tận Gốc',
+              description:
+                'Nhập thẳng từ nhà máy — giấy in A4, bìa Thái, decal, nhựa ép dẻo và đầy đủ văn phòng phẩm các loại. Hàng sẵn kho, xuất hoá đơn VAT, giao toàn quốc.',
+              image: '/branch-van-phong-pham.png',
+            },
+            {
+              index: 2,
+              branchSlug: 'hang-thai-lan',
+              title: 'Hàng Tiêu Dùng Thái Lan — Nhập Khẩu Chính Ngạch',
+              description:
+                'Nước giặt, nước xả vải, vệ sinh nhà cửa, chăm sóc cá nhân và hàng tiêu dùng Thái Lan chính hãng. Đầy đủ chứng từ thuế VAT, hàng sẵn kho số lượng lớn.',
+              image: '/branch-hang-thai-lan.png',
+            },
+            {
+              index: 3,
+              branchSlug: 'giay-in',
+              title: 'Giấy In — Nhập Thẳng Từ Nhà Máy',
+              description:
+                'Giấy in A4 các hãng Supreme, Double A, Paper One, bìa Thái Gold 160gsm, decal và nhựa ép dẻo. Hàng sẵn kho số lượng lớn, xuất hoá đơn VAT đầy đủ.',
+              image: '/branch-giay-in.png',
+            },
+            {
+              index: 4,
+              branchSlug: 'becker-chemie',
+              title: 'Becker Chemie — Nhập Khẩu Chính Ngạch',
+              description:
+                'Giải pháp làm sạch toàn diện từ Đức — lau đa năng, tẩy rửa nhà vệ sinh, lau sàn, rửa chén, tẩy dầu mỡ. Công thức tiên tiến, an toàn, hiệu quả tối ưu.',
+              image: '/branch-becker-chemie.png',
+            },
+          ].map((branch) => {
+            const branchCategories = categories.filter((c) => c.branch_slug === branch.branchSlug)
+            const branchProducts = productsByBranch(branch.branchSlug)
+            return (
+              <ScrollReveal key={branch.branchSlug}>
+                <div className="bg-white shadow-md rounded-3xl p-6 sm:p-10">
+                  <p className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase mb-2">
+                    [ Dòng sản phẩm {String(branch.index).padStart(2, '0')} ]
                   </p>
-                  <h2 className="text-3xl md:text-4xl font-extrabold text-[#1a3a6b] leading-tight mb-4">
-                    Văn Phòng Phẩm<br />
-                    <span className="text-[#1a56db]">Giá Sỉ Tận Gốc</span>
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-3">
+                    {branch.title}
                   </h2>
-                  <p className="text-gray-500 text-base leading-relaxed mb-6">
-                    Nhập thẳng từ nhà máy — giấy in A4, bìa Thái, decal, nhựa ép dẻo và đầy đủ
-                    văn phòng phẩm các loại. Hàng sẵn kho, xuất hoá đơn VAT, giao toàn quốc.
+                  <p className="text-gray-500 text-sm sm:text-base leading-relaxed mb-6 max-w-2xl">
+                    {branch.description}
                   </p>
-                  {/* Danh mục */}
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    {vpp.map((cat) => (
-                      <Link
-                        key={cat.slug}
-                        href={`/san-pham?category=${cat.slug}`}
-                        className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-[#1a56db] border border-gray-200 hover:border-[#1a56db] px-3 py-1.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
-                      >
-                        <span>{cat.icon}</span>
-                        <span>{cat.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                  <Link
-                    href="/san-pham?branch=van-phong-pham"
-                    className="inline-flex items-center gap-2 border-2 border-[#1a3a6b] text-[#1a3a6b] hover:bg-[#1a3a6b] hover:text-white font-semibold px-7 py-3 rounded-full transition-all duration-200 text-sm tracking-wide"
-                  >
-                    XEM SẢN PHẨM
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </ScrollReveal>
-              </div>
-            </div>
-          </section>
-        )
-      })()}
 
-      {/* Nhánh 2: Hàng Tiêu Dùng Thái Lan — text trái, ảnh phải */}
-      {(() => {
-        const thai = categories.filter((c) => c.branch_slug === 'hang-thai-lan')
-        return (
-          <section className="py-16 bg-[#f8fafc] overflow-hidden">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col lg:flex-row-reverse items-center gap-10 lg:gap-16">
-                {/* Ảnh */}
-                <ScrollReveal className="w-full lg:w-[45%] shrink-0">
-                  <div className="overflow-hidden rounded-2xl">
-                    <img
-                      src="/branch-hang-thai-lan.jpg"
-                      alt="Hàng Tiêu Dùng Thái Lan"
-                      className="w-full h-auto block hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                </ScrollReveal>
-                {/* Nội dung */}
-                <ScrollReveal className="w-full lg:w-[55%]" delay={150}>
-                  <p className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase mb-4">
-                    [ Dòng sản phẩm 02 ]
-                  </p>
-                  <h2 className="text-3xl md:text-4xl font-extrabold text-[#7f1d1d] leading-tight mb-4">
-                    Hàng Tiêu Dùng Thái Lan<br />
-                    <span className="text-[#dc2626]">Nhập Khẩu Chính Ngạch</span>
-                  </h2>
-                  <p className="text-gray-500 text-base leading-relaxed mb-6">
-                    Nước giặt, nước xả vải, vệ sinh nhà cửa, chăm sóc cá nhân và hàng tiêu dùng
-                    Thái Lan chính hãng. Đầy đủ chứng từ thuế VAT, hàng sẵn kho số lượng lớn.
-                  </p>
-                  {/* Danh mục */}
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    {thai.map((cat) => (
-                      <Link
-                        key={cat.slug}
-                        href={`/san-pham?category=${cat.slug}`}
-                        className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-[#dc2626] border border-gray-200 hover:border-[#dc2626] px-3 py-1.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
-                      >
-                        <span>{cat.icon}</span>
-                        <span>{cat.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                  <Link
-                    href="/san-pham?branch=hang-thai-lan"
-                    className="inline-flex items-center gap-2 border-2 border-[#991b1b] text-[#991b1b] hover:bg-[#991b1b] hover:text-white font-semibold px-7 py-3 rounded-full transition-all duration-200 text-sm tracking-wide"
-                  >
-                    XEM SẢN PHẨM
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </ScrollReveal>
-              </div>
-            </div>
-          </section>
-        )
-      })()}
-
-      {/* Nhánh 3: Giấy In — ảnh trái, text phải */}
-      {(() => {
-        const giayIn = categories.filter((c) => c.branch_slug === 'giay-in')
-        return (
-          <section className="py-16 bg-white overflow-hidden">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-                {/* Ảnh */}
-                <ScrollReveal className="w-full lg:w-[45%] shrink-0">
-                  <div className="overflow-hidden rounded-2xl">
-                    <img
-                      src="/branch-giay-in.jpg"
-                      alt="Giấy In"
-                      className="w-full h-auto hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                </ScrollReveal>
-                {/* Nội dung */}
-                <ScrollReveal className="w-full lg:w-[55%]" delay={150}>
-                  <p className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase mb-4">
-                    [ Dòng sản phẩm 03 ]
-                  </p>
-                  <h2 className="text-3xl md:text-4xl font-extrabold text-[#14532d] leading-tight mb-4">
-                    Giấy In<br />
-                    <span className="text-[#16a34a]">Nhập Thẳng Từ Nhà Máy</span>
-                  </h2>
-                  <p className="text-gray-500 text-base leading-relaxed mb-6">
-                    Giấy in A4 các hãng Supreme, Double A, Paper One, bìa Thái Gold 160gsm,
-                    decal và nhựa ép dẻo. Hàng sẵn kho số lượng lớn, xuất hoá đơn VAT đầy đủ.
-                  </p>
-                  {/* Danh mục */}
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    {giayIn.map((cat) => (
-                      <Link
-                        key={cat.slug}
-                        href={`/san-pham?category=${cat.slug}`}
-                        className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-[#16a34a] border border-gray-200 hover:border-[#16a34a] px-3 py-1.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
-                      >
-                        <span>{cat.icon}</span>
-                        <span>{cat.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                  <Link
-                    href="/san-pham?branch=giay-in"
-                    className="inline-flex items-center gap-2 border-2 border-[#14532d] text-[#14532d] hover:bg-[#14532d] hover:text-white font-semibold px-7 py-3 rounded-full transition-all duration-200 text-sm tracking-wide"
-                  >
-                    XEM SẢN PHẨM
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </ScrollReveal>
-              </div>
-            </div>
-          </section>
-        )
-      })()}
-
-      {/* Nhánh 4: Hàng Becker Chemie — text trái, ảnh phải */}
-      {(() => {
-        const becker = categories.filter((c) => c.branch_slug === 'becker-chemie')
-        return (
-            <section className="py-16 bg-[#f8fafc] overflow-hidden">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col lg:flex-row-reverse items-center gap-10 lg:gap-16">
-                  {/* Ảnh */}
-                  <ScrollReveal className="w-full lg:w-[45%] shrink-0">
-                    <div className="overflow-hidden rounded-2xl">
-                      <img
-                          src="/branch-becker-chemie.jpg"
-                          alt="Becker Chemie"
-                          className="w-full h-auto block hover:scale-105 transition-transform duration-700"
-                      />
-                    </div>
-                  </ScrollReveal>
-                  {/* Nội dung */}
-                  <ScrollReveal className="w-full lg:w-[55%]" delay={150}>
-                    <p className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase mb-4">
-                      [ Dòng sản phẩm 04 ]
-                    </p>
-                    <h2 className="text-3xl md:text-4xl font-extrabold text-[#0000AA] leading-tight mb-4">
-                      Dòng sản phẩm Becker Chemie<br />
-                      <span className="text-[#0099FF]">Nhập Khẩu Chính Ngạch</span>
-                    </h2>
-                    <p className="text-gray-500 text-base leading-relaxed mb-6">
-                      Giải pháp làm sạch toàn diện, nâng tầm không gian sống. Được nghiên cứu và phát triển dựa trên các tiêu chuẩn
-                      chất lượng khắt khe, Becker Chemie không chỉ đơn thuần là dung dịch tẩy rửa, mà là "chuyên gia" đồng hành bảo vệ
-                      tổ ấm và không gian làm việc của bạn.
-                    </p>
-                    {/* Danh mục */}
-                    <div className="flex flex-wrap gap-2 mb-8">
-                      {becker.map((cat) => (
-                          <Link
-                              key={cat.slug}
-                              href={`/san-pham?category=${cat.slug}`}
-                              className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-[#dc2626] border border-gray-200 hover:border-[#dc2626] px-3 py-1.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
-                          >
-                            <span>{cat.icon}</span>
-                            <span>{cat.name}</span>
-                          </Link>
+                  {branchCategories.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {branchCategories.map((cat) => (
+                        <Link
+                          key={cat.slug}
+                          href={`/san-pham?branch=${branch.branchSlug}&category=${cat.slug}`}
+                          className="text-sm font-medium text-gray-700 bg-[#f8faff] border border-[#d7e5ff] hover:bg-[#1a56db] hover:text-white hover:border-transparent px-4 py-2 rounded-full transition-colors"
+                        >
+                          {cat.name}
+                        </Link>
                       ))}
                     </div>
-                    <Link
-                        href="/san-pham?branch=becker-chemie"
-                        className="inline-flex items-center gap-2 border-2 border-[#991b1b] text-[#991b1b] hover:bg-[#991b1b] hover:text-white font-semibold px-7 py-3 rounded-full transition-all duration-200 text-sm tracking-wide"
-                    >
-                      XEM SẢN PHẨM
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
-                  </ScrollReveal>
-                </div>
-              </div>
-            </section>
-        )
-      })()}
+                  )}
 
-      {/* Featured Products – Carousel */}
-      <section className="py-12 bg-[#f8fafc]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#1a3a6b]">Sản phẩm nổi bật</h2>
-              <p className="text-gray-500 text-sm mt-1">Hàng sẵn kho, giá tốt nhất</p>
-            </div>
-            <Link
-              href="/san-pham"
-              className="text-[#1a56db] hover:text-[#1e40af] text-sm font-semibold flex items-center gap-1 transition-colors"
-            >
-              Xem tất cả
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
-          <ScrollReveal>
-            <FeaturedCarousel products={featuredProducts} categoryMap={categoryMap} />
-          </ScrollReveal>
+                  <div className="rounded-2xl overflow-hidden mb-6">
+                    <img src={branch.image} alt={branch.title} className="w-full h-auto" />
+                  </div>
+
+                  {branchProducts.length > 0 && (
+                    <div className="flex items-stretch gap-3 sm:gap-4">
+                      <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                        {branchProducts.map((product) => (
+                          <ProductCard
+                            key={product.slug}
+                            product={product}
+                            category={categoryMap[product.category]}
+                            surfaceClassName="bg-[#f8faff] border border-[#d7e5ff]"
+                          />
+                        ))}
+                      </div>
+                      <Link
+                        href={`/san-pham?branch=${branch.branchSlug}`}
+                        aria-label={`Xem tất cả ${branch.title}`}
+                        className="shrink-0 self-center w-11 h-11 rounded-full bg-[#1a56db] hover:bg-[#1e40af] text-white flex items-center justify-center transition-colors"
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </ScrollReveal>
+            )
+          })}
         </div>
       </section>
 

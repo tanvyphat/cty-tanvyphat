@@ -10,7 +10,6 @@ import {
 import ProductCard from '../../../src/components/ProductCard'
 import ProductFilter from '../../../src/components/ProductFilter'
 import ProductHero from '../../../src/components/ProductHero'
-import CategoryStrip from '../../../src/components/CategoryStrip'
 import SortBar from '../../../src/components/SortBar'
 import ProductPagination from '../../../src/components/ProductPagination'
 
@@ -107,18 +106,6 @@ export default async function SanPhamPage({ searchParams }: PageProps) {
       />
 
       <div className="max-w-7xl mx-auto px-1 sm:px-6 lg:px-8">
-        {selectedBranch !== 'all' && (
-          <CategoryStrip
-            categories={categories}
-            selectedBranch={selectedBranch}
-            selectedCategory={selectedCategory}
-            searchText={searchText}
-            sortBy={sortBy}
-            sortDir={sortDir}
-            perPage={perPage}
-          />
-        )}
-
         <div className="mt-6 mb-4">
           <SortBar
             sortBy={sortBy}
@@ -135,6 +122,7 @@ export default async function SanPhamPage({ searchParams }: PageProps) {
 
         <div className="flex gap-6 pb-12">
           <ProductFilter
+            categories={categories}
             selectedBranch={selectedBranch}
             selectedCategory={selectedCategory}
             searchText={searchText}

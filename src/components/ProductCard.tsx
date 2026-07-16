@@ -17,16 +17,21 @@ function stripMarkdown(text: string): string {
 interface ProductCardProps {
   product: ProductRow
   category?: CategoryRow
+  surfaceClassName?: string
 }
 
-export default function ProductCard({ product, category }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  category,
+  surfaceClassName = 'bg-white shadow-sm border border-gray-100',
+}: ProductCardProps) {
   const hasImage = product.images.length > 0
   const firstUnit = product.product_units[0] ?? null
   const hasPrice = firstUnit?.price != null
   const multipleUnits = product.product_units.length > 1
 
   return (
-    <div className="group flex flex-col bg-white rounded-lg sm:rounded-xl overflow-hidden shadow-sm border border-gray-100">
+    <div className={`group flex flex-col rounded-lg sm:rounded-xl overflow-hidden ${surfaceClassName}`}>
       <Link href={`/san-pham/${product.slug}`} className="block relative aspect-square overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100">
         {hasImage ? (
           <Image

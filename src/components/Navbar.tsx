@@ -7,13 +7,14 @@ import {useRouter} from 'nextjs-toploader/app'
 import {store} from '../data/store'
 import CartBadge from './CartBadge'
 import {useAuth} from '../contexts/AuthContext'
+import type {CategoryRow} from '../lib/supabase/server'
 
 const navLinks = [
     {href: '/', label: 'Trang chủ'},
-    {href: '/san-pham?branch=giay-in', label: 'Giấy in'},
-    {href: '/san-pham?branch=van-phong-pham', label: 'Văn phòng phẩm'},
-    {href: '/san-pham?branch=hang-thai-lan', label: 'Hàng Thái Lan'},
-    {href: '/san-pham?branch=becker-chemie', label: 'Becker Chemie'},
+    {href: '/san-pham?branch=giay-in', label: 'Giấy in', branchSlug: 'giay-in'},
+    {href: '/san-pham?branch=van-phong-pham', label: 'Văn phòng phẩm', branchSlug: 'van-phong-pham'},
+    {href: '/san-pham?branch=hang-thai-lan', label: 'Hàng Thái Lan', branchSlug: 'hang-thai-lan'},
+    {href: '/san-pham?branch=becker-chemie', label: 'Becker Chemie', branchSlug: 'becker-chemie'},
     {href: '/gioi-thieu', label: 'Giới thiệu'},
     {href: '/tin-tuc', label: 'Tin tức'},
 ]
@@ -154,8 +155,10 @@ function UserMenu() {
     )
 }
 
-export default function Navbar() {
+export default function Navbar({categories = []}: {categories?: CategoryRow[]}) {
     const [menuOpen, setMenuOpen] = useState(false)
+    const [openNav, setOpenNav] = useState<string | null>(null)
+    const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
     const pathname = usePathname()
     const router = useRouter()
     const desktopSearchRef = useRef<HTMLInputElement>(null)
@@ -170,6 +173,16 @@ export default function Navbar() {
         const q = value.trim()
         setMenuOpen(false)
         router.push(q ? `/san-pham?search=${encodeURIComponent(q)}` : '/san-pham')
+    }
+
+    const openNavNow = (label: string) => {
+        if (closeTimer.current) clearTimeout(closeTimer.current)
+        setOpenNav(label)
+    }
+
+    const closeNavSoon = () => {
+        if (closeTimer.current) clearTimeout(closeTimer.current)
+        closeTimer.current = setTimeout(() => setOpenNav(null), 150)
     }
 
     return (
@@ -302,19 +315,56 @@ export default function Navbar() {
             {/* Nav links row - desktop */}
             <nav className="hidden md:block bg-white border-t border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.label}
-                            href={link.href}
-                            className={`px-3 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-                                isActive(link.href)
-                                    ? 'text-[#1a56db] border-[#1a56db]'
-                                    : 'text-gray-600 border-transparent hover:text-[#1a56db]'
-                            }`}
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
+                    {navLinks.map((link) => {
+                        const subcats = link.branchSlug
+                            ? categories.filter((c) => c.branch_slug === link.branchSlug)
+                            : []
+                        const isOpen = openNav === link.label && subcats.length > 0
+                        return (
+                            <div
+                                key={link.label}
+                                className="relative"
+                                onMouseEnter={() => subcats.length > 0 && openNavNow(link.label)}
+                                onMouseLeave={closeNavSoon}
+                            >
+                                <Link
+                                    href={link.href}
+                                    className={`flex items-center gap-1 px-3 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+                                        isActive(link.href) || isOpen
+                                            ? 'text-[#1a56db] border-[#1a56db]'
+                                            : 'text-gray-600 border-transparent hover:text-[#1a56db]'
+                                    }`}
+                                >
+                                    {link.label}
+                                    {subcats.length > 0 && (
+                                        <svg className="h-3 w-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
+                                        </svg>
+                                    )}
+                                </Link>
+
+                                {isOpen && (
+                                    <div
+                                        className="absolute left-0 top-full pt-2 w-64 z-40"
+                                        onMouseEnter={() => openNavNow(link.label)}
+                                        onMouseLeave={closeNavSoon}
+                                    >
+                                        <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-2 max-h-[360px] overflow-y-auto">
+                                            {subcats.map((cat) => (
+                                                <Link
+                                                    key={cat.slug}
+                                                    href={`/san-pham?branch=${link.branchSlug}&category=${cat.slug}`}
+                                                    className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-blue-50 hover:text-[#1a56db] transition-colors"
+                                                >
+                                                    {cat.name}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )
+                    })}
                 </div>
             </nav>
 
