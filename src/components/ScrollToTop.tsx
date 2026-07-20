@@ -33,7 +33,7 @@ export default function ScrollToTop() {
             type="button"
             onClick={scrollToTop}
             /* Đã đổi bottom-8 thành bottom-28 để nâng nút lên cao hơn Zalo */
-            className={`cursor-pointer fixed bottom-32 right-15 z-40 p-3 bg-blue-600 text-white rounded-full shadow-lg transition-all duration-300 hover:bg-blue-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+            className={`cursor-pointer fixed bottom-32 right-14 z-40 p-3 bg-blue-600 text-white rounded-full shadow-lg transition-all duration-300 hover:bg-blue-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
             }`}
             aria-label="Cuộn lên đầu trang"
