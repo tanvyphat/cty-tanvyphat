@@ -10,6 +10,7 @@ const NAV_LINKS = [
     { href: '/admin/san-pham', label: '🛍️ Sản phẩm' },
     { href: '/admin/tin-tuc', label: '📰 Tin tức' },
     { href: '/admin/quan-tri-vien', label: '👥 Quản trị viên' },
+    { href: '/admin/kiem-kho-giay', label: 'Kiểm kho giấy'},
 ]
 
 export default function AdminNavbar() {
