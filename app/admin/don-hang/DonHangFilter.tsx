@@ -90,7 +90,7 @@ export default function DonHangFilter({
       </div>
 
       <button
-        onClick={apply}
+        onClick={() => apply()}
         disabled={isPending}
         className="px-4 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-1.5"
       >
@@ -104,7 +104,7 @@ export default function DonHangFilter({
 
       {hasFilter && (
         <button
-          onClick={reset}
+          onClick={() => reset()}
           disabled={isPending}
           className="px-4 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
