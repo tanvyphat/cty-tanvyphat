@@ -113,7 +113,10 @@ export async function getProducts(): Promise<ProductRow[]> {
     .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
     .order('featured', { ascending: false })
     .order('name')
-  if (error) throw new Error(`getProducts: ${error.message}`)
+  if (error) {
+    console.warn(`getProducts fetch failed: ${error.message}`);
+    return [];
+  }
   return (data ?? []).map(normalizeProduct)
 }
 
@@ -121,7 +124,10 @@ export async function getRandomProducts(limit: number): Promise<ProductRow[]> {
   const { data, error } = await getClient()
     .rpc('get_random_products', { limit_count: limit })
     .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
-  if (error) throw new Error(`getRandomProducts: ${error.message}`)
+  if (error) {
+    console.warn(`Fetch error getRandomProducts: ${error.message}`);
+    return [] as any;
+  }
   return (data ?? []).map(normalizeProduct)
 }
 
@@ -130,7 +136,10 @@ export async function getBranches(): Promise<BranchRow[]> {
     .from('branches')
     .select('*')
     .order('sort_order')
-  if (error) throw new Error(`getBranches: ${error.message}`)
+  if (error) {
+    console.warn(`Fetch error getBranches: ${error.message}`);
+    return [] as any;
+  }
   return data ?? []
 }
 
@@ -208,7 +217,10 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
   query = query.range(offset, offset + perPage - 1)
 
   const { data, error, count } = await query
-  if (error) throw new Error(`getProductsFiltered: ${error.message}`)
+  if (error) {
+    console.warn(`Fetch error getProductsFiltered: ${error.message}`);
+    return [] as any;
+  }
 
   let result = data ?? []
   if (branchSlug === 'giay-in' || branchSlug === 'van-phong-pham' || branchSlug === 'hang-thai-lan') {
@@ -243,7 +255,10 @@ export async function getCategories(): Promise<CategoryRow[]> {
     .select('*, branches!inner(slug)')
     .order('branch_id')
     .order('sort_order')
-  if (error) throw new Error(`getCategories: ${error.message}`)
+  if (error) {
+    console.warn(`Fetch error getCategories: ${error.message}`);
+    return [] as any;
+  }
   return (data ?? []).map((row: CategoryRow & { branches: { slug: string } }) => ({
     id: row.id,
     slug: row.slug,
@@ -264,7 +279,10 @@ export async function getProductsByCategory(categorySlug: string): Promise<Produ
     .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
     .eq('category', categorySlug)
     .order('name')
-  if (error) throw new Error(`getProductsByCategory: ${error.message}`)
+  if (error) {
+    console.warn(`Fetch error getProductsByCategory: ${error.message}`);
+    return [] as any;
+  }
   return (data ?? []).map(normalizeProduct)
 }
 
@@ -287,7 +305,10 @@ export async function getNewsList(): Promise<NewsRow[]> {
     .from('news')
     .select('*')
     .order('published_at', { ascending: false })
-  if (error) throw new Error(`getNewsList: ${error.message}`)
+  if (error) {
+    console.warn(`Fetch error getNewsList: ${error.message}`);
+    return [] as any;
+  }
   return data ?? []
 }
 
@@ -309,6 +330,9 @@ export async function getAllNewsSlugs(): Promise<{ slug: string }[]> {
     .from('news')
     .select('slug')
     .order('published_at', { ascending: false })
-  if (error) throw new Error(`getAllNewsSlugs: ${error.message}`)
+  if (error) {
+    console.warn(`Fetch error getAllNewsSlugs: ${error.message}`);
+    return [] as any;
+  }
   return data ?? []
 }
