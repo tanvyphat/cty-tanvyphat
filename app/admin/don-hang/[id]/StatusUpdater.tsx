@@ -116,7 +116,7 @@ export default function StatusUpdater({
             </select>
 
             <button
-                onClick={handleUpdateStatus}
+                onClick={() => handleUpdateStatus()}
                 disabled={statusLoading || status === currentStatus}
                 className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-6 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap"
             >
@@ -143,7 +143,7 @@ export default function StatusUpdater({
                   </select>
 
                   <button
-                      onClick={handleUpdatePaymentStatus}
+                      onClick={() => handleUpdatePaymentStatus()}
                       disabled={paymentLoading || paymentStatus === currentPaymentStatus}
                       className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 text-white px-6 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap"
                   >

@@ -4,10 +4,21 @@ import { useEffect } from 'react';
 
 export default function ZaloChatWidget() {
     useEffect(() => {
-        // Chỉ load script 1 lần
-        if (!document.querySelector('script[src="https://sp.zalo.me/plugins/sdk.js"]')) {
-            const script = document.createElement('script');
-            script.src = 'https://sp.zalo.me/plugins/sdk.js';
+        const scriptUrl = "https://sp.zalo.me/plugins/sdk.js";
+        const checkExist = document.querySelector(`script[src="${scriptUrl}"]`);
+        if (!checkExist) {
+            // Protect native JSON.stringify from being overwritten by Zalo SDK
+            // Zalo SDK includes an old polyfill that causes "Converting circular structure to JSON"
+            // when it interacts with React's FiberNodes in Server Components/Client Components.
+            const originalStringify = JSON.stringify;
+            Object.defineProperty(JSON, 'stringify', {
+                value: originalStringify,
+                writable: false,
+                configurable: true
+            });
+
+            const script = document.createElement("script");
+            script.src = scriptUrl;
             script.async = true;
             document.body.appendChild(script);
         }
