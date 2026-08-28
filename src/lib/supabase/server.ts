@@ -126,7 +126,7 @@ export async function getRandomProducts(limit: number): Promise<ProductRow[]> {
     .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
   if (error) {
     console.warn(`Fetch error getRandomProducts: ${error.message}`);
-    return [] as any;
+    return [];
   }
   return (data ?? []).map(normalizeProduct)
 }
@@ -138,7 +138,7 @@ export async function getBranches(): Promise<BranchRow[]> {
     .order('sort_order')
   if (error) {
     console.warn(`Fetch error getBranches: ${error.message}`);
-    return [] as any;
+    return [];
   }
   return data ?? []
 }
@@ -219,7 +219,7 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
   const { data, error, count } = await query
   if (error) {
     console.warn(`Fetch error getProductsFiltered: ${error.message}`);
-    return [] as any;
+    return { data: [], count: 0 };
   }
 
   let result = data ?? []
@@ -257,7 +257,7 @@ export async function getCategories(): Promise<CategoryRow[]> {
     .order('sort_order')
   if (error) {
     console.warn(`Fetch error getCategories: ${error.message}`);
-    return [] as any;
+    return [];
   }
   return (data ?? []).map((row: CategoryRow & { branches: { slug: string } }) => ({
     id: row.id,
@@ -281,7 +281,7 @@ export async function getProductsByCategory(categorySlug: string): Promise<Produ
     .order('name')
   if (error) {
     console.warn(`Fetch error getProductsByCategory: ${error.message}`);
-    return [] as any;
+    return [];
   }
   return (data ?? []).map(normalizeProduct)
 }
@@ -307,7 +307,7 @@ export async function getNewsList(): Promise<NewsRow[]> {
     .order('published_at', { ascending: false })
   if (error) {
     console.warn(`Fetch error getNewsList: ${error.message}`);
-    return [] as any;
+    return [];
   }
   return data ?? []
 }
@@ -332,7 +332,7 @@ export async function getAllNewsSlugs(): Promise<{ slug: string }[]> {
     .order('published_at', { ascending: false })
   if (error) {
     console.warn(`Fetch error getAllNewsSlugs: ${error.message}`);
-    return [] as any;
+    return [];
   }
   return data ?? []
 }
