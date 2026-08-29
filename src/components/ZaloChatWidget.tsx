@@ -13,14 +13,21 @@ export default function ZaloChatWidget() {
         }
     }, []);
 
-    return (
+    // Render the widget using dangerouslySetInnerHTML so React doesn't attach its internal Fiber
+    // properties to the actual Zalo widget DOM node. This prevents the Zalo SDK from throwing
+    // "Converting circular structure to JSON" when it tries to serialize the node.
+    const widgetHtml = `
         <div
-            className="zalo-chat-widget"
+            class="zalo-chat-widget"
             data-oaid="1377439457201992738"
             data-welcome-message="Em chào Anh/Chị ạ, Anh/Chị cần em hỗ trợ gì ạ"
             data-autopopup="0"
             data-width="380"
             data-height="520"
-        />
+        ></div>
+    `;
+
+    return (
+        <div dangerouslySetInnerHTML={{ __html: widgetHtml }} />
     );
 }
