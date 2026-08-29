@@ -103,7 +103,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-      <html lang="vi" className={`${geistSans.variable} h-full`} suppressHydrationWarning>
+      <html lang="vi" className={`${geistSans.variable} h-full`} suppressHydrationWarning data-scroll-behavior="smooth">
       <body className="min-h-full flex flex-col antialiased bg-[#f8fafc] text-[#1e293b]" suppressHydrationWarning>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
