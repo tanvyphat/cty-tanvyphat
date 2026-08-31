@@ -5,7 +5,6 @@ import Link from 'next/link'
 import {usePathname} from 'next/navigation'
 import {useRouter} from 'nextjs-toploader/app'
 import {store} from '../data/store'
-import CartBadge from './CartBadge'
 import {useAuth} from '../contexts/AuthContext'
 import type {CategoryRow} from '../lib/supabase/server'
 
@@ -255,13 +254,11 @@ export default function Navbar({categories = []}: {categories?: CategoryRow[]}) 
                             </div>
                         </div>
                         <UserMenu/>
-                        <CartBadge/>
                     </div>
 
-                    {/* Mobile: user + cart + phone + hamburger */}
+                    {/* Mobile: user + phone + hamburger */}
                     <div className="flex md:hidden items-center gap-1 ml-auto">
                         <UserMenu/>
-                        <CartBadge/>
                         <a
                             href={`tel:${store.phone}`}
                             className="text-[#1a56db] p-2"
