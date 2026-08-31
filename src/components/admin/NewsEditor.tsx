@@ -41,13 +41,14 @@ export default function NewsEditor({ content, onChangeAction }: Props) {
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        link: false, // Vô hiệu hóa link mặc định có sẵn trong StarterKit
+      }),
       ImageExtension.configure({ inline: false }),
       LinkExtension.configure({ openOnClick: false }),
       Placeholder.configure({ placeholder: 'Viết nội dung bài đăng tại đây...' }),
     ],
     content,
-    // THÊM DÒNG NÀY ĐỂ FIX LỖI HYDRATION TIPTAP TRONG NEXT.JS
     immediatelyRender: false,
     onUpdate({ editor }) {
       onChangeAction(editor.getHTML())
