@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const type = searchParams.get('type') as EmailOtpType | null
   const next = type === 'recovery'
     ? '/doi-mat-khau'
-    : (searchParams.get('next') ?? '/admin/don-hang')
+    : (searchParams.get('next') ?? '/admin/san-pham')
 
   if (token_hash && type) {
     const supabase = await createSSRClient()

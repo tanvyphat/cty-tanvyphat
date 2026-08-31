@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
       } else if (data.user?.app_metadata?.role !== 'admin') {
         window.location.href = '/san-pham'
       } else {
-        window.location.href = '/admin/don-hang'
+        window.location.href = '/admin/san-pham'
       }
     } catch {
       setError('Có lỗi xảy ra. Vui lòng thử lại.')

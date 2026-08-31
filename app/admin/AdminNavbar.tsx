@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import LogoutButton from '@/app/admin/don-hang/LogoutButton'
 
 const NAV_LINKS = [
-    { href: '/admin/don-hang', label: '📦 Đơn hàng' },
+    // { href: '/admin/don-hang', label: '📦 Đơn hàng' },
     { href: '/admin/san-pham', label: '🛍️ Sản phẩm' },
     { href: '/admin/tin-tuc', label: '📰 Tin tức' },
     { href: '/admin/quan-tri-vien', label: '👥 Quản trị viên' },

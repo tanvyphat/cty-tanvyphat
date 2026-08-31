@@ -32,14 +32,14 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin/dang-nhap', request.url))
   }
 
-  // Đã là admin → vào trang login → redirect về don-hang
+  // Đã là admin → vào trang login → redirect về san-pham
   if (isLoginPath && isAdmin) {
-    return NextResponse.redirect(new URL('/admin/don-hang', request.url))
+    return NextResponse.redirect(new URL('/admin/san-pham', request.url))
   }
 
-  // Đã là admin → vào /admin root → redirect về don-hang
-  if (pathname === '/admin' && isAdmin) {
-    return NextResponse.redirect(new URL('/admin/don-hang', request.url))
+  // Đã là admin → vào /admin root hoặc /admin/don-hang → redirect về san-pham
+  if ((pathname === '/admin' || pathname.startsWith('/admin/don-hang')) && isAdmin) {
+    return NextResponse.redirect(new URL('/admin/san-pham', request.url))
   }
 
   return supabaseResponse
