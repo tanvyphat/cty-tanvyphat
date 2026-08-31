@@ -4,6 +4,7 @@ import { getProducts, getCategories } from '../../src/lib/supabase/server'
 import HomeHero from '../../src/components/HomeHero'
 import ScrollReveal from '../../src/components/ScrollReveal'
 import ProductCard from '../../src/components/ProductCard'
+import PromoPopup from '../../src/components/PromoPopup'
 
 const uspItems = [
   {
@@ -67,6 +68,7 @@ export default async function Home() {
 
   return (
     <>
+      <PromoPopup />
       {/* Hero: carousel tràn viền */}
       <HomeHero />
 
