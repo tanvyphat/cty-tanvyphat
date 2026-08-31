@@ -6,10 +6,10 @@ type Props = {
   label: string
   accept: string
   currentUrl?: string | null
-  onUpload: (url: string) => void
+  onUploadAction: (url: string) => void
 }
 
-export default function MediaUpload({ label, accept, currentUrl, onUpload }: Props) {
+export default function MediaUpload({ label, accept, currentUrl, onUploadAction }: Props) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentUrl ?? null)
@@ -36,7 +36,7 @@ export default function MediaUpload({ label, accept, currentUrl, onUpload }: Pro
       }
       const { url } = await res.json()
       setPreviewUrl(url)
-      onUpload(url)
+      onUploadAction(url)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload thất bại')
       setPreviewUrl(null)
@@ -47,7 +47,7 @@ export default function MediaUpload({ label, accept, currentUrl, onUpload }: Pro
 
   function handleRemove() {
     setPreviewUrl(null)
-    onUpload('')
+    onUploadAction('')
     if (inputRef.current) inputRef.current.value = ''
   }
 

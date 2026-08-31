@@ -9,7 +9,7 @@ import { useCallback, useRef } from 'react'
 
 type Props = {
   content: string
-  onChange: (html: string) => void
+  onChangeAction: (html: string) => void
 }
 
 type ToolbarButtonProps = {
@@ -36,7 +36,7 @@ function ToolbarButton({ onClick, active, children, title }: ToolbarButtonProps)
   )
 }
 
-export default function NewsEditor({ content, onChange }: Props) {
+export default function NewsEditor({ content, onChangeAction }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const editor = useEditor({
@@ -50,7 +50,7 @@ export default function NewsEditor({ content, onChange }: Props) {
     // THÊM DÒNG NÀY ĐỂ FIX LỖI HYDRATION TIPTAP TRONG NEXT.JS
     immediatelyRender: false,
     onUpdate({ editor }) {
-      onChange(editor.getHTML())
+      onChangeAction(editor.getHTML())
     },
   })
 
