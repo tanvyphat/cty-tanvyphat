@@ -17,53 +17,25 @@ interface Props {
 }
 
 export default function UnitSelector({ product, units }: Props) {
-  const [selectedIndex, setSelectedIndex] = useState(0)
-
-  const selectedUnit = units[selectedIndex]
+  const firstUnit = units[0] ?? null
+  const hasPrice = firstUnit?.price != null
+  const multipleUnits = units.length > 1
 
   return (
     <div className="space-y-4">
-      {/* Chọn đơn vị */}
-      {units.length > 0 && (
-        <div>
-          <p className="text-amber-700 font-semibold text-sm mb-2">Chọn đơn vị:</p>
-          <div className="flex flex-wrap gap-2">
-            {units.map((unit, i) => (
-              <button
-                key={unit.id}
-                onClick={() => setSelectedIndex(i)}
-                className={`px-4 py-2 rounded-lg border-2 text-sm font-medium transition-colors ${
-                  selectedIndex === i
-                    ? 'border-amber-500 bg-amber-50 text-amber-700'
-                    : 'border-gray-200 bg-white text-gray-700 hover:border-amber-300'
-                }`}
-              >
-                {unit.unit_name}
-                {unit.price != null && (
-                  <span className="ml-1.5 font-bold">
-                    — {unit.price.toLocaleString('vi-VN')}đ
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Giá đơn vị đã chọn */}
-      {selectedUnit && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-          <p className="text-amber-700 font-semibold text-sm">Đơn vị: {selectedUnit.unit_name}</p>
-          <p className="text-amber-600 font-bold text-xl mt-1">
-            {selectedUnit.price != null
-              ? selectedUnit.price.toLocaleString('vi-VN') + 'đ'
-              : 'Liên hệ để được báo giá sỉ tốt nhất'}
-          </p>
-          {selectedUnit.stock > 0 && (
-            <p className="text-xs text-amber-600 mt-1">Còn hàng: {selectedUnit.stock}</p>
+      {/* Hiển thị giá chung của sản phẩm */}
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+        <p className="text-amber-600 font-bold text-xl">
+          {hasPrice ? (
+            <>
+              {multipleUnits ? 'Từ ' : 'Giá: '}
+              {firstUnit!.price!.toLocaleString('vi-VN')}đ/{firstUnit!.unit_name}
+            </>
+          ) : (
+            'Liên hệ để được báo giá sỉ tốt nhất'
           )}
-        </div>
-      )}
+        </p>
+      </div>
 
       {/* Nút hành động */}
       <div className="flex flex-col gap-3">
