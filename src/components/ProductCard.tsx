@@ -2,7 +2,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { ProductRow, CategoryRow } from '../lib/supabase/server'
 import { store } from '../data/store'
-import AddToCartButton from './AddToCartButton'
 
 function stripMarkdown(text: string): string {
   return text
@@ -83,22 +82,12 @@ export default function ProductCard({
           >
             Chi tiết
           </Link>
-          {hasPrice && firstUnit ? (
-            <div className="flex-1">
-              <AddToCartButton
-                product={{ id: product.id, slug: product.slug, name: product.name, images: product.images }}
-                unit={firstUnit}
-                fullWidth
-              />
-            </div>
-          ) : (
-            <a
-              href={`tel:${store.phone}`}
-              className="flex-1 text-center text-[10px] sm:text-xs border border-red-500 text-red-600 hover:bg-red-500 hover:text-white font-medium py-0.5 sm:py-1.5 px-1 sm:px-3 rounded-md sm:rounded-lg transition-colors"
-            >
-              Đặt hàng
-            </a>
-          )}
+          <a
+            href={`tel:${store.phone}`}
+            className="flex-1 text-center text-[10px] sm:text-xs border border-red-500 text-red-600 hover:bg-red-500 hover:text-white font-medium py-0.5 sm:py-1.5 px-1 sm:px-3 rounded-md sm:rounded-lg transition-colors"
+          >
+            Đặt hàng
+          </a>
         </div>
       </div>
     </div>

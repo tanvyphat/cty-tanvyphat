@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useCart } from '../../../../src/hooks/useCart'
 import { store } from '../../../../src/data/store'
 import type { ProductUnitRow } from '../../../../src/lib/supabase/server'
 
@@ -18,29 +17,9 @@ interface Props {
 }
 
 export default function UnitSelector({ product, units }: Props) {
-  const { addItem } = useCart()
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const [added, setAdded] = useState(false)
 
   const selectedUnit = units[selectedIndex]
-
-  function handleAdd() {
-    if (!selectedUnit || selectedUnit.price == null) return
-    addItem({
-      productId: product.id,
-      unitId: selectedUnit.id,
-      slug: product.slug,
-      name: product.name,
-      image: product.images?.[0] ?? null,
-      price: selectedUnit.price,
-      unit: selectedUnit.unit_name,
-      weight_grams: selectedUnit.weight_grams ?? null,
-    })
-    setAdded(true)
-    setTimeout(() => setAdded(false), 1500)
-  }
-
-  const hasAnyPrice = units.some(u => u.price != null)
 
   return (
     <div className="space-y-4">
@@ -88,24 +67,15 @@ export default function UnitSelector({ product, units }: Props) {
 
       {/* Nút hành động */}
       <div className="flex flex-col gap-3">
-        {selectedUnit?.price != null ? (
-          <button
-            onClick={handleAdd}
-            className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3.5 rounded-xl text-base transition-colors shadow-md"
-          >
-            {added ? '✓ Đã thêm vào giỏ!' : 'Thêm vào giỏ hàng'}
-          </button>
-        ) : (
-          <a
-            href={`tel:${store.phone}`}
-            className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-3.5 rounded-xl text-base transition-colors shadow-md"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-            </svg>
-            Gọi điện: {store.phoneDisplay}
-          </a>
-        )}
+        <a
+          href={`tel:${store.phone}`}
+          className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-3.5 rounded-xl text-base transition-colors shadow-md"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </svg>
+          Gọi điện: {store.phoneDisplay}
+        </a>
         <div className="grid grid-cols-2 gap-3">
           <a
             href={store.zalo}
