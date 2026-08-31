@@ -131,19 +131,19 @@ export default function ChinhSuaClient({ item }: { item: NewsRow }) {
             label="Ảnh bìa"
             accept="image/*"
             currentUrl={imageUrl || null}
-            onUpload={setImageUrl}
+            onUploadAction={setImageUrl}
           />
           <MediaUpload
             label="Video (không bắt buộc)"
             accept="video/*"
             currentUrl={videoUrl || null}
-            onUpload={setVideoUrl}
+            onUploadAction={setVideoUrl}
           />
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <label className="block text-sm font-semibold text-gray-700 mb-3">Nội dung *</label>
-          <NewsEditor content={content} onChange={handleContentChange} />
+          <NewsEditor content={content} onChangeAction={handleContentChange} />
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-5 space-y-4">
