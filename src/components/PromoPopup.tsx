@@ -35,7 +35,7 @@ export default function PromoPopup() {
       >
         <button
           onClick={() => setIsOpen(false)}
-          className="absolute -top-12 right-0 md:-right-12 w-10 h-10 flex items-center justify-center rounded-full bg-white text-gray-900 hover:bg-gray-200 transition-colors z-[110] shadow-xl"
+          className="absolute -top-12 right-0 md:-right-12 w-10 h-10 flex items-center justify-center rounded-full bg-white text-gray-900 hover:bg-gray-200 transition-colors z-[110] shadow-xl cursor-pointer"
           aria-label="Đóng popup"
         >
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
