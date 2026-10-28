@@ -29,10 +29,22 @@ Legacy JWT-based `service_role` cannot be revoked independently from the legacy 
 
 ## Ready-to-run code preparation in PR #12 (NOT Production)
 
-- `src/lib/supabase/admin.ts`: server-only; first use `SUPABASE_SECRET_KEY`, fallback to `SUPABASE_SERVICE_ROLE_KEY`.
+- **Updated catalog-only PR**: the privileged `src/lib/supabase/admin.ts` has been
+  removed entirely. Admin APIs/Server Components use `createSSRClient()` with
+  the verified user Auth session, plus RLS. The narrow admin-user RPC requires
+  separate migration approval because the Supabase Auth Admin API cannot operate
+  with a publishable key alone; it touches only `auth.users`, not catalog data.
+  It is SECURITY DEFINER with explicit live Admin check from `auth.users`,
+  restrictive EXECUTE permissions, no dynamic SQL, and no direct table exposure.
 - Public key helper: first use `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, fallback to `NEXT_PUBLIC_SUPABASE_ANON_KEY`; used consistently by browser client, server client, SSR client and Auth proxy.
 - No `NEXT_PUBLIC_SUPABASE_SECRET_KEY` and no API keys stored in source.
-- These are **optional new environment names**, not yet configured. Without them, existing Preview/Production configuration is unchanged.
+- The new catalog application does not reference `SUPABASE_SECRET_KEY` or
+  `SUPABASE_SERVICE_ROLE_KEY` at runtime; the old **Production main** still does.
+  Key fallback descriptions elsewhere in this runbook refer to historical releases.
+- Migration RLS/Storage/Auth RPC must be verified on a disposable test project
+  **before** any deployment of the new catalog-only code. Without that SQL,
+  Admin uploads/role management may fail or public writes remain unprotected.
+- Existing Vercel Preview/Production environment names are unchanged.
 - Earlier PR removes five contaminated scripts; those scripts remain on public `main` until a separately approved release. Do not execute them.
 
 ## Recommended emergency cutover — approval gate

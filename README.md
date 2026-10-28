@@ -22,23 +22,19 @@ npm run lint
 npm run build
 ```
 
-Supply environment variables through the deployment/CI secret manager:
-`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
-(preferred; temporary fallback: `NEXT_PUBLIC_SUPABASE_ANON_KEY`),
-`SUPABASE_SECRET_KEY` (server-only; temporary fallback:
-`SUPABASE_SERVICE_ROLE_KEY`), and `NEXT_PUBLIC_SITE_URL`.
-**Never** prefix the secret key with `NEXT_PUBLIC_`.
-Do not commit .env files or token values. Legacy-key fallbacks are a
-short-lived migration aid, not evidence of credential revocation.
-The Supabase legacy credential must be independently disabled and verified
-after an owner-approved Production cutover. See
-`database/review-only/20261028_service_role_rotation_runbook.md`.
-Production build can prerender catalog pages and requires valid Supabase
-**public** environment variables, not service role for public reads.
+Catalog configuration is limited to
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`,
+and `NEXT_PUBLIC_SITE_URL`. See `.env.example` (no credentials).
+The Admin UI uses the current Supabase Auth session + RLS. There is **no
+service role or secret key** in the website runtime. The RLS/Storage policy
+migration and Auth account-management RPC must be approved, applied and
+regression-tested **before** deploying this PR to Production.
+Never commit real keys or execute the review-only SQL on Production without
+explicit approval.
 
 `AGENTS.md` contains mandatory Next.js 16 guidance. Catalog data access lives
-in `src/lib/supabase/server.ts`; admin-only service role helper is
-`src/lib/supabase/admin.ts`. Admin routes must validate a Supabase Auth user
+in `src/lib/supabase/server.ts`; admin API requests use
+`createSSRClient()` with the Admin Auth session. Admin routes must validate a Supabase Auth user
 with `user.app_metadata.role === 'admin'` **before** obtaining the service client;
 the proxy is not a substitute for endpoint authorization.
 

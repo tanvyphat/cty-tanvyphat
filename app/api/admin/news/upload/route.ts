@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { randomUUID } from 'node:crypto'
 import { createSSRClient } from '@/src/lib/supabase/server'
-import { getAdminClient } from '@/src/lib/supabase/admin'
 
 export async function POST(req: NextRequest) {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user || user.app_metadata?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (user.app_metadata?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const formData = await req.formData()
   const file = formData.get('file') as File | null
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 
   const bytes = await file.arrayBuffer()
 
-  const admin = getAdminClient()
+  const admin = supabase
   const { error } = await admin.storage
     .from('news-media')
     .upload(path, bytes, { contentType: file.type, upsert: false })

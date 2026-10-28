@@ -1,6 +1,6 @@
+import { createSSRClient } from '@/src/lib/supabase/server'
 import Link from 'next/link'
 import { getCategories } from '@/src/lib/supabase/server'
-import { getAdminClient } from '@/src/lib/supabase/admin'
 import DeleteProductButton from './DeleteProductButton'
 
 type ProductUnit = { id: number; unit_name: string; price: number | null; stock: number; sort_order: number }
@@ -19,6 +19,9 @@ export default async function SanPhamTable({
   search: string
   page: number
 }) {
+  const supabase = await createSSRClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user || user.app_metadata?.role !== 'admin') throw new Error('Unauthorized admin catalog access')
   const limit = 20
   const offset = (page - 1) * limit
 
@@ -30,7 +33,7 @@ export default async function SanPhamTable({
     catSlugs = categories.filter(c => c.branch_slug === branch).map(c => c.slug)
   }
 
-  const db = getAdminClient()
+  const db = supabase
   let query = db
     .from('products')
     .select('id, slug, name, category, images, min_price, featured, updated_at, product_units(id, unit_name, price, stock, sort_order)', { count: 'exact' })

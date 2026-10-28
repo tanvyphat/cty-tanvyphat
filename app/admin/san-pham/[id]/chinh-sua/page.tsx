@@ -1,6 +1,5 @@
 import { redirect, notFound } from 'next/navigation'
 import { createSSRClient, getCategories } from '@/src/lib/supabase/server'
-import { getAdminClient } from '@/src/lib/supabase/admin'
 import ProductFormClient from '../../ProductFormClient'
 
 export default async function ChinhSuaPage({
@@ -16,7 +15,7 @@ export default async function ChinhSuaPage({
 
   const [categories, { data: rawProduct, error }] = await Promise.all([
     getCategories(),
-    getAdminClient()
+    supabase
       .from('products')
       .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at)')
       .eq('id', Number(id))

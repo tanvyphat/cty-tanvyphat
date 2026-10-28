@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSSRClient } from '@/src/lib/supabase/server'
-import { getAdminClient } from '@/src/lib/supabase/admin'
 
 export async function GET() {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user || user.app_metadata?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (user.app_metadata?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const { data, error } = await getAdminClient()
+  const { data, error } = await supabase
     .from('news')
     .select('*')
     .order('published_at', { ascending: false })
@@ -19,7 +19,8 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user || user.app_metadata?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (user.app_metadata?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const body = await req.json()
   const { slug, title, excerpt, content, image_url, video_url, tag, tag_color, fb_url, published_at } = body
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Thiếu thông tin bắt buộc' }, { status: 400 })
   }
 
-  const { data, error } = await getAdminClient()
+  const { data, error } = await supabase
     .from('news')
     .insert({ slug, title, excerpt, content, image_url, video_url, tag, tag_color, fb_url, published_at })
     .select()

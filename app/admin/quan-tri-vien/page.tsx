@@ -107,35 +107,10 @@ export default function QuanTriVienPage() {
     })
   }
 
-  // Hàm Xoá vĩnh viễn người dùng với Pop-up
-  function handleDeleteUser(user: AdminUser) {
-    showConfirm(
-        'Xoá vĩnh viễn người dùng',
-        `CẢNH BÁO: Bạn sắp xoá vĩnh viễn ${user.email} khỏi hệ thống.\n\nHành động này KHÔNG THỂ HOÀN TÁC và sẽ xoá toàn bộ dữ liệu liên quan!`,
-        'danger',
-        async () => {
-          closeModal()
-          setDeleting(user.id)
-          try {
-            const res = await fetch('/api/admin/users', {
-              method: 'DELETE',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ user_id: user.id }),
-            })
-
-            const data = await res.json()
-            if (!res.ok) {
-              showAlert('Lỗi khi xoá', data.error || 'Đã xảy ra lỗi khi xoá người dùng.', 'danger')
-            } else {
-              await fetchUsers()
-            }
-          } catch {
-            showAlert('Lỗi kết nối', 'Không thể kết nối đến máy chủ.', 'danger')
-          } finally {
-            setDeleting(null)
-          }
-        }
-    )
+  // Account deletion is intentionally unavailable; the old endpoint was
+  // not implemented. Preserve all users until an explicit deletion protocol exists.
+  function handleDeleteUser(_user: AdminUser) {
+    showAlert('Chưa hỗ trợ', 'Xoá tài khoản cần quy trình phê duyệt riêng.', 'warning')
   }
 
   const admins = users.filter(u => u.role === 'admin')

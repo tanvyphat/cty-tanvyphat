@@ -3,7 +3,6 @@ export const dynamic = 'force-dynamic'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createSSRClient } from '@/src/lib/supabase/server'
-import { getAdminClient } from '@/src/lib/supabase/admin'
 import type { NewsRow } from '@/src/lib/supabase/server'
 import DeleteNewsButton from './DeleteNewsButton'
 import AdminNavbar from '@/app/admin/AdminNavbar' // Import Navbar chung
@@ -13,7 +12,7 @@ export default async function AdminTinTucPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user || user.app_metadata?.role !== 'admin') redirect('/admin/dang-nhap')
 
-  const { data } = await getAdminClient()
+  const { data } = await supabase
       .from('news')
       .select('*')
       .order('published_at', { ascending: false })

@@ -12,8 +12,8 @@ Facebook order creation, order management or shipping quote endpoints.
 - `proxy.ts` covers admin/auth routes. Each privileged server API must
   check `user.app_metadata?.role === 'admin'` before using the service key.
 - Public catalog queries use the anon/publishable key, never service role.
-- `src/lib/supabase/server.ts` is catalog reader, `src/lib/supabase/admin.ts`
-  is server-only privileged client.
+- `src/lib/supabase/server.ts` is the catalog reader and Admin SSR client;
+  Admin server code uses Auth + RLS, without a privileged service key.
 - Public listing URL canonical parameter is `branch`; `brand` is a legacy alias.
 - Product units/prices live in `product_units`; product `min_price` is
   maintained by a database trigger. `products.price` does not exist.

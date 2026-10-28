@@ -1,6 +1,5 @@
 import { redirect, notFound } from 'next/navigation'
 import { createSSRClient } from '@/src/lib/supabase/server'
-import { getAdminClient } from '@/src/lib/supabase/admin'
 import ChinhSuaClient from './ChinhSuaClient'
 
 export default async function ChinhSuaPage({ params }: { params: Promise<{ id: string }> }) {
@@ -9,7 +8,7 @@ export default async function ChinhSuaPage({ params }: { params: Promise<{ id: s
   if (!user || user.app_metadata?.role !== 'admin') redirect('/admin/dang-nhap')
 
   const { id } = await params
-  const { data } = await getAdminClient().from('news').select('*').eq('id', id).single()
+  const { data } = await supabase.from('news').select('*').eq('id', id).single()
   if (!data) notFound()
 
   return <ChinhSuaClient item={data} />
