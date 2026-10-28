@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { cache } from 'react'
+import { getPublicSupabaseKey } from './public-key'
 
 export type ProductUnitRow = {
   id: number
@@ -74,29 +75,14 @@ function normalizeProduct(row: ProductRow & { product_units?: ProductUnitRow[] }
 
 export function getClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!url || !key) throw new Error('Missing Supabase env vars')
+  const key = getPublicSupabaseKey()
+  if (!url) throw new Error('Missing Supabase URL')
   return createClient(url, key)
 }
-// ==================== ADMIN CLIENT (Service Role) ====================
-export function getAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-  if (!url || !key) {
-    throw new Error('Missing Supabase admin env vars (SUPABASE_SERVICE_ROLE_KEY)')
-  }
-
-  return createClient(url, key, {
-    auth: { persistSession: false },
-  })
-}
-// ===================================================================
-
 export async function createSSRClient() {
   const cookieStore = await cookies()
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  const key = getPublicSupabaseKey()
   return createServerClient(url, key, {
     cookies: {
       getAll() { return cookieStore.getAll() },
