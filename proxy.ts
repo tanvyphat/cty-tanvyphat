@@ -46,5 +46,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
+  // Catalog is public: avoid Supabase Auth network calls on every page request.
+  // Admin pages/APIs and auth callbacks still refresh and verify sessions.
+  matcher: ['/admin/:path*', '/api/admin/:path*', '/auth/:path*'],
 }
