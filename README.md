@@ -23,9 +23,16 @@ npm run build
 ```
 
 Supply environment variables through the deployment/CI secret manager:
-`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-`SUPABASE_SERVICE_ROLE_KEY` (server-only), and
-`NEXT_PUBLIC_SITE_URL`. Do not commit .env files or token values.
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+(preferred; temporary fallback: `NEXT_PUBLIC_SUPABASE_ANON_KEY`),
+`SUPABASE_SECRET_KEY` (server-only; temporary fallback:
+`SUPABASE_SERVICE_ROLE_KEY`), and `NEXT_PUBLIC_SITE_URL`.
+**Never** prefix the secret key with `NEXT_PUBLIC_`.
+Do not commit .env files or token values. Legacy-key fallbacks are a
+short-lived migration aid, not evidence of credential revocation.
+The Supabase legacy credential must be independently disabled and verified
+after an owner-approved Production cutover. See
+`database/review-only/20261028_service_role_rotation_runbook.md`.
 Production build can prerender catalog pages and requires valid Supabase
 **public** environment variables, not service role for public reads.
 
