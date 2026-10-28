@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { cache } from 'react'
 
 export type ProductUnitRow = {
   id: number
@@ -107,10 +108,12 @@ export async function createSSRClient() {
   })
 }
 
+const PRODUCT_SELECT = 'id, slug, name, category, description, images, fb_post_url, featured, keyword, min_price, created_at, updated_at, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)'
+
 export async function getProducts(): Promise<ProductRow[]> {
   const { data, error } = await getClient()
     .from('products')
-    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
+    .select(PRODUCT_SELECT)
     .order('featured', { ascending: false })
     .order('name')
   if (error) throw new Error(`getProducts: ${error.message}`)
@@ -125,14 +128,14 @@ export async function getRandomProducts(limit: number): Promise<ProductRow[]> {
   return (data ?? []).map(normalizeProduct)
 }
 
-export async function getBranches(): Promise<BranchRow[]> {
+export const getBranches = cache(async (): Promise<BranchRow[]> => {
   const { data, error } = await getClient()
     .from('branches')
     .select('*')
     .order('sort_order')
   if (error) throw new Error(`getBranches: ${error.message}`)
   return data ?? []
-}
+})
 
 export async function getProductsFiltered(filter: ProductFilterParams = {}): Promise<{
   data: ProductRow[]
@@ -165,7 +168,7 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
   // Include categories to allow ordering by sort_order for giay-in branch
   let query = client
     .from('products')
-    .select('*, categories!products_category_fkey(sort_order), product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)', { count: 'exact' })
+    .select(`id, slug, name, category, description, images, fb_post_url, featured, keyword, min_price, created_at, updated_at, categories!products_category_fkey(sort_order), product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)`, { count: 'exact' })
 
   if (search && search.trim()) {
     const term = search.trim()
@@ -224,7 +227,7 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
   return { data: result.map(normalizeProduct), count: count ?? 0 }
 }
 
-export async function getProductBySlug(slug: string): Promise<ProductRow | null> {
+export const getProductBySlug = cache(async (slug: string): Promise<ProductRow | null> => {
   const { data, error } = await getClient()
     .from('products')
     .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
@@ -235,12 +238,12 @@ export async function getProductBySlug(slug: string): Promise<ProductRow | null>
     throw new Error(`getProductBySlug: ${error.message}`)
   }
   return normalizeProduct(data)
-}
+})
 
-export async function getCategories(): Promise<CategoryRow[]> {
+export const getCategories = cache(async (): Promise<CategoryRow[]> => {(): Promise<CategoryRow[]> {
   const { data, error } = await getClient()
     .from('categories')
-    .select('*, branches!inner(slug)')
+    .select('id, slug, name, description, icon, branch_id, sort_order, created_at, updated_at, branches!inner(slug)')
     .order('branch_id')
     .order('sort_order')
   if (error) throw new Error(`getCategories: ${error.message}`)
@@ -256,14 +259,17 @@ export async function getCategories(): Promise<CategoryRow[]> {
     created_at: row.created_at,
     updated_at: row.updated_at,
   }))
-}
+})
 
-export async function getProductsByCategory(categorySlug: string): Promise<ProductRow[]> {
-  const { data, error } = await getClient()
+export async function getProductsByCategory(categorySlug: string, excludeSlug?: string, limit = 4): Promise<ProductRow[]> {
+  let query = getClient()
     .from('products')
-    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
+    .select(PRODUCT_SELECT)
     .eq('category', categorySlug)
     .order('name')
+    .limit(Math.max(1, Math.min(limit, 12)))
+  if (excludeSlug) query = query.neq('slug', excludeSlug)
+  const { data, error } = await query
   if (error) throw new Error(`getProductsByCategory: ${error.message}`)
   return (data ?? []).map(normalizeProduct)
 }
