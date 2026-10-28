@@ -5,7 +5,7 @@ import ProductFormClient from '../ProductFormClient'
 export default async function TaoMoiPage() {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/dang-nhap')
+  if (!user || user.app_metadata?.role !== 'admin') redirect('/admin/dang-nhap')
 
   const categories = await getCategories()
   return <ProductFormClient categories={categories} />
