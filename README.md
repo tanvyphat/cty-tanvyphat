@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tân Vy Phát — Company Product Catalog
 
-## Getting Started
+Website: https://tanvyphat.com · Next.js 16.2, React 19, TypeScript, TailwindCSS 4, Supabase PostgreSQL, Vercel.
 
-First, run the development server:
+## Business scope
+
+This is a **catalog and company information website**, NOT an e-commerce checkout.
+Public pages: homepage, searchable/filterable/paginated products, product detail with
+units and prices, company information, news and phone/contact links. Admin provides
+product, pricing/unit and news management, plus admin accounts.
+
+Cart, online checkout, order creation, SePay/Facebook payment webhooks, shipping
+quotation and consumer accounts have been retired. Legacy page URLs redirect to
+catalog/contact pages. Historical database tables and rows are NOT deleted.
+
+## Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm ci
+npx tsc --noEmit
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Supply environment variables through the deployment/CI secret manager:
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+`SUPABASE_SERVICE_ROLE_KEY` (server-only), and
+`NEXT_PUBLIC_SITE_URL`. Do not commit .env files or token values.
+Production build can prerender catalog pages and requires valid Supabase
+**public** environment variables, not service role for public reads.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`AGENTS.md` contains mandatory Next.js 16 guidance. Catalog data access lives
+in `src/lib/supabase/server.ts`; admin-only service role helper is
+`src/lib/supabase/admin.ts`. Admin routes must validate a Supabase Auth user
+with `user.app_metadata.role === 'admin'` **before** obtaining the service client;
+the proxy is not a substitute for endpoint authorization.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Security/change control
 
-## Learn More
+Supabase Production RLS currently requires hardening. Review the SQL proposal,
+verification queries, explicit insecure emergency rollback and key-rotation plan
+in `database/review-only/`. These files are documentation, not applied migrations.
+The historical service-role JWT was committed to the public Git history; deleting
+scripts does NOT revoke it. Rotation requires a separately approved coordinated
+Supabase/Vercel change window.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+No direct push to main, automatic PR merge, Production deployment, Production SQL
+execution, production credential rotation, or data removal.

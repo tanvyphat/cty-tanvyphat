@@ -7,16 +7,15 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
+  const requestedNext = searchParams.get('next') ?? '/admin/san-pham'
   const next = type === 'recovery'
     ? '/doi-mat-khau'
-    : (searchParams.get('next') ?? '/admin/san-pham')
+    : (requestedNext.startsWith('/admin/') ? requestedNext : '/admin/san-pham')
 
   if (token_hash && type) {
     const supabase = await createSSRClient()
     const { error } = await supabase.auth.verifyOtp({ type, token_hash })
-    if (!error) {
-      redirect(next)
-    }
+    if (!error) redirect(next)
   }
 
   redirect('/admin/dang-nhap')
