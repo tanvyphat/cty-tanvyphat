@@ -24,6 +24,7 @@ const VALID_PER_PAGE: PerPage[] = [50, 100, 200]
 type PageProps = {
   searchParams: Promise<{
     branch?: string
+    brand?: string
     category?: string
     search?: string
     sort?: string
@@ -38,6 +39,7 @@ type PageProps = {
 export default async function SanPhamPage({ searchParams }: PageProps) {
   const {
     branch: branchParam,
+    brand: brandParam,
     category: categoryParam,
     search: searchParam,
     sort: sortParam,
@@ -48,7 +50,7 @@ export default async function SanPhamPage({ searchParams }: PageProps) {
     weight: weightParam,
   } = await searchParams
 
-  const selectedBranch = branchParam ?? 'all'
+  const selectedBranch = branchParam ?? brandParam ?? 'all'
   const selectedCategory = categoryParam ?? 'all'
   const searchText = searchParam ?? ''
   const sortBy: SortBy = sortParam === 'price' ? 'price' : 'name'
