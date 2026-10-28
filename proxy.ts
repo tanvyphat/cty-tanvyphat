@@ -1,12 +1,13 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { getPublicSupabaseKey } from './src/lib/supabase/public-key'
 
 export async function proxy(request: NextRequest) {
   const supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    getPublicSupabaseKey(),
     {
       cookies: {
         getAll() { return request.cookies.getAll() },
