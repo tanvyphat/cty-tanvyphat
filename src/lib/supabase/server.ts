@@ -247,14 +247,14 @@ export const getCategories = cache(async (): Promise<CategoryRow[]> => {
     .order('branch_id')
     .order('sort_order')
   if (error) throw new Error(`getCategories: ${error.message}`)
-  return (data ?? []).map((row: CategoryRow & { branches: { slug: string } }) => ({
+  return (data ?? []).map((row) => ({
     id: row.id,
     slug: row.slug,
     name: row.name,
     description: row.description,
     icon: row.icon,
     branch_id: row.branch_id,
-    branch_slug: row.branches.slug,
+    branch_slug: Array.isArray(row.branches) ? row.branches[0]?.slug ?? '' : (row.branches as { slug: string }).slug,
     sort_order: row.sort_order,
     created_at: row.created_at,
     updated_at: row.updated_at,
