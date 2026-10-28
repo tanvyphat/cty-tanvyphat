@@ -61,9 +61,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   if (!product) notFound()
 
   const category = categories.find((c) => c.slug === product.category)
-  const relatedProducts = await getProductsByCategory(product.category).then((ps) =>
-    ps.filter((p) => p.slug !== product.slug).slice(0, 4)
-  )
+  const relatedProducts = await getProductsByCategory(product.category, product.slug, 4)
   const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c]))
   const hasImage = product.images.length > 0
 
@@ -125,7 +123,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <div className="bg-white border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <nav className="flex items-center gap-2 text-sm text-gray-500">
-              <Link href="/public" className="hover:text-[#1a56db] transition-colors">
+              <Link href="/" className="hover:text-[#1a56db] transition-colors">
                 Trang chủ
               </Link>
               <span>›</span>
