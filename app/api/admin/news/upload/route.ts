@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { randomUUID } from 'node:crypto'
 import { createSSRClient } from '@/src/lib/supabase/server'
 import { getAdminClient } from '@/src/lib/supabase/admin'
 
@@ -9,12 +10,24 @@ export async function POST(req: NextRequest) {
 
   const formData = await req.formData()
   const file = formData.get('file') as File | null
-  if (!file) return NextResponse.json({ error: 'Không có file' }, { status: 400 })
+  if (!(file instanceof File)) return NextResponse.json({ error: 'Không có file' }, { status: 400 })
 
-  const isVideo = file.type.startsWith('video/')
+  const imageTypes: Record<string, string> = {
+    'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp',
+    'image/gif': 'gif', 'image/avif': 'avif',
+  }
+  const videoTypes: Record<string, string> = {
+    'video/mp4': 'mp4', 'video/webm': 'webm', 'video/quicktime': 'mov',
+  }
+  const isVideo = Object.hasOwn(videoTypes, file.type)
+  const ext = imageTypes[file.type] ?? videoTypes[file.type]
+  if (!ext) return NextResponse.json({ error: 'Định dạng media không được hỗ trợ' }, { status: 415 })
+  const maxBytes = isVideo ? 100 * 1024 * 1024 : 10 * 1024 * 1024
+  if (file.size === 0 || file.size > maxBytes) {
+    return NextResponse.json({ error: 'File quá lớn hoặc rỗng' }, { status: 413 })
+  }
   const folder = isVideo ? 'videos' : 'images'
-  const ext = file.name.split('.').pop() ?? (isVideo ? 'mp4' : 'jpg')
-  const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const path = `${folder}/${randomUUID()}.${ext}`
 
   const bytes = await file.arrayBuffer()
 
