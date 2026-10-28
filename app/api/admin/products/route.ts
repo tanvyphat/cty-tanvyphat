@@ -6,7 +6,7 @@ import { getAdminClient } from '@/src/lib/supabase/admin'
 export async function POST(req: NextRequest) {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!user || user.app_metadata?.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await req.json()
   const { slug, name, category, description, images, featured, fb_post_url, keyword, units } = body
