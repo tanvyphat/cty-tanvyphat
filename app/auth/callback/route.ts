@@ -5,7 +5,10 @@ import { createSSRClient } from '@/src/lib/supabase/server'
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/'
+  const requestedNext = searchParams.get('next') ?? '/admin/san-pham'
+  const next = requestedNext.startsWith('/') && !requestedNext.startsWith('//') && !requestedNext.includes('\\\\')
+    ? requestedNext
+    : '/admin/san-pham'
 
   if (code) {
     const supabase = await createSSRClient()
@@ -15,5 +18,5 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  redirect('/dang-nhap?error=auth')
+  redirect('/admin/dang-nhap?error=auth')
 }
