@@ -5,7 +5,7 @@ import { getAdminClient } from '@/src/lib/supabase/admin'
 export async function GET() {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!user || user.app_metadata?.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { data, error } = await getAdminClient()
     .from('news')
@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!user || user.app_metadata?.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await req.json()
   const { slug, title, excerpt, content, image_url, video_url, tag, tag_color, fb_url, published_at } = body
