@@ -240,7 +240,7 @@ export const getProductBySlug = cache(async (slug: string): Promise<ProductRow |
   return normalizeProduct(data)
 })
 
-export const getCategories = cache(async (): Promise<CategoryRow[]> => {(): Promise<CategoryRow[]> {
+export const getCategories = cache(async (): Promise<CategoryRow[]> => {
   const { data, error } = await getClient()
     .from('categories')
     .select('id, slug, name, description, icon, branch_id, sort_order, created_at, updated_at, branches!inner(slug)')
