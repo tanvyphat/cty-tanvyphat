@@ -11,7 +11,7 @@ import AdminNavbar from '@/app/admin/AdminNavbar' // Import Navbar chung
 export default async function AdminTinTucPage() {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/dang-nhap')
+  if (!user || user.app_metadata?.role !== 'admin') redirect('/admin/dang-nhap')
 
   const { data } = await getAdminClient()
       .from('news')

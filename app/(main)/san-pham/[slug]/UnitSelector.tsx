@@ -1,6 +1,5 @@
 'use client'
 
-import {useState} from 'react'
 import {store} from '../../../../src/data/store'
 import type {ProductUnitRow} from '../../../../src/lib/supabase/server'
 
@@ -16,7 +15,7 @@ interface Props {
     units: ProductUnitRow[]
 }
 
-export default function UnitSelector({product, units}: Props) {
+export default function UnitSelector({units}: Props) {
     const firstUnit = units[0] ?? null
     const hasPrice = firstUnit?.price != null
     const multipleUnits = units.length > 1

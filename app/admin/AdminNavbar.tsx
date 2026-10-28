@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 // Lưu ý: Sếp sửa lại import này nếu IDE báo lỗi nhé (Tuỳ thuộc thư mục app của sếp nằm đâu)
-import LogoutButton from '@/app/admin/don-hang/LogoutButton'
+import LogoutButton from '@/app/admin/LogoutButton'
 
 const NAV_LINKS = [
     // { href: '/admin/don-hang', label: '📦 Đơn hàng' },

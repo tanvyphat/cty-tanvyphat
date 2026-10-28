@@ -1,11 +1,11 @@
 import type { MetadataRoute } from 'next'
-import { getProducts, getCategories, getAllNewsSlugs } from '../src/lib/supabase/server'
+import { getProductSitemapEntries, getCategories, getAllNewsSlugs } from '../src/lib/supabase/server'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tanvyphat.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, categories, newsSlugs] = await Promise.all([
-    getProducts(),
+    getProductSitemapEntries(),
     getCategories(),
     getAllNewsSlugs(),
   ])
@@ -16,7 +16,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/tin-tuc`,           lastModified: new Date() },
     { url: `${SITE_URL}/gioi-thieu`,        lastModified: new Date() },
     { url: `${SITE_URL}/lien-he`,           lastModified: new Date() },
-    { url: `${SITE_URL}/tra-cuu-don-hang`,  lastModified: new Date() },
   ]
 
   const categoryPages: MetadataRoute.Sitemap = categories.map((cat) => ({

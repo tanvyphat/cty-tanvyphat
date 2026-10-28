@@ -4,7 +4,6 @@ import { store } from '../data/store'
 const quickLinks = [
   { href: '/chinh-sach/chinh-sach-bao-mat', label: 'Chính Sách Bảo Mật' },
   { href: '/chinh-sach/dieu-khoan-dich-vu', label: 'Điều Khoản Dịch Vụ' },
-  { href: '/chinh-sach/chinh-sach-thanh-toan', label: 'Chính Sách Thanh Toán' },
   { href: '/tin-tuc', label: 'Tin tức' },
   { href: '/lien-he', label: 'Liên hệ' },
   { href: '/chinh-sach/chinh-sach-xoa-du-lieu', label: 'Chính sách xoá dữ liệu người dùng' }

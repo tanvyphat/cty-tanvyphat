@@ -49,7 +49,7 @@ export default function DeleteProductButton({ id, name }: { id: number; name: st
                 {/* Body Modal */}
                 <div className="p-6">
                   <p className="text-gray-600 text-sm whitespace-pre-wrap leading-relaxed">
-                    CẢNH BÁO: Bạn sắp xoá sản phẩm <strong>"{name}"</strong>.<br /><br />
+                    CẢNH BÁO: Bạn sắp xoá sản phẩm <strong>&quot;{name}&quot;</strong>.<br /><br />
                     Hành động này KHÔNG THỂ HOÀN TÁC và sẽ xoá toàn bộ dữ liệu liên quan!
                   </p>
                 </div>

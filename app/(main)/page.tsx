@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { store } from '../../src/data/store'
-import { getProducts, getCategories } from '../../src/lib/supabase/server'
+import { getHomepageBranchProducts, getCategories } from '../../src/lib/supabase/server'
 import HomeHero from '../../src/components/HomeHero'
 import ScrollReveal from '../../src/components/ScrollReveal'
 import ProductCard from "@/src/components/ProductCard";
@@ -60,10 +60,14 @@ const uspItems = [
 
 
 export default async function Home() {
-  const [allProducts, categories] = await Promise.all([getProducts(), getCategories()])
+  const categories = await getCategories()
   const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c]))
+  const branchSlugs = ['van-phong-pham', 'hang-thai-lan', 'giay-in', 'becker-chemie']
+  const homeProducts = await Promise.all(
+    branchSlugs.map((slug) => getHomepageBranchProducts(categories, slug))
+  )
   const productsByBranch = (branchSlug: string) =>
-    allProducts.filter((p) => categoryMap[p.category]?.branch_slug === branchSlug).slice(0, 4)
+    homeProducts[branchSlugs.indexOf(branchSlug)] ?? []
 
   return (
     <>

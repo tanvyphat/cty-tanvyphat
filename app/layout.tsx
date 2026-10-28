@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
 import NextTopLoader from 'nextjs-toploader'
-import { CartProvider } from '../src/contexts/CartContext'
-import { AuthProvider } from '../src/contexts/AuthContext'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -109,12 +107,7 @@ export default function RootLayout({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
       <NextTopLoader color="#1a56db" showSpinner={false} />
 
-      {/* Giữ các Provider ở Root để trạng thái Auth không bị mất khi chuyển qua lại giữa Admin và các trang */}
-      <AuthProvider>
-        <CartProvider>
-          {children}
-        </CartProvider>
-      </AuthProvider>
+      {children}
 
       </body>
       </html>

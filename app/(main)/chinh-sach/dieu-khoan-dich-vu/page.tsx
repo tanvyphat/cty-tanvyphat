@@ -38,9 +38,9 @@ export default function TermsOfServicePage() {
                         {}
                         <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">1. Định nghĩa</h2>
                         <ul className="list-disc pl-6 space-y-2">
-                            <li><strong>"Chúng tôi", "Tân Vy Phát":</strong> Chỉ Công ty TNHH Tân Vy Phát, đơn vị chủ quản của website tanvyphat.com.</li>
-                            <li><strong>"Quý khách", "Khách hàng", "Người dùng":</strong> Chỉ các cá nhân, tổ chức truy cập, sử dụng dịch vụ hoặc mua sắm trên website.</li>
-                            <li><strong>"Sản phẩm", "Hàng hóa":</strong> Chỉ các mặt hàng văn phòng phẩm, hàng tiêu dùng Thái Lan, và các sản phẩm khác được bày bán trên website.</li>
+                            <li><strong>&quot;Chúng tôi&quot;, &quot;Tân Vy Phát&quot;:</strong> Chỉ Công ty TNHH Tân Vy Phát, đơn vị chủ quản của website tanvyphat.com.</li>
+                            <li><strong>&quot;Quý khách&quot;, &quot;Khách hàng&quot;, &quot;Người dùng&quot;:</strong> Chỉ các cá nhân, tổ chức truy cập, sử dụng dịch vụ hoặc mua sắm trên website.</li>
+                            <li><strong>&quot;Sản phẩm&quot;, &quot;Hàng hóa&quot;:</strong> Chỉ các mặt hàng văn phòng phẩm, hàng tiêu dùng Thái Lan, và các sản phẩm khác được bày bán trên website.</li>
                         </ul>
 
                         <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">2. Điều kiện sử dụng website</h2>
@@ -61,7 +61,7 @@ export default function TermsOfServicePage() {
                         <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">4. Chấp nhận, Hủy đơn và Vận chuyển</h2>
                         <ul className="list-disc pl-6 space-y-2">
                             <li>Tân Vy Phát có quyền từ chối hoặc hủy bỏ đơn hàng do hết hàng, lỗi hệ thống, hoặc không thể xác minh thông tin nhận hàng. Nếu đã thanh toán, chúng tôi sẽ hoàn tiền theo quy định.</li>
-                            <li>Quý khách có thể yêu cầu hủy đơn hàng trước khi đơn hàng chuyển sang trạng thái "Đang giao".</li>
+                            <li>Quý khách có thể yêu cầu hủy đơn hàng trước khi đơn hàng chuyển sang trạng thái &quot;Đang giao&quot;.</li>
                             <li>Thời gian giao hàng dự kiến sẽ được thông báo cụ thể. Rủi ro về mất mát hoặc hư hỏng hàng hóa sẽ được chuyển giao cho quý khách kể từ thời điểm ký nhận hàng. Vui lòng kiểm tra kỹ gói hàng trước khi nhận.</li>
                         </ul>
 

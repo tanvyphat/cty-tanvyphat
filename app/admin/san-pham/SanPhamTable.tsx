@@ -43,7 +43,7 @@ export default async function SanPhamTable({
   const { data, count } = await query
   const products = (data ?? []).map(p => ({
     ...p,
-    product_units: ((p as any).product_units as ProductUnit[] ?? []).sort((a, b) => a.sort_order - b.sort_order),
+    product_units: ((p.product_units ?? []) as ProductUnit[]).sort((a, b) => a.sort_order - b.sort_order),
   })) as Product[]
   const totalPages = Math.ceil((count ?? 0) / limit)
 

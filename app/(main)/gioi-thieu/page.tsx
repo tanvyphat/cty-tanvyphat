@@ -88,7 +88,7 @@ export default function GioiThieuPage() {
                   <strong>Giải pháp phù hợp cho từng nhu cầu.</strong>
                 </p>
                 <p>
-                  Không có một loại giấy nào "tốt nhất cho tất cả", chỉ có loại phù hợp nhất cho từng mục đích: in nội bộ, in hợp đồng, in báo cáo hay tài liệu trình ký.
+                  Không có một loại giấy nào &quot;tốt nhất cho tất cả&quot;, chỉ có loại phù hợp nhất cho từng mục đích: in nội bộ, in hợp đồng, in báo cáo hay tài liệu trình ký.
                 </p>
                 <p>
                   <em>Với nền tảng kinh nghiệm hơn 17 năm, chúng tôi tập trung vào việc tư vấn đúng nhu cầu, giúp doanh nghiệp tối ưu chi phí và nâng cao hiệu quả sử dụng.</em>

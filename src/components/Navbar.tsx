@@ -1,11 +1,10 @@
 'use client'
 
-import {useState, useRef, useEffect} from 'react'
+import {useState, useRef} from 'react'
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
 import {useRouter} from 'nextjs-toploader/app'
 import {store} from '../data/store'
-import {useAuth} from '../contexts/AuthContext'
 import type {CategoryRow} from '../lib/supabase/server'
 
 const navLinks = [
@@ -19,140 +18,9 @@ const navLinks = [
 ]
 
 const utilityLinks = [
-    {href: '/tra-cuu-don-hang', label: 'Tra cứu đơn hàng'},
     {href: '/tin-tuc', label: 'Tin tức'},
     {href: '/lien-he', label: 'Liên hệ'},
 ]
-
-function UserMenu() {
-    const {user, profile, authLoading, signOut} = useAuth()
-    const router = useRouter()
-    const [open, setOpen] = useState(false)
-    const ref = useRef<HTMLDivElement>(null)
-
-    useEffect(() => {
-        function handleClick(e: MouseEvent) {
-            if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-        }
-
-        document.addEventListener('mousedown', handleClick)
-        return () => document.removeEventListener('mousedown', handleClick)
-    }, [])
-
-    if (authLoading) return <div className="w-8 h-8 rounded-full bg-gray-100 animate-pulse"/>
-
-    if (!user) {
-        return (
-            <Link
-                href="/dang-nhap"
-                className="flex items-center gap-1.5 text-gray-600 hover:text-[#1a56db] text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors"
-            >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round"
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                </svg>
-                Đăng nhập
-            </Link>
-        )
-    }
-
-    const avatarUrl = user.user_metadata?.avatar_url as string | undefined
-    const displayName = profile?.full_name ?? user.user_metadata?.full_name ?? user.user_metadata?.name ?? user.email ?? ''
-    const initials = displayName.charAt(0).toUpperCase()
-    // Kiểm tra quyền Admin từ app_metadata (cột raw_app_meta_data trong SQL)
-    const isAdmin = user.app_metadata?.role === 'admin'
-    return (
-        <div className="relative" ref={ref}>
-            <button
-                onClick={() => setOpen(o => !o)}
-                className="flex items-center gap-2 rounded-full hover:opacity-90 transition-opacity"
-                aria-label="Tài khoản"
-            >
-                {avatarUrl ? (
-                    <img src={avatarUrl} alt={displayName}
-                         className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"/>
-                ) : (
-                    <div
-                        className="w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center text-sm font-bold text-[#1a3a6b] border-2 border-gray-200">
-                        {initials}
-                    </div>
-                )}
-                <span
-                    className="hidden lg:block text-sm text-gray-700 font-medium max-w-[100px] truncate">{displayName.split(' ').pop()}</span>
-                <svg className="h-3 w-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                     strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
-                </svg>
-            </button>
-
-            {open && (
-                <div
-                    className="absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-1 z-50">
-                    <div className="px-4 py-3 border-b border-gray-100">
-                        <p className="font-semibold text-gray-900 text-sm truncate">{displayName}</p>
-                        <p className="text-xs text-gray-400 truncate">{user.email}</p>
-                    </div>
-                    <Link
-                        href="/tai-khoan"
-                        onClick={() => setOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    >
-                        <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                             strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round"
-                                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-                        Tài khoản
-                    </Link>
-                    <Link
-                        href="/don-hang-da-dat"
-                        onClick={() => setOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    >
-                        <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                             strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round"
-                                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                        Đơn hàng của tôi
-                    </Link>
-                    {isAdmin && (
-                        <Link
-                            href="/admin"
-                            onClick={() => setOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors font-medium text-blue-600"
-                        >
-                            {}
-                            <svg className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                 strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round"
-                                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                            </svg>
-                            Admin Mode
-                        </Link>
-                    )}
-                    <div className="border-t border-gray-100 mt-1 pt-1">
-                        <button
-                            onClick={async () => {
-                                setOpen(false);
-                                await signOut();
-                                router.push('/')
-                            }}
-                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
-                        >
-                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                 strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round"
-                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                            </svg>
-                            Đăng xuất
-                        </button>
-                    </div>
-                </div>
-            )}
-        </div>
-    )
-}
 
 export default function Navbar({categories = []}: {categories?: CategoryRow[]}) {
     const [menuOpen, setMenuOpen] = useState(false)
@@ -253,12 +121,12 @@ export default function Navbar({categories = []}: {categories?: CategoryRow[]}) 
                                 </a>
                             </div>
                         </div>
-                        <UserMenu/>
+                        <Link href="/admin/dang-nhap" className="text-sm text-gray-600 hover:text-[#1a56db]">Quản trị</Link>
                     </div>
 
                     {/* Mobile: user + phone + hamburger */}
                     <div className="flex md:hidden items-center gap-1 ml-auto">
-                        <UserMenu/>
+                        <Link href="/admin/dang-nhap" className="text-sm text-gray-600 hover:text-[#1a56db]">Quản trị</Link>
                         <a
                             href={`tel:${store.phone}`}
                             className="text-[#1a56db] p-2"

@@ -120,11 +120,28 @@ export async function getProducts(): Promise<ProductRow[]> {
   return (data ?? []).map(normalizeProduct)
 }
 
-export async function getRandomProducts(limit: number): Promise<ProductRow[]> {
+// Only fetch fields required to construct SEO URLs; avoid loading units/images for all products.
+export async function getProductSitemapEntries(): Promise<{ slug: string; updated_at: string }[]> {
   const { data, error } = await getClient()
-    .rpc('get_random_products', { limit_count: limit })
-    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
-  if (error) throw new Error(`getRandomProducts: ${error.message}`)
+    .from('products')
+    .select('slug, updated_at')
+  if (error) throw new Error(`getProductSitemapEntries: ${error.message}`)
+  return data ?? []
+}
+
+// Homepage shows four products per industry. Limit at the DB rather than downloading
+// the entire catalog (including nested product_units) for a handful of cards.
+export async function getHomepageBranchProducts(categories: CategoryRow[], branchSlug: string): Promise<ProductRow[]> {
+  const slugs = categories.filter((c) => c.branch_slug === branchSlug).map((c) => c.slug)
+  if (slugs.length === 0) return []
+  const { data, error } = await getClient()
+    .from('products')
+    .select(PRODUCT_SELECT)
+    .in('category', slugs)
+    .order('featured', { ascending: false })
+    .order('name')
+    .limit(4)
+  if (error) throw new Error(`getHomepageBranchProducts: ${error.message}`)
   return (data ?? []).map(normalizeProduct)
 }
 

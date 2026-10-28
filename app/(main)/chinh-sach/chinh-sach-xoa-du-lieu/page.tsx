@@ -39,7 +39,7 @@ export default function XoaDuLieuPage() {
                   <a href={`mailto:${store.email}`} className="text-blue-600 hover:underline font-medium">
                     {store.email}
                   </a>
-                  {' '}— tiêu đề: <em>"Yêu cầu xoá dữ liệu"</em>
+                  {' '}— tiêu đề: <em>&quot;Yêu cầu xoá dữ liệu&quot;</em>
                 </span>
               </li>
               <li className="flex items-start gap-2">

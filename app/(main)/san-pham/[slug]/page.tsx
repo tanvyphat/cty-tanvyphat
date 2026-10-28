@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import {
-  getProducts,
+  getProductSitemapEntries,
   getProductBySlug,
   getCategories,
   getProductsByCategory,
@@ -21,7 +21,7 @@ type PageProps = {
 }
 
 export async function generateStaticParams() {
-  const products = await getProducts()
+  const products = await getProductSitemapEntries()
   return products.map((p) => ({ slug: p.slug }))
 }
 
@@ -63,9 +63,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const category = categories.find((c) => c.slug === product.category)
   const relatedProducts = await getProductsByCategory(product.category, product.slug, 4)
   const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c]))
-  const hasImage = product.images.length > 0
 
-  const firstUnit = product.product_units[0] ?? null
+  const hasImage = product.images.length > 0
   const minPrice = product.min_price
 
   const productUrl = `${SITE_URL}/san-pham/${product.slug}`

@@ -5,7 +5,7 @@ import { getAdminClient } from '@/src/lib/supabase/admin'
 export async function POST(req: NextRequest) {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!user || user.app_metadata?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const formData = await req.formData()
   const file = formData.get('file') as File | null

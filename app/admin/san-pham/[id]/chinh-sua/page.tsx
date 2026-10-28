@@ -10,7 +10,7 @@ export default async function ChinhSuaPage({
 }) {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/dang-nhap')
+  if (!user || user.app_metadata?.role !== 'admin') redirect('/admin/dang-nhap')
 
   const { id } = await params
 
@@ -25,7 +25,7 @@ export default async function ChinhSuaPage({
 
   const product = rawProduct ? {
     ...rawProduct,
-    product_units: ((rawProduct as any).product_units ?? []).sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order),
+    product_units: (rawProduct.product_units ?? []).sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order),
   } : null
 
   if (error || !rawProduct || !product) notFound()
