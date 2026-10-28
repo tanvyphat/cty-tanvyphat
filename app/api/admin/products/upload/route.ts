@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { randomUUID } from 'node:crypto'
 import { createSSRClient } from '@/src/lib/supabase/server'
 import { getAdminClient } from '@/src/lib/supabase/admin'
 
@@ -9,10 +10,18 @@ export async function POST(req: NextRequest) {
 
   const formData = await req.formData()
   const file = formData.get('file') as File | null
-  if (!file) return NextResponse.json({ error: 'Không có file' }, { status: 400 })
+  if (!(file instanceof File)) return NextResponse.json({ error: 'Không có file' }, { status: 400 })
 
-  const ext = file.name.split('.').pop() ?? 'jpg'
-  const path = `uploads/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const supportedTypes: Record<string, string> = {
+    'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp',
+    'image/gif': 'gif', 'image/avif': 'avif',
+  }
+  const ext = supportedTypes[file.type]
+  if (!ext) return NextResponse.json({ error: 'Định dạng ảnh không được hỗ trợ' }, { status: 415 })
+  if (file.size === 0 || file.size > 10 * 1024 * 1024) {
+    return NextResponse.json({ error: 'Ảnh phải nhỏ hơn 10 MB' }, { status: 413 })
+  }
+  const path = `uploads/${randomUUID()}.${ext}`
 
   const bytes = await file.arrayBuffer()
   const admin = getAdminClient()
