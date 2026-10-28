@@ -56,7 +56,7 @@ export default async function AdminSanPhamPage({
 }) {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/dang-nhap')
+  if (!user || user.app_metadata?.role !== 'admin') redirect('/admin/dang-nhap')
 
   const { branch = 'all', search = '', page: pageStr = '1' } = await searchParams
   const page = Math.max(1, parseInt(pageStr, 10))
