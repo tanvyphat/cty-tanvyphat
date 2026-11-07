@@ -27,8 +27,8 @@ const uspItems = [
         <circle cx="18" cy="19" r="1.8" />
       </svg>
     ),
-    title: 'Giao toàn quốc',
-    desc: 'Nội thành HCM trong ngày',
+    title: 'Giao nội thành TP.HCM',
+    desc: 'Ngoài khu vực: khách thanh toán phí ship',
     iconColor: 'text-blue-600',
     ring: 'border-blue-300',
   },
@@ -111,12 +111,12 @@ export default async function Home() {
             </p>
             <p className="text-gray-500 text-sm leading-relaxed">
               Chúng tôi phục vụ các đại lý, văn phòng, trường học, tiệm văn phòng phẩm và hộ kinh doanh
-              trên <strong className="text-gray-600 font-medium">toàn quốc</strong> — giao hàng nhanh, giá cạnh tranh, hỗ trợ tận tâm.
+              tại <strong className="text-gray-600 font-medium">TP.HCM</strong> — giao nội thành; ngoài khu vực theo thỏa thuận và khách chịu phí vận chuyển.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-8">
               {[
                 { value: '5868+', label: 'Khách hàng' },
-                { value: 'Toàn quốc', label: 'Giao hàng' },
+                { value: 'Nội thành', label: 'Giao hàng TP.HCM' },
                 { value: '17+', label: 'Năm kinh nghiệm' },
                 { value: 'Q.12 HCM', label: 'Địa chỉ kho' },
               ].map((stat) => (
@@ -140,7 +140,7 @@ export default async function Home() {
               branchSlug: 'van-phong-pham',
               title: 'Văn Phòng Phẩm — Giá Sỉ Tận Gốc',
               description:
-                'Nhập thẳng từ nhà máy — giấy in A4, bìa Thái, decal, nhựa ép dẻo và đầy đủ văn phòng phẩm các loại. Hàng sẵn kho, xuất hoá đơn VAT, giao toàn quốc.',
+                'Nhập thẳng từ nhà máy — giấy in A4, bìa Thái, decal, nhựa ép dẻo và đầy đủ văn phòng phẩm các loại. Hàng sẵn kho, xuất hoá đơn VAT, giao nội thành TP.HCM.',
               image: '/branch-van-phong-pham.png',
             },
             {

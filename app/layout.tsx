@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
 import NextTopLoader from 'nextjs-toploader'
-import { CartProvider } from '../src/contexts/CartContext'
-import { AuthProvider } from '../src/contexts/AuthContext'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -17,7 +15,7 @@ export const metadata: Metadata = {
     template: '%s | CT Tân Vy Phát',
   },
   description:
-      'CT Tân Vy Phát – Chuyên phân phối giấy in A4, văn phòng phẩm, bìa Thái, nhựa ép giá sỉ tại Q.12 TPHCM. Hàng chính hãng, ship toàn quốc. Liên hệ: 090 360 87 68.',
+      'CT Tân Vy Phát – Chuyên phân phối giấy in A4, văn phòng phẩm, bìa Thái, nhựa ép giá sỉ tại Q.12 TPHCM. Hàng chính hãng, giao nội thành TP.HCM; khu vực khác theo thỏa thuận, khách chịu phí vận chuyển. Liên hệ: 090 360 87 68.',
   keywords: [
     'giấy in giá sỉ',
     'văn phòng phẩm TPHCM',
@@ -32,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'CT Tân Vy Phát | Giấy In & VPP Giá Sỉ TPHCM',
     description:
-        'Chuyên phân phối giấy in A4, văn phòng phẩm, bìa Thái, nhựa ép giá sỉ. Ship toàn quốc.',
+        'Chuyên phân phối giấy in A4, văn phòng phẩm, bìa Thái, nhựa ép giá sỉ. Giao nội thành TP.HCM; khu vực khác theo thỏa thuận.',
     locale: 'vi_VN',
     type: 'website',
     siteName: 'CT Tân Vy Phát',
@@ -56,7 +54,7 @@ const localBusinessSchema = {
   logo: 'https://tanvyphat.com/logo.png',
   image: 'https://tanvyphat.com/logo.png',
   description:
-      'Chuyên phân phối giấy in A4, văn phòng phẩm, bìa Thái, nhựa ép giá sỉ tại Q.12 TPHCM. Hàng chính hãng, ship toàn quốc.',
+      'Chuyên phân phối giấy in A4, văn phòng phẩm, bìa Thái, nhựa ép giá sỉ tại Q.12 TPHCM. Hàng chính hãng, giao nội thành TP.HCM; khu vực khác theo thỏa thuận, khách chịu phí vận chuyển.',
   telephone: '+84903608768',
   email: 'tanvyphatpaper@gmail.com',
   address: {
@@ -110,11 +108,7 @@ export default function RootLayout({
       <NextTopLoader color="#1a56db" showSpinner={false} />
 
       {/* Giữ các Provider ở Root để trạng thái Auth không bị mất khi chuyển qua lại giữa Admin và các trang */}
-      <AuthProvider>
-        <CartProvider>
-          {children}
-        </CartProvider>
-      </AuthProvider>
+      {children}
 
       </body>
       </html>

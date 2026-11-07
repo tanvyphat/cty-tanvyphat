@@ -45,20 +45,12 @@ export async function proxy(request: NextRequest) {
   return supabaseResponse
 }
 
-// Keep session refresh for protected pages, authenticated customer flows,
-// and API endpoints that read the user's SSR session.
-// Public catalog/marketing pages intentionally bypass Supabase Auth in Proxy.
+// Only admin endpoints and auth callbacks refresh sessions.
+// Public pages are a catalog without customer accounts or checkout.
 export const config = {
   matcher: [
     '/admin/:path*',
     '/api/admin/:path*',
     '/auth/:path*',
-    '/api/orders/:path*',
-    '/dang-nhap',
-    '/tai-khoan/:path*',
-    '/don-hang-da-dat/:path*',
-    '/gio-hang/:path*',
-    '/thanh-toan',
-    '/dat-hang/:path*',
   ],
 }

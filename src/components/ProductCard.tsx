@@ -86,7 +86,7 @@ export default function ProductCard({
             href={`tel:${store.phone}`}
             className="flex-1 text-center text-[10px] sm:text-xs border border-red-500 text-red-600 hover:bg-red-500 hover:text-white font-medium py-0.5 sm:py-1.5 px-1 sm:px-3 rounded-md sm:rounded-lg transition-colors"
           >
-            Đặt hàng
+            Gọi báo giá
           </a>
         </div>
       </div>
