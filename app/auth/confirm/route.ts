@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const type = searchParams.get('type') as EmailOtpType | null
   const next = type === 'recovery'
     ? '/doi-mat-khau'
-    : (searchParams.get('next') ?? '/admin/san-pham')
+    : (searchParams.get('next') ?? '/tai-khoan')
 
   if (token_hash && type) {
     const supabase = await createSSRClient()
@@ -19,5 +19,5 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  redirect('/admin/dang-nhap')
+  redirect('/dang-nhap?error=auth')
 }

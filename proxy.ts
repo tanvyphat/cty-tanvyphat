@@ -45,12 +45,15 @@ export async function proxy(request: NextRequest) {
   return supabaseResponse
 }
 
-// Only admin endpoints and auth callbacks refresh sessions.
-// Public pages are a catalog without customer accounts or checkout.
+// Refresh sessions for admin, auth callbacks and customer account pages; catalog remains public.
 export const config = {
   matcher: [
     '/admin/:path*',
     '/api/admin/:path*',
     '/auth/:path*',
+    '/dang-nhap',
+    '/tai-khoan/:path*',
+    '/quen-mat-khau',
+    '/doi-mat-khau',
   ],
 }

@@ -6,6 +6,7 @@ import {usePathname} from 'next/navigation'
 import {useRouter} from 'nextjs-toploader/app'
 import {store} from '../data/store'
 import type {CategoryRow} from '../lib/supabase/server'
+import UserMenu from './UserMenu'
 
 const navLinks = [
     {href: '/', label: 'Trang chủ'},
@@ -121,11 +122,12 @@ export default function Navbar({categories = []}: {categories?: CategoryRow[]}) 
                                 </a>
                             </div>
                         </div>
-                        
+                        <UserMenu />
                     </div>
 
                     {/* Mobile: phone + navigation */}
                     <div className="flex md:hidden items-center gap-1 ml-auto">
+                        <UserMenu />
                         
                         <a
                             href={`tel:${store.phone}`}
@@ -252,6 +254,7 @@ export default function Navbar({categories = []}: {categories?: CategoryRow[]}) 
                             </Link>
                         ))}
                         <div className="border-t border-gray-100 my-2"/>
+                        <Link onClick={() => setMenuOpen(false)} href="/dang-nhap?mode=register" className="px-3 py-2 text-sm text-blue-600">Đăng ký tài khoản</Link>
                         {utilityLinks.map((link) => (
                             <Link
                                 key={link.label}
