@@ -1,54 +1,270 @@
 'use client'
-import { useEffect, useState } from 'react'
+
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { createSupabaseBrowserClient } from '@/src/lib/supabase/browser'
 import { useAuth } from '@/src/contexts/AuthContext'
+import { PROVINCES, DISTRICTS_BY_PROVINCE, type Province, type District } from '@/src/data/provinces'
+import Link from 'next/link'
+
 const supabase = createSupabaseBrowserClient()
+
 export default function ProfileClient() {
- const { user, profile, authLoading, signOut, refreshProfile } = useAuth()
- const router = useRouter()
- const [fullName, setFullName] = useState('')
- const [phone, setPhone] = useState('')
- const [saving, setSaving] = useState(false)
- const [message, setMessage] = useState('')
- const [error, setError] = useState('')
- useEffect(() => { if (!authLoading && !user) router.replace('/dang-nhap') }, [authLoading, user, router])
- useEffect(() => {
-   setFullName(profile?.full_name ?? String(user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? ''))
-   setPhone(profile?.phone ?? '')
- }, [profile, user])
- async function save(e: React.FormEvent) {
-   e.preventDefault()
-   if (!user) return
-   setSaving(true); setError(''); setMessage('')
-   const { error: saveError } = await supabase.from('profiles').upsert(
-     { id: user.id, full_name: fullName.trim() || null, phone: phone.trim() || null },
-     { onConflict: 'id' }
-   )
-   if (saveError) setError('Không lưu được: ' + saveError.message)
-   else { await refreshProfile(); setMessage('Đã cập nhật hồ sơ.') }
-   setSaving(false)
- }
- async function logout() { await signOut(); router.replace('/'); router.refresh() }
- if (authLoading || !user) return <main className="min-h-[70vh] flex items-center justify-center text-gray-500">Đang tải tài khoản...</main>
- const provider = user.app_metadata?.provider as string | undefined
- return <main className="min-h-[70vh] bg-gray-50 py-10 px-4">
-   <section className="max-w-2xl mx-auto bg-white border border-gray-100 rounded-2xl shadow-sm p-6 sm:p-8 space-y-6">
-     <div className="flex justify-between items-start gap-4">
-       <div><h1 className="text-2xl font-bold text-[#1a3a6b]">Tài khoản của tôi</h1>
-       <p className="text-sm text-gray-500 mt-1">{user.email}</p></div>
-       <button type="button" onClick={logout} className="text-red-600 text-sm hover:underline">Đăng xuất</button>
-     </div>
-     <p className="rounded-lg bg-blue-50 text-gray-700 px-4 py-3 text-sm">Website chỉ giới thiệu sản phẩm và nhận yêu cầu báo giá qua điện thoại, Zalo hoặc Facebook; không đặt hàng hay thanh toán trực tuyến.</p>
-     <form onSubmit={save} className="space-y-4">
-       <div><label htmlFor="full-name" className="block text-sm font-medium mb-1">Họ và tên</label><input id="full-name" maxLength={120} value={fullName} onChange={e => setFullName(e.target.value)} className="w-full border rounded-xl px-4 py-2.5" /></div>
-       <div><label htmlFor="phone" className="block text-sm font-medium mb-1">Số điện thoại</label><input id="phone" type="tel" maxLength={20} value={phone} onChange={e => setPhone(e.target.value)} className="w-full border rounded-xl px-4 py-2.5" /></div>
-       {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
-       {message && <p role="status" className="text-sm text-green-700">{message}</p>}
-       <button type="submit" disabled={saving} className="bg-[#1a56db] text-white px-5 py-2.5 rounded-xl font-semibold disabled:opacity-60">{saving ? 'Đang lưu...' : 'Lưu thông tin'}</button>
-     </form>
-     {(!provider || provider === 'email') && <Link href="/tai-khoan/doi-mat-khau" className="text-blue-600 text-sm hover:underline">Đổi mật khẩu</Link>}
-   </section>
- </main>
+  const { user, profile, authLoading, signOut, refreshProfile } = useAuth()
+  const router = useRouter()
+
+  const [fullName, setFullName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [address, setAddress] = useState('')
+  const [province, setProvince] = useState<Province | null>(null)
+  const [district, setDistrict] = useState<District | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [error, setError] = useState('')
+
+  const districts = province ? (DISTRICTS_BY_PROVINCE[province.code] ?? []) : []
+
+  useEffect(() => {
+    if (!authLoading && !user) router.replace('/dang-nhap')
+  }, [authLoading, user, router])
+
+  useEffect(() => {
+    if (profile) {
+      setFullName(profile.full_name ?? '')
+      setPhone(profile.phone ?? '')
+      setAddress(profile.address ?? '')
+      const p = PROVINCES.find(pr => pr.name === profile.province) ?? null
+      setProvince(p)
+      if (p && profile.district) {
+        const d = (DISTRICTS_BY_PROVINCE[p.code] ?? []).find(d => d.name === profile.district) ?? null
+        setDistrict(d)
+      }
+    }
+  }, [profile])
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault()
+    setError('')
+    setSaving(true)
+    try {
+      const { error } = await supabase.from('profiles').upsert({
+        id: user!.id,
+        full_name: fullName.trim() || null,
+        phone: phone.trim() || null,
+        address: address.trim() || null,
+        province: province?.name ?? null,
+        district: district?.name ?? null,
+        updated_at: new Date().toISOString(),
+      })
+      if (error) {
+        setError('Không thể lưu, vui lòng thử lại.')
+      } else {
+        await refreshProfile()
+        setSaved(true)
+      }
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  function handleProvinceChange(code: string) {
+    const p = PROVINCES.find(pr => pr.code === code) ?? null
+    setProvince(p)
+    setDistrict(null)
+  }
+
+  async function handleSignOut() {
+    await signOut()
+    router.replace('/')
+    router.refresh()
+  }
+
+  if (authLoading) {
+    return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <p className="text-gray-400 text-sm">Đang tải...</p>
+        </div>
+    )
+  }
+
+  if (!user) return null
+
+  const avatarUrl = user.user_metadata?.avatar_url as string | undefined
+  const displayName = profile?.full_name ?? user.user_metadata?.full_name ?? user.user_metadata?.name ?? user.email ?? ''
+  const provider = user.app_metadata?.provider as string | undefined
+
+  // Kiểm tra quyền Admin từ app_metadata (cột raw_app_meta_data trong SQL)
+  const isAdmin = user.app_metadata?.role === 'admin'
+
+  return (
+      <div className="min-h-screen bg-gray-50 py-8 px-4">
+        <div className="max-w-xl mx-auto space-y-5">
+          {/* Header card */}
+          <div className="bg-white rounded-2xl shadow-sm p-5 flex items-center gap-4">
+            {avatarUrl ? (
+                <img src={avatarUrl} alt={displayName} className="w-14 h-14 rounded-full object-cover flex-shrink-0" />
+            ) : (
+                <div className="w-14 h-14 rounded-full bg-[#1a3a6b] flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+                  {displayName.charAt(0).toUpperCase()}
+                </div>
+            )}
+            <div className="min-w-0">
+              <p className="font-bold text-gray-900 truncate">{displayName}</p>
+              <p className="text-sm text-gray-500 truncate">{user.email}</p>
+              {provider && provider !== 'email' && (
+                  <span className="inline-block mt-1 text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full capitalize">
+                {provider === 'google' ? '🔵 Google' : provider === 'facebook' ? '🔷 Facebook' : provider}
+              </span>
+              )}
+            </div>
+            <button
+                onClick={handleSignOut}
+                className="ml-auto text-xs text-red-500 hover:text-red-600 font-medium flex-shrink-0"
+            >
+              Đăng xuất
+            </button>
+          </div>
+
+          {/* Profile form */}
+          <div className="bg-white rounded-2xl shadow-sm p-5">
+            <h2 className="font-bold text-gray-900 mb-4">Thông tin cá nhân</h2>
+
+            <form onSubmit={handleSave} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Họ và tên</label>
+                <input
+                    type="text"
+                    value={fullName}
+                    onChange={e => setFullName(e.target.value)}
+                    placeholder="Nguyễn Văn A"
+                    className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Số điện thoại</label>
+                <input
+                    type="tel"
+                    value={phone}
+                    onChange={e => setPhone(e.target.value)}
+                    placeholder="0901 234 567"
+                    inputMode="numeric"
+                    className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Tỉnh / Thành phố</label>
+                  <select
+                      value={province?.code ?? ''}
+                      onChange={e => handleProvinceChange(e.target.value)}
+                      className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  >
+                    <option value="">Chọn tỉnh/TP</option>
+                    {PROVINCES.map(p => (
+                        <option key={p.code} value={p.code}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Quận / Huyện</label>
+                  <select
+                      value={district?.code ?? ''}
+                      onChange={e => setDistrict(districts.find(d => d.code === e.target.value) ?? null)}
+                      disabled={!province}
+                      key={province?.code ?? 'none'}
+                      className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white disabled:bg-gray-50 disabled:text-gray-400"
+                  >
+                    <option value="">Chọn quận/huyện</option>
+                    {districts.map(d => (
+                        <option key={d.code} value={d.code}>{d.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Địa chỉ chi tiết</label>
+                <textarea
+                    value={address}
+                    onChange={e => setAddress(e.target.value)}
+                    placeholder="Thông tin địa chỉ liên hệ (nếu muốn)"
+                    rows={2}
+                    className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                />
+              </div>
+
+              {error && (
+                  <p className="text-red-500 text-sm bg-red-50 border border-red-100 rounded-xl px-4 py-2.5">{error}</p>
+              )}
+
+              {saved && (
+                  <p className="text-green-600 text-sm bg-green-50 border border-green-100 rounded-xl px-4 py-2.5">
+                    ✓ Đã lưu thông tin thành công
+                  </p>
+              )}
+
+              <button
+                  type="submit"
+                  disabled={saving}
+                  className="w-full bg-[#1a3a6b] hover:bg-[#1e4db7] disabled:opacity-60 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
+              >
+                {saving ? 'Đang lưu...' : 'Lưu thông tin'}
+              </button>
+            </form>
+          </div>
+
+          {/* Quick links - Sử dụng overflow-hidden thay vì gán rounded cho thẻ con */}
+          <div className="bg-white rounded-2xl shadow-sm divide-y divide-gray-50 overflow-hidden">
+
+            {/* Nút chỉ hiện cho Admin */}
+            {isAdmin && (
+                <Link href="/admin/san-pham" className="flex items-center justify-between px-5 py-4 hover:bg-blue-50 bg-blue-50/40 transition-colors">
+                  <div className="flex items-center gap-3 text-sm font-medium text-blue-700">
+                    <span className="text-xl">🛡️</span>
+                    Chuyển sang chế độ admin
+                  </div>
+                  <svg className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+            )}
+
+            {(!provider || provider === 'email') && (
+              <Link href="/tai-khoan/doi-mat-khau" className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors">
+                <div className="flex items-center gap-3 text-sm font-medium text-gray-700">
+                  <span className="text-xl">🔑</span>
+                  Đổi mật khẩu
+                </div>
+                <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            )}
+
+            <Link href="/san-pham" className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors">
+              <div className="flex items-center gap-3 text-sm font-medium text-gray-700">
+                <span className="text-xl">📚</span>
+                Xem danh mục sản phẩm
+              </div>
+              <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+
+            <button
+                onClick={handleSignOut}
+                className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors text-left"
+            >
+              <div className="flex items-center gap-3 text-sm font-medium text-red-500">
+                <span className="text-xl">🚪</span>
+                Đăng xuất
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+  )
 }
