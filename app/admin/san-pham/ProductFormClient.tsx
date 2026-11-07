@@ -5,6 +5,7 @@ import React, { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { CategoryRow, ProductRow } from '@/src/lib/supabase/server'
+import { adminRequest } from '@/src/lib/admin-api-client'
 
 const BRANCH_NAMES: Record<string, string> = {
   'giay-in': 'Giấy In',
@@ -56,20 +57,27 @@ export default function ProductFormClient({ categories, product }: Props) {
     if (!files || files.length === 0) return
     setUploading(true)
     setError(null)
-    for (const file of Array.from(files)) {
-      const form = new FormData()
-      form.append('file', file)
-      try {
-        const res = await fetch('/api/admin/products/upload', { method: 'POST', body: form })
-        if (!res.ok) throw new Error((await res.json()).error)
-        const { url } = await res.json()
-        setImages(prev => [...prev, url])
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Upload thất bại')
+    try {
+      for (const file of Array.from(files)) {
+        if (file.size > 4 * 1024 * 1024) {
+          setError(`Ảnh "${file.name}" vượt 4 MB, vui lòng nén rồi tải lại.`)
+          continue
+        }
+        try {
+          const form = new FormData()
+          form.append('file', file)
+          const { url } = await adminRequest<{ url: string }>('/api/admin/products/upload', {
+            method: 'POST', body: form,
+          })
+          setImages(prev => [...prev, url])
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Không thể tải ảnh.')
+        }
       }
+    } finally {
+      setUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
-    setUploading(false)
-    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   function removeImage(index: number) {
@@ -108,21 +116,19 @@ export default function ProductFormClient({ categories, product }: Props) {
     const url = isEdit ? `/api/admin/products/${product?.id}` : '/api/admin/products'
     const method = isEdit ? 'PATCH' : 'POST'
 
-    const res = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-
-    if (!res.ok) {
-      const { error: msg } = await res.json()
-      setError(msg)
+    try {
+      await adminRequest<{ id?: number; success?: boolean }>(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      router.push('/admin/san-pham')
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Không thể lưu sản phẩm.')
+    } finally {
       setSubmitting(false)
-      return
     }
-
-    router.push('/admin/san-pham')
-    router.refresh()
   }
 
   const branchSlugs = categories ? [...new Set(categories.map(c => c.branch_slug))] : []

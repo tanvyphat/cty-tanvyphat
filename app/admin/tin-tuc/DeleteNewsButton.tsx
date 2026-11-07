@@ -2,25 +2,24 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { adminRequest } from '@/src/lib/admin-api-client'
 
 export default function DeleteNewsButton({ id, title }: { id: number; title?: string }) {
   const router = useRouter()
   const [modalOpen, setModalOpen] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [error, setError] = useState('')
 
   async function handleDelete() {
     setDeleting(true)
+    setError('')
     try {
-      const res = await fetch(`/api/admin/news/${id}`, { method: 'DELETE' })
-      if (res.ok) {
-        setModalOpen(false)
-        router.refresh()
-      } else {
-        alert('Xóa thất bại')
-        setDeleting(false)
-      }
-    } catch (error) {
-      alert('Đã xảy ra lỗi hệ thống')
+      await adminRequest<{ success: boolean }>(`/api/admin/news/${id}`, { method: 'DELETE' })
+      setModalOpen(false)
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Không thể xóa bài viết.')
+    } finally {
       setDeleting(false)
     }
   }
@@ -29,7 +28,7 @@ export default function DeleteNewsButton({ id, title }: { id: number; title?: st
       <>
         {/* Nút bấm để mở Modal */}
         <button
-            onClick={() => setModalOpen(true)}
+            onClick={() => { setError(''); setModalOpen(true) }}
             className="text-red-500 hover:underline text-xs cursor-pointer font-medium"
         >
           Xóa
@@ -55,6 +54,7 @@ export default function DeleteNewsButton({ id, title }: { id: number; title?: st
                   </p>
                 </div>
 
+                {error && <div role="alert" className="mx-5 mb-3 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>}
                 {/* Footer Modal - Nút hành động */}
                 <div className="p-4 bg-gray-50 flex justify-end gap-3 border-t border-gray-100">
                   <button

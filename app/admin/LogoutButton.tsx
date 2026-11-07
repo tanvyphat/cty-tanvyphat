@@ -2,24 +2,38 @@
 
 import { createSupabaseBrowserClient } from '@/src/lib/supabase/browser'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function LogoutButton() {
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   async function handleLogout() {
-    const supabase = createSupabaseBrowserClient()
-    await supabase.auth.signOut()
-    router.push('/')
-    router.refresh()
+    setLoading(true)
+    setError('')
+    try {
+      const supabase = createSupabaseBrowserClient()
+      const { error: signOutError } = await supabase.auth.signOut()
+      if (signOutError) throw signOutError
+      router.replace('/')
+      router.refresh()
+    } catch {
+      setError('Không thể đăng xuất. Vui lòng thử lại.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
+    <>
       <button
           onClick={handleLogout}
+          disabled={loading}
           className="cursor-pointer group flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-500 transition-all duration-200 rounded-lg hover:bg-red-50 hover:text-red-600 focus:outline-none"
           title="Đăng xuất khỏi hệ thống"
       >
-        <span>Đăng xuất</span>
+        <span>{loading ? "Đang thoát..." : "Đăng xuất"}</span>
         {/* Icon Mũi tên thoát ra */}
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -38,5 +52,7 @@ export default function LogoutButton() {
           <line x1="21" y1="12" x2="9" y2="12"></line>
         </svg>
       </button>
+      {error && <span role="alert" className="text-xs text-red-600">{error}</span>}
+    </>
   )
 }

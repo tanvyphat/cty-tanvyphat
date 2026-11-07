@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import type { NewsRow } from '@/src/lib/supabase/server'
+import { adminRequest } from '@/src/lib/admin-api-client'
 import MediaUpload from '@/src/components/admin/MediaUpload'
 
 const NewsEditor = dynamic(() => import('@/src/components/admin/NewsEditor'), { ssr: false })
@@ -44,7 +45,8 @@ export default function ChinhSuaClient({ item }: { item: NewsRow }) {
     setSubmitting(true)
     setError(null)
 
-    const res = await fetch(`/api/admin/news/${item.id}`, {
+    try {
+      await adminRequest(`/api/admin/news/${item.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -56,16 +58,13 @@ export default function ChinhSuaClient({ item }: { item: NewsRow }) {
         published_at: publishedAt,
       }),
     })
-
-    if (!res.ok) {
-      const { error: msg } = await res.json()
-      setError(msg)
+      router.push('/admin/tin-tuc')
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Không thể lưu tin tức.')
+    } finally {
       setSubmitting(false)
-      return
     }
-
-    router.push('/admin/tin-tuc')
-    router.refresh()
   }
 
   return (

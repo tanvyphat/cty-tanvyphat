@@ -3,7 +3,8 @@
 export const dynamic = 'force-dynamic'
 
 import { useState, useEffect, useCallback } from 'react'
-import AdminNavbar from '@/app/admin/AdminNavbar' // Đảm bảo import đúng đường dẫn Navbar chung của sếp
+import AdminNavbar from '@/app/admin/AdminNavbar'
+import { adminRequest } from '@/src/lib/admin-api-client'
 
 interface AdminUser {
   id: string
@@ -38,6 +39,7 @@ export default function QuanTriVienPage() {
   const [toggling, setToggling] = useState<string | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [error, setError] = useState('')
+  const [toast, setToast] = useState('')
 
   // State quản lý Pop-up (Modal)
   const [modal, setModal] = useState<ModalConfig>({
@@ -60,19 +62,23 @@ export default function QuanTriVienPage() {
 
   const fetchUsers = useCallback(async () => {
     setLoading(true)
+    setError('')
     try {
-      const res = await fetch('/api/admin/users')
-      const data = await res.json()
-      if (!res.ok) { setError(data.error); return }
+      const data = await adminRequest<{ users: AdminUser[] }>('/api/admin/users')
       setUsers(data.users)
-    } catch {
-      setError('Không thể tải danh sách')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Không thể tải danh sách người dùng.')
     } finally {
       setLoading(false)
     }
   }, [])
 
   useEffect(() => { fetchUsers() }, [fetchUsers])
+  useEffect(() => {
+    if (!toast) return
+    const timer = setTimeout(() => setToast(''), 3500)
+    return () => clearTimeout(timer)
+  }, [toast])
 
   // Hàm Cấp/Hạ cấp Admin với Pop-up
   function handleToggleAdmin(user: AdminUser) {
@@ -88,19 +94,15 @@ export default function QuanTriVienPage() {
       closeModal()
       setToggling(user.id)
       try {
-        const res = await fetch('/api/admin/users', {
+        await adminRequest<{ success: boolean }>('/api/admin/users', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ user_id: user.id, role: newRole }),
         })
-        const data = await res.json()
-        if (!res.ok) {
-          showAlert('Lỗi cập nhật', data.error || 'Có lỗi xảy ra', 'danger')
-        } else {
-          await fetchUsers()
-        }
-      } catch {
-        showAlert('Lỗi kết nối', 'Không thể kết nối đến máy chủ.', 'danger')
+        await fetchUsers()
+        setToast(isPromoting ? 'Đã cấp quyền quản trị viên.' : 'Đã hạ quyền quản trị viên.')
+      } catch (err) {
+        showAlert('Lỗi cập nhật quyền', err instanceof Error ? err.message : 'Không thể cập nhật quyền.', 'danger')
       } finally {
         setToggling(null)
       }
@@ -117,20 +119,15 @@ export default function QuanTriVienPage() {
           closeModal()
           setDeleting(user.id)
           try {
-            const res = await fetch('/api/admin/users', {
+            await adminRequest<{ success: boolean }>('/api/admin/users', {
               method: 'DELETE',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ user_id: user.id }),
             })
-
-            const data = await res.json()
-            if (!res.ok) {
-              showAlert('Lỗi khi xoá', data.error || 'Đã xảy ra lỗi khi xoá người dùng.', 'danger')
-            } else {
-              await fetchUsers()
-            }
-          } catch {
-            showAlert('Lỗi kết nối', 'Không thể kết nối đến máy chủ.', 'danger')
+            await fetchUsers()
+            setToast('Đã xóa tài khoản và thông tin hồ sơ liên quan.')
+          } catch (err) {
+            showAlert('Lỗi khi xóa tài khoản', err instanceof Error ? err.message : 'Không thể xóa tài khoản.', 'danger')
           } finally {
             setDeleting(null)
           }
@@ -144,6 +141,7 @@ export default function QuanTriVienPage() {
   return (
       <div className="min-h-screen bg-gray-100 relative">
         <AdminNavbar />
+        {toast && <div role="status" className="fixed bottom-6 right-6 z-[60] max-w-sm bg-white border border-green-200 text-green-700 shadow-xl rounded-xl px-5 py-3 text-sm font-semibold">✓ {toast}</div>}
 
         {/* Modal / Pop-up Overlay */}
         {modal.isOpen && (

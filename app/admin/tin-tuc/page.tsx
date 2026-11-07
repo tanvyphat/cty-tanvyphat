@@ -11,13 +11,14 @@ import AdminNavbar from '@/app/admin/AdminNavbar' // Import Navbar chung
 export default async function AdminTinTucPage() {
   const supabase = await createSSRClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/dang-nhap')
+  if (user?.app_metadata?.role !== 'admin') redirect('/admin/dang-nhap')
 
-  const { data } = await getAdminClient()
+  const { data, error } = await getAdminClient()
       .from('news')
       .select('*')
       .order('published_at', { ascending: false })
 
+  if (error) throw new Error('Không thể tải danh sách tin tức: ' + error.message)
   const news: NewsRow[] = data ?? []
 
   return (
