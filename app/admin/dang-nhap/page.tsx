@@ -16,13 +16,12 @@ export default function AdminLoginPage() {
 
     try {
       const supabase = createSupabaseBrowserClient()
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) {
         setError('Email hoặc mật khẩu không đúng')
-      } else if (data.user?.app_metadata?.role !== 'admin') {
-        window.location.href = '/san-pham'
       } else {
-        window.location.href = '/admin/san-pham'
+        // Mọi tài khoản, bao gồm Admin, đều về trang chủ sau khi đăng nhập.
+        window.location.replace('/')
       }
     } catch {
       setError('Có lỗi xảy ra. Vui lòng thử lại.')

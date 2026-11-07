@@ -32,9 +32,9 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin/dang-nhap', request.url))
   }
 
-  // Đã là admin → vào trang login → redirect về san-pham
+  // Nếu đã có phiên Admin mà mở lại trang đăng nhập: trở về trang chủ.
   if (isLoginPath && isAdmin) {
-    return NextResponse.redirect(new URL('/admin/san-pham', request.url))
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
   // Đã là admin → vào /admin root hoặc /admin/don-hang → redirect về san-pham

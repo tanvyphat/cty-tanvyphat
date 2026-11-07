@@ -21,7 +21,7 @@ export default function LoginClient() {
 
   useEffect(() => {
     // Chuyển hướng sang trang chủ "/" nếu người dùng đã đăng nhập
-    if (user) router.replace('/tai-khoan')
+    if (user) router.replace('/')
   }, [user, router])
 
   async function handleEmail(e: React.FormEvent) {
@@ -36,18 +36,18 @@ export default function LoginClient() {
           setError(error.message === 'Invalid login credentials' ? 'Email hoặc mật khẩu không đúng.' : error.message)
         } else {
           // Chuyển hướng sang trang chủ "/" sau khi đăng nhập thành công
-          router.push('/tai-khoan')
+          router.replace('/')
         }
       } else {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { full_name: name }, emailRedirectTo: `${window.location.origin}/auth/callback?next=/tai-khoan` },
+          options: { data: { full_name: name }, emailRedirectTo: `${window.location.origin}/auth/callback` },
         })
         if (error) {
           setError(error.message)
         } else {
-          if (data.session) router.push('/tai-khoan')
+          if (data.session) router.replace('/')
           else setMessage('Kiểm tra email để xác nhận tài khoản trước khi đăng nhập.')
         }
       }
@@ -61,7 +61,7 @@ export default function LoginClient() {
   async function handleOAuth(provider: 'google' | 'facebook') {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=/tai-khoan` },
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
     })
     if (error) setError(error.message)
   }
