@@ -40,7 +40,6 @@ export default async function SanPhamPage({ searchParams }: PageProps) {
     branch: branchParam,
     category: categoryParam,
     search: searchParam,
-    sort: sortParam,
     dir: dirParam,
     per_page: perPageParam,
     page: pageParam,
@@ -51,7 +50,7 @@ export default async function SanPhamPage({ searchParams }: PageProps) {
   const selectedBranch = branchParam ?? 'all'
   const selectedCategory = categoryParam ?? 'all'
   const searchText = searchParam ?? ''
-  const sortBy: SortBy = sortParam === 'price' ? 'price' : 'name'
+  const sortBy: SortBy = 'name'
   const sortDir: SortDir = dirParam === 'desc' ? 'desc' : 'asc'
   const perPage: PerPage = VALID_PER_PAGE.includes(Number(perPageParam) as PerPage)
     ? (Number(perPageParam) as PerPage)
