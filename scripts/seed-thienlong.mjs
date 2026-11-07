@@ -16,7 +16,8 @@ import { readdirSync, statSync } from 'fs'
 import { join, basename, extname } from 'path'
 
 const SUPABASE_URL = 'https://dsgvnlyubkohjiojjmrm.supabase.co'
-const SERVICE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzZ3ZubHl1YmtvaGppb2pqbXJtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDkzODU5MCwiZXhwIjoyMDkwNTE0NTkwfQ.PphTAd-vYorBWHk_qwqjM2Fl7KCKakIJzl2-Cr3tZKw'
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+if (!SERVICE_KEY) throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable')
 const BUCKET       = 'product-images'
 const CATEGORY     = 'thien-long'
 const BRANCH       = 'van-phong-pham'
@@ -162,7 +163,7 @@ async function uploadImage(localPath, storagePath) {
       featured: false,
       price: null,
       stock: 0,
-      keyword: null,
+
       fb_post_url: null,
     })
 
