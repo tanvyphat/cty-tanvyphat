@@ -116,11 +116,12 @@ export default function ProductFormClient({ categories, product }: Props) {
     const url = isEdit ? `/api/admin/products/${product?.id}` : '/api/admin/products'
     const method = isEdit ? 'PATCH' : 'POST'
 
-    const res = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
+    try {
+      await adminRequest<{ id?: number; success?: boolean }>(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
       router.push('/admin/san-pham')
       router.refresh()
     } catch (err) {
