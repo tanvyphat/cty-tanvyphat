@@ -8,21 +8,23 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (user?.app_metadata?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const body = await req.json()
+  const body = await req.json().catch(() => null)
+  if (!body || typeof body !== 'object') return NextResponse.json({ error: 'Dữ liệu không hợp lệ.' }, { status: 400 })
   const { slug, name, category, description, images, featured, fb_post_url } = body
 
-  if (!slug || !name || !category) {
+  if (![slug, name, category].every(v => typeof v === 'string' && v.trim())) {
     return NextResponse.json({ error: 'Thiếu thông tin bắt buộc (tên, slug, danh mục)' }, { status: 400 })
   }
 
   const db = getAdminClient()
 
-  const { data: existing } = await db
+  const { data: existing, error: existingError } = await db
     .from('products')
     .select('id')
     .eq('slug', slug)
     .maybeSingle()
 
+  if (existingError) return NextResponse.json({ error: existingError.message }, { status: 500 })
   if (existing) {
     return NextResponse.json({ error: 'Slug đã tồn tại, hãy chỉnh sửa tên hoặc slug' }, { status: 409 })
   }
@@ -45,6 +47,8 @@ export async function POST(req: NextRequest) {
 
   revalidatePath(`/san-pham/${slug}`)
   revalidatePath('/san-pham')
+  revalidatePath('/')
+  revalidatePath('/sitemap.xml')
 
   return NextResponse.json({ id: product.id }, { status: 201 })
 }
