@@ -57,21 +57,27 @@ export default function ProductFormClient({ categories, product }: Props) {
     if (!files || files.length === 0) return
     setUploading(true)
     setError(null)
-    for (const file of Array.from(files)) {
-      const form = new FormData()
-      form.append('file', file)
-      try {
+    try {
+      for (const file of Array.from(files)) {
+        if (file.size > 4 * 1024 * 1024) {
+          setError(`Ảnh "${file.name}" vượt 4 MB, vui lòng nén rồi tải lại.`)
+          continue
+        }
         try {
-      await adminRequest('/api/admin/products/upload', { method: 'POST', body: form })
-        if (!res.ok) throw new Error((await res.json()).error)
-        const { url } = await res.json()
-        setImages(prev => [...prev, url])
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Upload thất bại')
+          const form = new FormData()
+          form.append('file', file)
+          const { url } = await adminRequest<{ url: string }>('/api/admin/products/upload', {
+            method: 'POST', body: form,
+          })
+          setImages(prev => [...prev, url])
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Không thể tải ảnh.')
+        }
       }
+    } finally {
+      setUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
-    setUploading(false)
-    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   function removeImage(index: number) {

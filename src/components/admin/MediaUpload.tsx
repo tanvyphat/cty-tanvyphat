@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { adminRequest } from '@/src/lib/admin-api-client'
 
 type Props = {
   label: string
@@ -20,28 +21,29 @@ export default function MediaUpload({ label, accept, currentUrl, onUploadAction 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-
+    if (file.size > 4 * 1024 * 1024) {
+      setError('Tập tin vượt 4 MB. Vui lòng nén trước khi tải qua máy chủ.')
+      e.target.value = ''
+      return
+    }
     setUploading(true)
     setError(null)
-    setPreviewUrl(URL.createObjectURL(file))
-
-    const form = new FormData()
-    form.append('file', file)
-
+    const localPreview = URL.createObjectURL(file)
+    setPreviewUrl(localPreview)
     try {
-      const res = await fetch('/api/admin/news/upload', { method: 'POST', body: form })
-      if (!res.ok) {
-        const { error: msg } = await res.json()
-        throw new Error(msg)
-      }
-      const { url } = await res.json()
+      const { url } = await adminRequest<{ url: string }>('/api/admin/news/upload', {
+        method: 'POST',
+        body: (() => { const form = new FormData(); form.append('file', file); return form })(),
+      })
       setPreviewUrl(url)
       onUploadAction(url)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload thất bại')
-      setPreviewUrl(null)
+      setError(err instanceof Error ? err.message : 'Upload thất bại.')
+      setPreviewUrl(currentUrl ?? null)
     } finally {
+      URL.revokeObjectURL(localPreview)
       setUploading(false)
+      if (inputRef.current) inputRef.current.value = ''
     }
   }
 

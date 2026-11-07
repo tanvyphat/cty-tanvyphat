@@ -5,7 +5,8 @@ import StarterKit from '@tiptap/starter-kit'
 import ImageExtension from '@tiptap/extension-image'
 import LinkExtension from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
+import { adminRequest } from '@/src/lib/admin-api-client'
 
 type Props = {
   content: string
@@ -38,6 +39,8 @@ function ToolbarButton({ onClick, active, children, title }: ToolbarButtonProps)
 
 export default function NewsEditor({ content, onChangeAction }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [uploadError, setUploadError] = useState('')
+  const [uploading, setUploading] = useState(false)
 
   const editor = useEditor({
     extensions: [
@@ -56,12 +59,24 @@ export default function NewsEditor({ content, onChangeAction }: Props) {
   })
 
   const uploadImage = useCallback(async (file: File) => {
-    const form = new FormData()
-    form.append('file', file)
-    const res = await fetch('/api/admin/news/upload', { method: 'POST', body: form })
-    if (!res.ok) return
-    const { url } = await res.json()
-    editor?.chain().focus().setImage({ src: url }).run()
+    if (file.size > 4 * 1024 * 1024) {
+      setUploadError('Ảnh vượt 4 MB, vui lòng nén trước khi chèn.')
+      return
+    }
+    setUploadError('')
+    setUploading(true)
+    try {
+      const form = new FormData()
+      form.append('file', file)
+      const { url } = await adminRequest<{ url: string }>('/api/admin/news/upload', {
+        method: 'POST', body: form,
+      })
+      editor?.chain().focus().setImage({ src: url }).run()
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Không thể chèn ảnh.')
+    } finally {
+      setUploading(false)
+    }
   }, [editor])
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +152,7 @@ export default function NewsEditor({ content, onChangeAction }: Props) {
           </ToolbarButton>
           <ToolbarButton
               onClick={() => fileInputRef.current?.click()}
-              title="Chèn ảnh vào bài"
+              title={uploading ? "Đang tải ảnh..." : "Chèn ảnh vào bài"}
           >
             🖼️
           </ToolbarButton>
@@ -163,6 +178,8 @@ export default function NewsEditor({ content, onChangeAction }: Props) {
           </ToolbarButton>
         </div>
 
+        {uploadError && <p role="alert" className="px-3 py-2 text-sm text-red-600 bg-red-50">{uploadError}</p>}
+        {uploading && <p role="status" className="px-3 py-2 text-sm text-blue-600">Đang tải ảnh vào bài...</p>}
         {/* Editor */}
         <EditorContent
             editor={editor}
