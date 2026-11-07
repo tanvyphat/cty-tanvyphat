@@ -6,7 +6,7 @@ import ImageExtension from '@tiptap/extension-image'
 import LinkExtension from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import { useCallback, useRef, useState } from 'react'
-import { adminRequest } from '@/src/lib/admin-api-client'
+import { uploadAdminNewsMedia } from '@/src/lib/admin-news-media-client'
 
 type Props = {
   content: string
@@ -59,18 +59,10 @@ export default function NewsEditor({ content, onChangeAction }: Props) {
   })
 
   const uploadImage = useCallback(async (file: File) => {
-    if (file.size > 4 * 1024 * 1024) {
-      setUploadError('Ảnh vượt 4 MB, vui lòng nén trước khi chèn.')
-      return
-    }
     setUploadError('')
     setUploading(true)
     try {
-      const form = new FormData()
-      form.append('file', file)
-      const { url } = await adminRequest<{ url: string }>('/api/admin/news/upload', {
-        method: 'POST', body: form,
-      })
+      const url = await uploadAdminNewsMedia(file)
       editor?.chain().focus().setImage({ src: url }).run()
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : 'Không thể chèn ảnh.')

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { adminRequest } from '@/src/lib/admin-api-client'
+import { uploadAdminNewsMedia } from '@/src/lib/admin-news-media-client'
 
 type Props = {
   label: string
@@ -21,20 +21,12 @@ export default function MediaUpload({ label, accept, currentUrl, onUploadAction 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-    if (file.size > 4 * 1024 * 1024) {
-      setError('Tập tin vượt 4 MB. Vui lòng nén trước khi tải qua máy chủ.')
-      e.target.value = ''
-      return
-    }
     setUploading(true)
     setError(null)
     const localPreview = URL.createObjectURL(file)
     setPreviewUrl(localPreview)
     try {
-      const { url } = await adminRequest<{ url: string }>('/api/admin/news/upload', {
-        method: 'POST',
-        body: (() => { const form = new FormData(); form.append('file', file); return form })(),
-      })
+      const url = await uploadAdminNewsMedia(file)
       setPreviewUrl(url)
       onUploadAction(url)
     } catch (err) {
