@@ -25,9 +25,6 @@ export default function ProductCard({
   surfaceClassName = 'bg-white shadow-sm border border-gray-100',
 }: ProductCardProps) {
   const hasImage = product.images.length > 0
-  const firstUnit = product.product_units[0] ?? null
-  const hasPrice = firstUnit?.price != null
-  const multipleUnits = product.product_units.length > 1
 
   return (
     <div className={`group flex flex-col rounded-lg sm:rounded-xl overflow-hidden ${surfaceClassName}`}>
@@ -64,16 +61,7 @@ export default function ProductCard({
             {stripMarkdown(product.description)}
           </p>
         </div>
-        <p className="text-red-600 font-bold text-[11px] sm:text-xs mb-1 sm:mb-3">
-          {hasPrice ? (
-            <>
-              {multipleUnits ? 'Từ ' : 'Giá: '}
-              {firstUnit!.price!.toLocaleString('vi-VN')}đ/{firstUnit!.unit_name}
-            </>
-          ) : (
-            <span className="text-red-600">Liên hệ</span>
-          )}
-        </p>
+        <p className="text-orange-600 font-semibold text-[11px] sm:text-xs mb-1 sm:mb-3">Liên hệ báo giá sỉ</p>
 
         <div className="flex gap-1 sm:gap-2 mt-auto">
           <Link

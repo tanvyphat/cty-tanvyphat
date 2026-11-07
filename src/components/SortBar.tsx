@@ -19,8 +19,6 @@ type Props = {
 const SORT_OPTIONS = [
   { label: 'Tên A→Z',       sort: 'name',  dir: 'asc' },
   { label: 'Tên Z→A',       sort: 'name',  dir: 'desc' },
-  { label: 'Giá thấp→cao',  sort: 'price', dir: 'asc' },
-  { label: 'Giá cao→thấp',  sort: 'price', dir: 'desc' },
 ]
 
 export default function SortBar({

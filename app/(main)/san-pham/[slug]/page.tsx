@@ -10,7 +10,7 @@ import {
 import { store } from '../../../../src/data/store'
 import ProductCard from '../../../../src/components/ProductCard'
 import ProductDescription from '../../../../src/components/ProductDescription'
-import UnitSelector from './UnitSelector'
+import ContactCTA from './ContactCTA'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tanvyphat.com'
 
@@ -67,9 +67,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c]))
   const hasImage = product.images.length > 0
 
-  const firstUnit = product.product_units[0] ?? null
-  const minPrice = product.min_price
-
   const productUrl = `${SITE_URL}/san-pham/${product.slug}`
 
   const jsonLd = {
@@ -81,25 +78,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
     url: productUrl,
     ...(product.images.length > 0 && { image: product.images }),
     brand: { '@type': 'Organization', name: 'CT Tân Vy Phát' },
-    offers: {
-      '@type': 'Offer',
-      availability: 'https://schema.org/OnlineOrInStoreOnly',
-      priceCurrency: 'VND',
-      ...(minPrice != null && { price: minPrice }),
-      url: productUrl,
-      seller: {
-        '@type': 'Organization',
-        name: 'CT Tân Vy Phát',
-        telephone: store.phone,
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: '1/6 Đường Tân Thới Nhất 22, Khu phố 8, Phường Đông Hưng Thuận',
-          addressLocality: 'TP. Hồ Chí Minh',
-          addressRegion: 'TP. Hồ Chí Minh',
-          addressCountry: 'VN',
-        },
-      },
-    },
   }
 
   const breadcrumbLd = {
@@ -125,7 +103,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <div className="bg-white border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <nav className="flex items-center gap-2 text-sm text-gray-500">
-              <Link href="/public" className="hover:text-[#1a56db] transition-colors">
+              <Link href="/" className="hover:text-[#1a56db] transition-colors">
                 Trang chủ
               </Link>
               <span>›</span>
@@ -182,11 +160,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 </h1>
 
                 <div className="flex-1" />
-
-                <UnitSelector
-                  product={{ id: product.id, slug: product.slug, name: product.name, images: product.images }}
-                  units={product.product_units}
-                />
+                <ContactCTA />
 
                 <p className="text-xs text-gray-400 mt-4 text-center">Địa chỉ: {store.address}</p>
               </div>

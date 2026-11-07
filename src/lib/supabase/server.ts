@@ -2,17 +2,6 @@ import { createClient } from '@supabase/supabase-js'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
-export type ProductUnitRow = {
-  id: number
-  product_id: number
-  unit_name: string
-  price: number | null
-  stock: number
-  sort_order: number
-  created_at: string
-  weight_grams: number | null
-}
-
 export type ProductRow = {
   id: number
   slug: string
@@ -22,11 +11,8 @@ export type ProductRow = {
   images: string[]
   fb_post_url: string | null
   featured: boolean
-  keyword: string | null
-  min_price: number | null
   created_at: string
   updated_at: string
-  product_units: ProductUnitRow[]
 }
 
 export type BranchRow = {
@@ -50,7 +36,7 @@ export type CategoryRow = {
   updated_at: string
 }
 
-export type SortBy = 'name' | 'price'
+export type SortBy = 'name'
 export type SortDir = 'asc' | 'desc'
 export type PerPage = 50 | 100 | 200
 
@@ -64,11 +50,6 @@ export type ProductFilterParams = {
   perPage?: PerPage
   sizes?: string[]
   weights?: string[]
-}
-
-function normalizeProduct(row: ProductRow & { product_units?: ProductUnitRow[] }): ProductRow {
-  const units = (row.product_units ?? []).slice().sort((a, b) => a.sort_order - b.sort_order)
-  return { ...row, product_units: units }
 }
 
 export function getClient() {
@@ -110,19 +91,19 @@ export async function createSSRClient() {
 export async function getProducts(): Promise<ProductRow[]> {
   const { data, error } = await getClient()
     .from('products')
-    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
+    .select('*')
     .order('featured', { ascending: false })
     .order('name')
   if (error) throw new Error(`getProducts: ${error.message}`)
-  return (data ?? []).map(normalizeProduct)
+  return (data ?? [])
 }
 
 export async function getRandomProducts(limit: number): Promise<ProductRow[]> {
   const { data, error } = await getClient()
     .rpc('get_random_products', { limit_count: limit })
-    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
+    .select('*')
   if (error) throw new Error(`getRandomProducts: ${error.message}`)
-  return (data ?? []).map(normalizeProduct)
+  return (data ?? [])
 }
 
 export async function getBranches(): Promise<BranchRow[]> {
@@ -142,7 +123,6 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
     category,
     branchSlug,
     search,
-    sortBy = 'name',
     sortDir = 'asc',
     page = 1,
     perPage = 50,
@@ -165,7 +145,7 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
   // Include categories to allow ordering by sort_order for giay-in branch
   let query = client
     .from('products')
-    .select('*, categories!products_category_fkey(sort_order), product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)', { count: 'exact' })
+    .select('*, categories!products_category_fkey(sort_order)', { count: 'exact' })
 
   if (search && search.trim()) {
     const term = search.trim()
@@ -194,10 +174,6 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
   if (branchSlug === 'giay-in' || branchSlug === 'van-phong-pham' || branchSlug === 'hang-thai-lan') {
     // Fetch theo name trước; sort theo brand priority sẽ xử lý trong JS bên dưới
     query = query.order('name', { ascending: true })
-  } else if (sortBy === 'price') {
-    query = query
-      .order('min_price', { ascending: sortDir === 'asc', nullsFirst: false })
-      .order('name', { ascending: true })
   } else {
     query = query
       .order('featured', { ascending: false })
@@ -221,20 +197,20 @@ export async function getProductsFiltered(filter: ProductFilterParams = {}): Pro
     })
   }
 
-  return { data: result.map(normalizeProduct), count: count ?? 0 }
+  return { data: result, count: count ?? 0 }
 }
 
 export async function getProductBySlug(slug: string): Promise<ProductRow | null> {
   const { data, error } = await getClient()
     .from('products')
-    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
+    .select('*')
     .eq('slug', slug)
     .single()
   if (error) {
     if (error.code === 'PGRST116') return null
     throw new Error(`getProductBySlug: ${error.message}`)
   }
-  return normalizeProduct(data)
+  return data
 }
 
 export async function getCategories(): Promise<CategoryRow[]> {
@@ -261,11 +237,11 @@ export async function getCategories(): Promise<CategoryRow[]> {
 export async function getProductsByCategory(categorySlug: string): Promise<ProductRow[]> {
   const { data, error } = await getClient()
     .from('products')
-    .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at, weight_grams)')
+    .select('*')
     .eq('category', categorySlug)
     .order('name')
   if (error) throw new Error(`getProductsByCategory: ${error.message}`)
-  return (data ?? []).map(normalizeProduct)
+  return (data ?? [])
 }
 
 export type NewsRow = {
