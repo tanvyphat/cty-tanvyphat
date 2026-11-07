@@ -5,6 +5,7 @@ import React, { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { CategoryRow, ProductRow } from '@/src/lib/supabase/server'
+import { adminRequest } from '@/src/lib/admin-api-client'
 
 const BRANCH_NAMES: Record<string, string> = {
   'giay-in': 'Giấy In',
@@ -60,7 +61,8 @@ export default function ProductFormClient({ categories, product }: Props) {
       const form = new FormData()
       form.append('file', file)
       try {
-        const res = await fetch('/api/admin/products/upload', { method: 'POST', body: form })
+        try {
+      await adminRequest('/api/admin/products/upload', { method: 'POST', body: form })
         if (!res.ok) throw new Error((await res.json()).error)
         const { url } = await res.json()
         setImages(prev => [...prev, url])
@@ -113,16 +115,13 @@ export default function ProductFormClient({ categories, product }: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     })
-
-    if (!res.ok) {
-      const { error: msg } = await res.json()
-      setError(msg)
+      router.push('/admin/san-pham')
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Không thể lưu sản phẩm.')
+    } finally {
       setSubmitting(false)
-      return
     }
-
-    router.push('/admin/san-pham')
-    router.refresh()
   }
 
   const branchSlugs = categories ? [...new Set(categories.map(c => c.branch_slug))] : []
