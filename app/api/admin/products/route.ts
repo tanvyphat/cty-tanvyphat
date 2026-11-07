@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await req.json()
-  const { slug, name, category, description, images, featured, fb_post_url, keyword, units } = body
+  const { slug, name, category, description, images, featured, fb_post_url, units } = body
 
   if (!slug || !name || !category) {
     return NextResponse.json({ error: 'Thiếu thông tin bắt buộc (tên, slug, danh mục)' }, { status: 400 })
@@ -37,7 +37,6 @@ export async function POST(req: NextRequest) {
       images: images || [],
       featured: Boolean(featured),
       fb_post_url: fb_post_url || null,
-      keyword: keyword || null,
     })
     .select('id')
     .single()

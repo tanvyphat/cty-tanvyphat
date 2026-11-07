@@ -22,7 +22,6 @@ export type ProductRow = {
   images: string[]
   fb_post_url: string | null
   featured: boolean
-  keyword: string | null
   min_price: number | null
   created_at: string
   updated_at: string

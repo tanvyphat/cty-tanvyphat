@@ -63,7 +63,6 @@ export default function ProductFormClient({ categories, product }: Props) {
   const [units, setUnits] = useState<UnitField[]>(defaultUnits(product))
   const [featured, setFeatured] = useState(product?.featured ?? false)
   const [fbPostUrl, setFbPostUrl] = useState(product?.fb_post_url ?? '')
-  const [keyword, setKeyword] = useState(product?.keyword ?? '')
   const [submitting, setSubmitting] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -142,7 +141,6 @@ export default function ProductFormClient({ categories, product }: Props) {
       images,
       featured,
       fb_post_url: fbPostUrl.trim() || null,
-      keyword: keyword.trim() || null,
       units: units.map(u => ({
         unit_name: u.unit_name.trim(),
         price: u.price.trim() || null,
@@ -434,16 +432,6 @@ export default function ProductFormClient({ categories, product }: Props) {
                   value={fbPostUrl}
                   onChange={e => setFbPostUrl(e.target.value)}
                   placeholder="https://facebook.com/..."
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Từ khóa tìm kiếm</label>
-              <input
-                  type="text"
-                  value={keyword}
-                  onChange={e => setKeyword(e.target.value)}
-                  placeholder="giay in a4, double a, 80gsm..."
                   className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>

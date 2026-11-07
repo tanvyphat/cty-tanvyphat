@@ -11,7 +11,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const { id } = await params
   const productId = Number(id)
   const body = await req.json()
-  const { slug, name, category, description, images, featured, fb_post_url, keyword, units } = body
+  const { slug, name, category, description, images, featured, fb_post_url, units } = body
 
   if (!slug || !name || !category) {
     return NextResponse.json({ error: 'Thiếu thông tin bắt buộc' }, { status: 400 })
@@ -38,7 +38,6 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       images: images || [],
       featured: Boolean(featured),
       fb_post_url: fb_post_url || null,
-      keyword: keyword || null,
       updated_at: new Date().toISOString(),
     })
     .eq('id', productId)
