@@ -4,7 +4,6 @@ import { store } from '../data/store'
 const quickLinks = [
   { href: '/chinh-sach/chinh-sach-bao-mat', label: 'Chính Sách Bảo Mật' },
   { href: '/chinh-sach/dieu-khoan-dich-vu', label: 'Điều Khoản Dịch Vụ' },
-  { href: '/chinh-sach/chinh-sach-thanh-toan', label: 'Chính Sách Thanh Toán' },
   { href: '/tin-tuc', label: 'Tin tức' },
   { href: '/lien-he', label: 'Liên hệ' },
   { href: '/chinh-sach/chinh-sach-xoa-du-lieu', label: 'Chính sách xoá dữ liệu người dùng' }
@@ -22,7 +21,7 @@ export default function Footer() {
             </div>
             <p className="text-blue-200 text-sm mb-4 leading-relaxed">{store.tagline}</p>
             <p className="text-xs text-gray-400 mb-5">
-              718+ khách hàng tin tưởng. Ship toàn quốc.
+              Chuyên phân phối giá sỉ, giao nội thành TP.HCM. Khu vực khác liên hệ thỏa thuận phí vận chuyển.
             </p>
             <div className="flex flex-col gap-3">
               <a

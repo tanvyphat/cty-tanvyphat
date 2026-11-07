@@ -14,7 +14,7 @@ export const BRANCH_VPP = {
   description:
     'Cung cấp giấy in A4, bìa, decal, nhựa ép, tập vở và văn phòng phẩm các loại. ' +
     'Hàng nhập trực tiếp từ nhà sản xuất — không qua trung gian. ' +
-    'Giao hàng toàn quốc, nhận đơn sỉ số lượng lớn cho đại lý, nhà sách, tiệm photocopy.',
+    'Giao nội thành TP.HCM; khu vực khác theo thỏa thuận và khách chịu phí vận chuyển, nhận đơn sỉ số lượng lớn.',
   facebook: 'https://www.facebook.com/profile.php?id=100023082080173',
   phone: '0903608768',
   icon: '📋',

@@ -13,8 +13,8 @@ const strengths = [
   },
   {
     icon: '🚀',
-    title: 'Giao nhanh TPHCM & toàn quốc',
-    desc: 'Kho hàng tại Q.12, TPHCM – giao hàng nội thành trong ngày. Hợp tác với các đơn vị vận chuyển uy tín để ship toàn quốc nhanh chóng, an toàn.',
+    title: 'Giao hàng nội thành TP.HCM',
+    desc: 'Kho hàng tại TP.HCM – ưu tiên giao nội thành. Các khu vực khác theo thỏa thuận, chi phí vận chuyển do khách hàng thanh toán.',
   },
 ]
 

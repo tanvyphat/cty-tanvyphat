@@ -51,7 +51,7 @@ export const products: Product[] = [
       'https://scontent.fsgn5-13.fna.fbcdn.net/v/t39.30808-6/649073019_2149013802544668_4784281595383273883_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=107&ccb=1-7&_nc_sid=13d280&_nc_ohc=b1kpI9lFEbkQ7kNvwHyuPxK&_nc_oc=Adp6fGx7dq_7opWwzd244UaPVWemRnHrjV6lRriSHEI-R5ehpvn2IEAoYtBtEMbLF-s&_nc_zt=23&_nc_ht=scontent.fsgn5-13.fna&_nc_gid=LE_syUsG124O3DEhxud5TQ&_nc_ss=7a30f&oh=00_AfzHDEjeYjp25vDv4fkN3e0ufKo80hUtEYFSInXurVYZyw&oe=69C24FBE',
     ],
     description:
-      'TÂN VY PHÁT – CHUYÊN CUNG CẤP GIẤY IN & VĂN PHÒNG PHẨM GIÁ SỈ TOÀN QUỐC. Giấy in A4 hàng sẵn kho giao liền tay. Đủ loại: Double A, Projecta, Supreme, Idea Max và nhiều nhãn hiệu khác.',
+      'TÂN VY PHÁT – CHUYÊN CUNG CẤP GIẤY IN & VĂN PHÒNG PHẨM GIÁ SỈ TẠI TP.HCM. Giấy in A4 hàng sẵn kho giao liền tay. Đủ loại: Double A, Projecta, Supreme, Idea Max và nhiều nhãn hiệu khác.',
   },
   {
     slug: 'tap-vo-hoa-binh',
@@ -68,7 +68,7 @@ export const products: Product[] = [
     featured: true,
     images: [],
     description:
-      'NHỰA ÉP DẺO 80 MIC – CHUẨN A4, A3, A5. Hàng chất lượng cao, trong suốt, bền đẹp. Phù hợp cho máy ép nhiệt văn phòng. Giá sỉ hấp dẫn, giao hàng toàn quốc.',
+      'NHỰA ÉP DẺO 80 MIC – CHUẨN A4, A3, A5. Hàng chất lượng cao, trong suốt, bền đẹp. Phù hợp cho máy ép nhiệt văn phòng. Giá sỉ hấp dẫn, giao nội thành TP.HCM.',
   },
   {
     slug: 'giay-nga-dl-80',
@@ -117,7 +117,7 @@ export const products: Product[] = [
     category: 'giay-in',
     images: [],
     description:
-      'Giấy Supreme A4 80g – lựa chọn kinh tế cho văn phòng. Chất lượng ổn định, giá tốt cho đơn sỉ lớn. Giao hàng TPHCM và toàn quốc.',
+      'Giấy Supreme A4 80g – lựa chọn kinh tế cho văn phòng. Chất lượng ổn định, giá tốt cho đơn sỉ lớn. Giao nội thành TP.HCM; khu vực khác liên hệ thỏa thuận phí vận chuyển.',
   },
   {
     slug: 'giay-idea-max',
