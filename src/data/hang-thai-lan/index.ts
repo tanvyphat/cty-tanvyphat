@@ -15,7 +15,7 @@ export const BRANCH_THAI = {
   description:
     'Chuyên cung cấp hàng tiêu dùng Thái Lan nhập khẩu chính ngạch: ' +
     'nước giặt, nước xả vải, vệ sinh nhà cửa, chăm sóc cá nhân, sản phẩm cho bé, ' +
-    'hương thơm và thực phẩm. Bán sỉ & lẻ toàn quốc.',
+    'hương thơm và thực phẩm. Ưu tiên bán sỉ tại TP.HCM; ngoài khu vực theo thỏa thuận.',
   facebook: 'https://www.facebook.com/lanvyshop828',
   tiktok: 'https://www.tiktok.com/@lanvyshop828',
   phone: '0906892828',

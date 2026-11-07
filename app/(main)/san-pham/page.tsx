@@ -16,7 +16,7 @@ import ProductPagination from '../../../src/components/ProductPagination'
 export const metadata: Metadata = {
   title: 'Sản Phẩm – Văn Phòng Phẩm & Hàng Tiêu Dùng Thái Lan',
   description:
-    'Giấy in A4, bìa Thái, nhựa ép, văn phòng phẩm và hàng tiêu dùng Thái Lan nhập khẩu chính ngạch – giá sỉ tốt nhất. Hàng sẵn kho, giao toàn quốc.',
+    'Giấy in A4, bìa Thái, nhựa ép, văn phòng phẩm và hàng tiêu dùng Thái Lan nhập khẩu chính ngạch – giá sỉ tốt nhất. Hàng sẵn kho, giao nội thành TP.HCM; khu vực khác theo thỏa thuận.',
 }
 
 const VALID_PER_PAGE: PerPage[] = [50, 100, 200]
