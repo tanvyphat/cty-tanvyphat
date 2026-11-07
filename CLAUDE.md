@@ -1,11 +1,11 @@
 # CTY Tân Vy Phát — Website giới thiệu sản phẩm
 
-- Catalog: duyệt danh mục, tìm kiếm, hình ảnh, mô tả, đơn vị sản phẩm và tin tức.
+- Catalog: duyệt danh mục, tìm kiếm, hình ảnh, mô tả, tin tức. Không hiển thị giá, tồn kho hoặc các quy cách đơn vị.
 - CTA: gọi điện, Zalo, Facebook; **không có giỏ hàng, thanh toán trực tuyến, đăng nhập khách hàng, chatbot tạo giỏ hàng**.
 - Chỉ giao nội thành TP.HCM theo chính sách chính; giao ngoài khu vực theo thỏa thuận và khách chịu phí vận chuyển.
 - Next.js 16.2, React 19, Tailwind v4, Supabase và Vercel.
 - Giữ Supabase Auth cho quản trị viên: /admin/dang-nhap, /admin/san-pham, /admin/tin-tuc, /admin/quan-tri-vien.
-- Bảng dùng cho catalog: products (giữ cột keyword mã sản phẩm), product_units, categories, branches, news. profiles có thể dùng với admin.
+- Bảng dùng cho catalog: products, product_units, categories, branches, news. profiles có thể dùng với admin.
 
 ## Quản lý secret
 - Không commit Supabase service-role key, mật khẩu, Facebook token hoặc SePay secret vào repo. Dùng environment variables.
@@ -15,3 +15,6 @@
 
 ## Dọn database
 Đọc scripts/db/README.md và chỉ thực hiện SQL cleanup sau khi production đã chạy phiên bản catalog-only, đã backup và kiểm tra.
+
+## RLS lưu ý
+Tài khoản khách hàng không có quyền sửa sản phẩm, tin tức, danh mục hoặc cấp quyền admin. Các endpoint /api/admin bắt buộc kiểm tra app_metadata.role=admin.

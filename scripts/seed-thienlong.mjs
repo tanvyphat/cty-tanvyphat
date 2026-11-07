@@ -161,8 +161,6 @@ async function uploadImage(localPath, storagePath) {
       description: '',
       images: imageUrls,
       featured: false,
-      price: null,
-      stock: 0,
 
       fb_post_url: null,
     })

@@ -16,6 +16,6 @@ drop table if exists public.order_items;
 drop table if exists public.pending_payments;
 drop table if exists public.cart_sessions;
 drop table if exists public.orders;
--- Keep public.products.keyword: all 298 products have distinct product codes.
+-- Lệnh 2 có migration riêng. Không xóa các cột products từ script dọn đơn hàng cũ.
 commit;
 -- fb_customers intentionally retained pending data handling and backup.

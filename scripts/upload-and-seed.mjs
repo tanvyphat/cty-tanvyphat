@@ -1,7 +1,7 @@
 /**
  * upload-and-seed.mjs — v2
  *
- * 1. Xóa toàn bộ products, categories khỏi DB
+ * CẢNH BÁO: script này xóa và seed lại toàn bộ sản phẩm/danh mục; chỉ chạy sau backup và kiểm tra.
  * 2. Xóa toàn bộ ảnh trong Supabase Storage
  * 3. Seed categories mới dựa theo structure san-pham/[branch]/[subfolder]/
  * 4. Walk san-pham/, convert JPG→WebP, upload Storage, seed products
@@ -297,8 +297,6 @@ function collectProducts() {
       description: '',
       images: imageUrls,
       featured: false,
-      price: null,
-      stock: 0,
 
       fb_post_url: null,
     })

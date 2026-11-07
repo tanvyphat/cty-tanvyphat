@@ -10,4 +10,4 @@ Chỉ chạy sau khi code catalog-only đã được triển khai và xác nhậ
 6. Xóa Meta App Webhooks subscription cho Facebook Page và SePay Webhook trong dashboard nhà cung cấp; sau đó dọn Vercel env cũ.
 7. Rotate Supabase service-role key từng bị hardcode trong Git history và cập nhật env mới.
 
-**Giữ products.keyword:** 298/298 sản phẩm đã có mã riêng; không xóa hoặc ghi đè các mã này khi tắt Facebook bot.
+**Lệnh 2:** theo yêu cầu mới, keyword và min_price sẽ bị xóa khỏi products; unit_name, price, stock, weight_grams bị xóa khỏi product_units. Trước đó lưu bản sao riêng trong schema backup nội bộ.
