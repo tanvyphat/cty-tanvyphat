@@ -5,7 +5,7 @@
 - Chỉ giao nội thành TP.HCM theo chính sách chính; giao ngoài khu vực theo thỏa thuận và khách chịu phí vận chuyển.
 - Next.js 16.2, React 19, Tailwind v4, Supabase và Vercel.
 - Giữ Supabase Auth cho quản trị viên: /admin/dang-nhap, /admin/san-pham, /admin/tin-tuc, /admin/quan-tri-vien.
-- Bảng dùng cho catalog: products, product_units, categories, branches, news. profiles có thể dùng với admin.
+- Bảng dùng cho catalog: products (giữ cột keyword mã sản phẩm), product_units, categories, branches, news. profiles có thể dùng với admin.
 
 ## Quản lý secret
 - Không commit Supabase service-role key, mật khẩu, Facebook token hoặc SePay secret vào repo. Dùng environment variables.

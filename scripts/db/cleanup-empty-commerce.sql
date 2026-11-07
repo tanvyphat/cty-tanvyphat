@@ -16,6 +16,6 @@ drop table if exists public.order_items;
 drop table if exists public.pending_payments;
 drop table if exists public.cart_sessions;
 drop table if exists public.orders;
-alter table public.products drop column if exists keyword;
+-- Keep public.products.keyword: all 298 products have distinct product codes.
 commit;
 -- fb_customers intentionally retained pending data handling and backup.

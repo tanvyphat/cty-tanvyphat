@@ -9,3 +9,5 @@ Chỉ chạy sau khi code catalog-only đã được triển khai và xác nhậ
 5. fb_customers có 3 bản ghi khách hàng: **không xóa trong script** vì cần sao lưu và cân nhắc nghĩa vụ lưu trữ/xóa dữ liệu trước.
 6. Xóa Meta App Webhooks subscription cho Facebook Page và SePay Webhook trong dashboard nhà cung cấp; sau đó dọn Vercel env cũ.
 7. Rotate Supabase service-role key từng bị hardcode trong Git history và cập nhật env mới.
+
+**Giữ products.keyword:** 298/298 sản phẩm đã có mã riêng; không xóa hoặc ghi đè các mã này khi tắt Facebook bot.
