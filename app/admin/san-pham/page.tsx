@@ -16,7 +16,7 @@ function TableSkeleton() {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
-              {['Sản phẩm', 'Danh mục', 'Đơn vị & Giá', 'Nổi bật', 'Thao tác'].map(h => (
+              {['Sản phẩm', 'Danh mục', 'Nổi bật', 'Thao tác'].map(h => (
                 <th key={h} className="text-left px-4 py-3 text-gray-500 font-medium">{h}</th>
               ))}
             </tr>
@@ -34,7 +34,6 @@ function TableSkeleton() {
                   </div>
                 </td>
                 <td className="px-4 py-3"><div className="h-4 w-20 bg-gray-200 rounded animate-pulse" /></td>
-                <td className="px-4 py-3"><div className="h-4 w-28 bg-gray-200 rounded animate-pulse" /></td>
                 <td className="px-4 py-3"><div className="h-4 w-4 bg-gray-200 rounded animate-pulse mx-auto" /></td>
                 <td className="px-4 py-3"><div className="flex justify-end gap-3">
                   <div className="h-4 w-8 bg-gray-200 rounded animate-pulse" />

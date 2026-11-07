@@ -18,17 +18,12 @@ export default async function ChinhSuaPage({
     getCategories(),
     getAdminClient()
       .from('products')
-      .select('*, product_units(id, product_id, unit_name, price, stock, sort_order, created_at)')
+      .select('*')
       .eq('id', Number(id))
       .single(),
   ])
 
-  const product = rawProduct ? {
-    ...rawProduct,
-    product_units: ((rawProduct as any).product_units ?? []).sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order),
-  } : null
+  if (error || !rawProduct) notFound()
 
-  if (error || !rawProduct || !product) notFound()
-
-  return <ProductFormClient categories={categories} product={product} />
+  return <ProductFormClient categories={categories} product={rawProduct} />
 }
